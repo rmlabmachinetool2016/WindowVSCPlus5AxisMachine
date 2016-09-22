@@ -67,7 +67,7 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>D:\M2_BUI DINH BA\boost_1_53_0;C:\Program Files\boost\boost_1_53_0;G:\TUT RESEARCH\Library\boost\boost_1_53_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DINHBA\Library\boost_1_53_0;G:\TUT RESEARCH\Library\boost\boost_1_53_0</AdditionalIncludeDirectories>
       <CompileAsManaged>true</CompileAsManaged>
     </ClCompile>
     <Link>
