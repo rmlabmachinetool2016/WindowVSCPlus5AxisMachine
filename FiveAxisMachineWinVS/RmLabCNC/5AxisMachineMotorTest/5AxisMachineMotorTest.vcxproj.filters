@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\FiveAxisCNCObject">
+      <UniqueIdentifier>{89b8d86e-b06a-49b4-9b47-095e7626c0ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SupportFiles">
+      <UniqueIdentifier>{48ecf981-1508-4604-aba1-03597830ea0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FiveAxisCNCObject">
+      <UniqueIdentifier>{aa1875bb-e0de-4b92-ae1f-b45202680fcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SupportFiles">
+      <UniqueIdentifier>{ed479a77-f02b-4d8c-9d86-940e49f8a333}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="..\..\5AxisMachineMini.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="app.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GUIProcessing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FiveAxisCNC.cpp">
+      <Filter>Source Files\FiveAxisCNCObject</Filter>
+    </ClCompile>
+    <ClCompile Include="FiveAxisControlModule.cpp">
+      <Filter>Source Files\FiveAxisCNCObject</Filter>
+    </ClCompile>
+    <ClCompile Include="FiveAxisIOModule.cpp">
+      <Filter>Source Files\FiveAxisCNCObject</Filter>
+    </ClCompile>
+    <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>Source Files\SupportFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="5AxisMachineMotorTest.cpp">
+      <Filter>Source Files\SupportFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files\SupportFiles</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="5AxisMotorTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIProcessing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FiveAxisCNC.h">
+      <Filter>Header Files\FiveAxisCNCObject</Filter>
+    </ClInclude>
+    <ClInclude Include="FiveAxisControlModule.h">
+      <Filter>Header Files\FiveAxisCNCObject</Filter>
+    </ClInclude>
+    <ClInclude Include="FiveAxisIOModule.h">
+      <Filter>Header Files\FiveAxisCNCObject</Filter>
+    </ClInclude>
+    <ClInclude Include="CAioCLI.h">
+      <Filter>Header Files\SupportFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="CCntCLI.h">
+      <Filter>Header Files\SupportFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files\SupportFiles</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="app.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="5AxisMotorTest.resX">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
