@@ -3,34 +3,87 @@
 using namespace System::IO;
 using namespace RmLabCNC;
 FiveAxisCNC::FiveAxisCNC(void)
-{
-// SimulationModelParameter setup
-// 	mt_Simul1_M.resize(NUMBERAXIS,NUMBERAXIS);
-// 
-// 	vec_Simulx.resize(NUMBERAXIS);
-// 	vec_SimulPrex.resize(NUMBERAXIS);
-// 	vec_Simulx_1.resize(NUMBERAXIS);
-// 	vec_SimulPrex_1.resize(NUMBERAXIS);
-// 	vec_SimulKc.resize(NUMBERAXIS);
-// 	vec_SimulFc.resize(NUMBERAXIS);
-// 	vec_InertiaForce.resize(NUMBERAXIS);
-// 
-// 	vec_Simulx.clear();
-// 	vec_SimulPrex.clear();
-// 	vec_Simulx_1.clear();
-// 	vec_SimulPrex_1.clear();
-// 	vec_SimulKc.clear();
-// 	vec_SimulFc.clear();
-// 	vec_InertiaForce.clear();
-// 	mt_Simul1_M.clear();
+{ 
+	// Sliding mode contouring controller variable
+	    matrix_temporary.resize(SLMCCSIZE,SLMCCSIZE);
+		matrix_weight_M.resize(SLMCCSIZE,SLMCCSIZE);matrix_inverse_weight_M.resize(SLMCCSIZE,SLMCCSIZE);matrix_estimated_weight_M.resize(SLMCCSIZE,SLMCCSIZE); matrix_inverse_estimated_weight_M.resize(SLMCCSIZE,SLMCCSIZE); 
+		matrix_previous_rotation_RT.resize(SLMCCSIZE,SLMCCSIZE);matrix_rotation_R.resize(SLMCCSIZE,SLMCCSIZE);matrix_rotation_RT.resize(SLMCCSIZE,SLMCCSIZE);
+		matrix_previous_rotation_dotRT.resize(SLMCCSIZE,SLMCCSIZE);matrix_rotation_dotRT.resize(SLMCCSIZE,SLMCCSIZE);
+		matrix_rotation_ddotRT.resize(SLMCCSIZE,SLMCCSIZE);
+		matrix_TC_gain_Kp.resize(SLMCCSIZE,SLMCCSIZE);matrix_TC_gain_Kd.resize(SLMCCSIZE,SLMCCSIZE);
+		matrix_SLMCC_gain_lambda.resize(SLMCCSIZE,SLMCCSIZE);matrix_SLMCC_gain_A.resize(SLMCCSIZE,SLMCCSIZE);
+		matrix_SLMCC_sign_L.resize(SLMCCSIZE,SLMCCSIZE);matrix_disturbance_gain_Kd.resize(SLMCCSIZE,SLMCCSIZE);
+		matrix_sign_real_velocity_dotq.resize(SLMCCSIZE,SLMCCSIZE); 
+		matrix_estimated_viscous_friction_c.resize(SLMCCSIZE,SLMCCSIZE);matrix_viscous_friction_c.resize(SLMCCSIZE,SLMCCSIZE);
+		matrix_nominal_viscous_friction_cn.resize(SLMCCSIZE,SLMCCSIZE);
+		matrix_number_peak.resize(NUM_DIRECT,SLMCCSIZE);matrix_peak_height.resize(NUM_DIRECT*SLMCCSIZE,NUM_PEAK);
+		matrix_peak_position.resize(NUM_DIRECT*SLMCCSIZE,NUM_PEAK);matrix_peak_width.resize(NUM_DIRECT*SLMCCSIZE,NUM_PEAK);
+		matrix_sinusoidal_friction.resize(SLMCCSIZE,NUM_SINFRIC_DATA); matrix_stribeck_friction.resize(SLMCCSIZE,NUM_SINFRIC_DATA); 
+
+
+		vector_temporary.resize(SLMCCSIZE);vector_switching_force.resize(SLMCCSIZE);
+		vector_control_force_fu.resize(SLMCCSIZE);vector_estimated_control_force_fu.resize(SLMCCSIZE);
+		vector_real_position_q.resize(SLMCCSIZE);vector_previous_real_position_q.resize(SLMCCSIZE);
+		vector_real_velocity_dotq.resize(SLMCCSIZE);
+		vector_desired_position_qd.resize(SLMCCSIZE);vector_previous_desired_position_qd.resize(SLMCCSIZE);
+		vector_desired_velocity_dotqd.resize(SLMCCSIZE);vector_previous_desired_velocity_dotqd.resize(SLMCCSIZE);
+		vector_desired_acceleration_ddotqd.resize(SLMCCSIZE);
+		vector_SLMCC_gain_k.resize(SLMCCSIZE);
+		vector_tracking_error_ew.resize(SLMCCSIZE);vector_tracking_error_dotew.resize(SLMCCSIZE);
+		vector_contour_error_el.resize(SLMCCSIZE);vector_contour_error_dotel.resize(SLMCCSIZE);
+		vector_estimated_friction_ff.resize(SLMCCSIZE); 
+		vector_coulomb_friction_fcl.resize(SLMCCSIZE); vector_estimated_coulomb_friction_fcl.resize(SLMCCSIZE); 
+		vector_nominal_coulomb_friction_fncl.resize(SLMCCSIZE); 
+
+		vector_gravitational_force_g.resize(SLMCCSIZE); vector_estimated_gravitational_force_g.resize(SLMCCSIZE);
+		vector_disturbance_estimator_de.resize(SLMCCSIZE);vector_estimated_disturbance_d.resize(SLMCCSIZE);
+		vector_sliding_surface_s.resize(SLMCCSIZE);
+
+
+		matrix_temporary.clear();
+		matrix_weight_M.clear();matrix_inverse_weight_M.clear();matrix_estimated_weight_M.clear(); matrix_inverse_estimated_weight_M.clear();
+		matrix_previous_rotation_RT.clear();matrix_rotation_R.clear();matrix_rotation_RT.clear();
+		matrix_previous_rotation_dotRT.clear();matrix_rotation_dotRT.clear();
+		matrix_rotation_ddotRT.clear();
+
+		matrix_TC_gain_Kp.clear();matrix_TC_gain_Kd.clear();
+
+		matrix_SLMCC_gain_lambda.clear();matrix_SLMCC_gain_A.clear();
+		matrix_SLMCC_sign_L.clear();matrix_disturbance_gain_Kd.clear();
+		matrix_sign_real_velocity_dotq.clear();
+		
+		matrix_estimated_viscous_friction_c.clear();matrix_viscous_friction_c.clear();
+		matrix_nominal_viscous_friction_cn.clear();
+		matrix_number_peak.clear();matrix_peak_height.clear();
+		matrix_peak_position.clear();matrix_peak_width.clear();
+		matrix_sinusoidal_friction.clear();matrix_stribeck_friction.clear();
+
+		vector_temporary.clear();vector_switching_force.clear();
+		vector_control_force_fu.clear();vector_estimated_control_force_fu.clear();
+		vector_real_position_q.clear();vector_previous_real_position_q.clear();
+		vector_real_velocity_dotq.clear();
+		vector_desired_position_qd.clear();vector_previous_desired_position_qd.clear();
+		vector_desired_velocity_dotqd.clear();vector_previous_desired_velocity_dotqd.clear();
+		vector_desired_acceleration_ddotqd.clear();
+		vector_SLMCC_gain_k.clear();
+		vector_tracking_error_ew.clear();vector_tracking_error_dotew.clear();
+		vector_contour_error_el.clear();vector_contour_error_dotel.clear();
+		vector_estimated_friction_ff.clear();
+		vector_coulomb_friction_fcl.clear(); vector_estimated_coulomb_friction_fcl.clear(); 
+		vector_nominal_coulomb_friction_fncl.clear();
+
+		vector_gravitational_force_g.clear();vector_estimated_gravitational_force_g.clear();
+		vector_disturbance_estimator_de.clear();vector_estimated_disturbance_d.clear();
+		vector_sliding_surface_s.clear();
+
+		vector_next_desired_position_data.resize(NUM_COUNTER);
+		vector_next_desired_position_data.clear();
 
 
  //   RmLabCNC::InitStaticVariable();
 	mt_Identity.resize(MTSIZE);
 
-	mt_M.resize(NUM_COUNTER,NUM_COUNTER);
-	mt_1_M.resize(NUM_COUNTER,NUM_COUNTER);
-	mt_Kc.resize(NUM_COUNTER,NUM_COUNTER);
+	mt_M.resize(NUM_COUNTER,NUM_COUNTER);mt_Kc.resize(NUM_COUNTER,NUM_COUNTER);
 	mt_Fbr.resize(NUM_COUNTER,NUM_COUNTER);
 
 	vec_Fc.resize(NUM_COUNTER);
@@ -38,24 +91,6 @@ FiveAxisCNC::FiveAxisCNC(void)
 	vec_FbrFW.resize(NUM_COUNTER);vec_FvsFW.resize(NUM_COUNTER);
 	vec_KcBW.resize(NUM_COUNTER);vec_FcBW.resize(NUM_COUNTER);
 	vec_FbrBW.resize(NUM_COUNTER);vec_FvsBW.resize(NUM_COUNTER);
-	// Disturbance,Friction, observed disturbance variable
-	vec_Selectx_1.resize(NUMBERAXIS);
-	vec_PredictedFriction.resize(NUM_COUNTER);
-	vec_NominalFc.resize(NUM_COUNTER);
-	vec_NominalFv.resize(NUM_COUNTER);
-
-	vec_PredictedDisturb.resize(NUM_COUNTER);
-	vec_DOBd.resize(NUM_COUNTER);
-	vec_DOBEstimatedx_1.resize(NUM_COUNTER);
-	vec_DOBew_1.resize(NUM_COUNTER);
-	vec_NumberPeak.resize(NUMBERAXIS*2);
-	vec_GMSElement.resize(NUMBERAXIS);
-	vec_SlidingVel.resize(NUMBERAXIS);
-
-	vec_KalmanMesured.resize(NUMMEASURED); //Kalman filter
-	vec_KalmanState.resize(NUMSTATE);
-	vec_KalmanBX.resize(NUMSTATE);
-// Matrix setting
 
 	mt_Translate.resize(MTSIZE,MTSIZE);
 	mt_rotR.resize(MTSIZE,MTSIZE);mt_rotR_1.resize(MTSIZE,MTSIZE);
@@ -64,33 +99,14 @@ FiveAxisCNC::FiveAxisCNC(void)
 	mt_Kvl.resize(NUM_COUNTER,NUM_COUNTER);mt_Kpl.resize(NUM_COUNTER,NUM_COUNTER);mt_Kil.resize(NUM_COUNTER,NUM_COUNTER);
 
 
-
 	mt_MachineCordinate.resize(MTSIZE,MTSIZE);
 	mt_ToolCordinate.resize(MTSIZE,MTSIZE);
 //	mt_ToolWorkPieceRelation.resize(MTSIZE,MTSIZE);
 	mt_WorkPieceCordinate.resize(MTSIZE,MTSIZE);
 	mt_ContourWorkPieceCordinate.resize(MTSIZE,MTSIZE);
 	mt_ContourMachineCordinate.resize(MTSIZE,MTSIZE);
-	// Disturbance,Friction, observed disturbance variable
-	mt_DOBKd.resize(NUM_COUNTER,NUM_COUNTER);      // Disturbance observer
-	mt_DOBKv.resize(NUM_COUNTER,NUM_COUNTER);      // Disturbance observer
-    mt_PeakHeight.resize(NUM_COUNTER*2,PEAKLIMIT); // Nonlinear friction
-	mt_PeakPos.resize(NUM_COUNTER*2,PEAKLIMIT);
-	mt_PeakWid.resize(NUM_COUNTER*2,PEAKLIMIT);
-	mt_GMSForceF.resize(NUMBERAXIS,GMSELEMENT);
-	mt_GMSForceW.resize(NUMBERAXIS,GMSELEMENT);
-	mt_GMSStiffK.resize(NUMBERAXIS,GMSELEMENT);
 
-	mt_StaticFricData.resize(NUM_COUNTER*2,NFRICTIONDATA); // Linear friction
-
-	mt_KalmanIX.resize(NUMSTATE,NUMSTATE); //Kalman filter
-	mt_KalmanKobsX.resize(NUMSTATE,NUMMEASURED); 
-	mt_KalmanAX.resize(NUMSTATE,NUMSTATE);  
-	mt_KalmanCX.resize(NUMMEASURED,NUMSTATE);    // (2,3)
-
-
-// Confirm Reset value
-	mt_M.clear();mt_1_M.clear();mt_Kc.clear();vec_Fc.clear();mt_Fbr.clear();
+	mt_M.clear();mt_Kc.clear();vec_Fc.clear();mt_Fbr.clear();
 	vec_KcFW.clear();vec_FcFW.clear();vec_FbrFW.clear();vec_FvsFW.clear();
 	vec_KcBW.clear();vec_FcFW.clear();vec_FbrBW.clear();vec_FvsBW.clear();
 	mt_Translate.clear();
@@ -126,31 +142,6 @@ FiveAxisCNC::FiveAxisCNC(void)
 	vec_VelChange.clear();vec_StartAcc.clear();
 	vec_EndAcc.clear();vec_NextStartAcc.clear();
 	vec_NextEndAcc.clear();
-
-	// Disturbance,Friction, observed disturbance variable
-	vec_Selectx_1.clear();
-	vec_PredictedFriction.clear();
-	vec_NominalFc.clear();
-	vec_NominalFv.clear();
-	vec_PredictedDisturb.clear();
-	vec_DOBd.clear();
-	vec_DOBEstimatedx_1.clear();
-	vec_DOBew_1.clear();
-	vec_NumberPeak.clear();
-	mt_DOBKd.clear();
-	mt_DOBKv.clear();
-	mt_PeakHeight.clear();
-	mt_PeakPos.clear();
-	mt_PeakWid.clear();
-	mt_StaticFricData.clear();
-
-	vec_KalmanMesured.clear(); //Kalman filter
-	vec_KalmanState.clear();
-	vec_KalmanBX.clear();
-	mt_KalmanIX.clear();//Kalman filter
-	mt_KalmanKobsX.clear(); 
-	mt_KalmanAX.clear();
-	mt_KalmanCX.clear();   // (2,3)
 
 	m_bGcodeFINISH = FALSE;
 	m_bNextGcodeFINISH = FALSE;
@@ -189,7 +180,7 @@ vector<double> FiveAxisCNC::GetRealPosition()
 void FiveAxisCNC::UpdateRealPosition()
 {
 	vec_realx = IOModule.GetAbsPosition();
-	m_strDebugString = "vec_realx(0)"+ System::Convert::ToString(vec_realx(0));
+	m_strDebugString = m_strDebugString+ "vec_realx(0)"+ System::Convert::ToString(vec_realx(0));
 }
 void FiveAxisCNC::SetRealPosition(vector<double> Vec_realPosition)
 {
@@ -205,19 +196,14 @@ void FiveAxisCNC::SetRealPosition(vector<double> Vec_realPosition)
 	m_CNCRealPos.A2 = vec_realx(6);
 	m_CNCRealPos.A1 = m_CNCRealPos.A1 ;
 
-// 	vec_Pre_realx = vec_realx;
-// 	vec_realx = vec_refr;
-//    vec_realx = vec_AbsolutePosition;
 
-// 	vec_refr(0)= 0.4;
-// 	vec_refr(1)= 2.3;
-// 	vec_realx(0) = Vec_realPosition.X;
-// 	vec_realx(1) = Vec_realPosition.Y1;
-// 	vec_realx(2) = Vec_realPosition.Y2;
-// 	vec_realx(3) = Vec_realPosition.Z;
-// 	vec_realx(4) = Vec_realPosition.C;
-// 	vec_realx(5) = Vec_realPosition.A1;
-// 	vec_realx(6) = Vec_realPosition.A2;
+	vector_previous_real_position_q = vector_real_position_q;
+	vector_real_position_q(0) =  Vec_realPosition(0);
+	vector_real_position_q(1) =  Vec_realPosition(1);
+	vector_real_position_q(2) =  Vec_realPosition(3);
+
+	vector_real_velocity_dotq = (vector_real_position_q - vector_previous_real_position_q)/(float)m_fSampTime;//  mm/s
+
 }
 void FiveAxisCNC::SetRefPosition(vector<double> Vec_refPosition)
 {
@@ -233,6 +219,15 @@ void FiveAxisCNC::SetRefPosition(vector<double> Vec_refPosition)
 	m_CNCRefPos.A1 = vec_refr(5);
 	m_CNCRefPos.A2 = vec_refr(6);
 	m_CNCRefPos.A  = m_CNCRefPos.A1;
+
+	vector_previous_desired_position_qd = vector_desired_position_qd;
+	vector_desired_position_qd(0) =  Vec_refPosition(0);
+	vector_desired_position_qd(1) =  Vec_refPosition(1);
+	vector_desired_position_qd(2) =  Vec_refPosition(3);
+
+	vector_previous_desired_velocity_dotqd = vector_desired_velocity_dotqd;
+	vector_desired_velocity_dotqd = (vector_desired_position_qd-vector_previous_desired_position_qd)/(float)m_fSampTime;//  mm/s
+	vector_desired_acceleration_ddotqd = (vector_desired_velocity_dotqd-vector_previous_desired_velocity_dotqd)/(float)m_fSampTime;// mm/s^2
 
 }
 void FiveAxisCNC::SetTableOrigin(vector<double> Vec_realPosition)
@@ -258,39 +253,24 @@ void FiveAxisCNC::IndependentControl2D(void)
 }
 void FiveAxisCNC::ContouringControl3DFiveAxis(void)
 {
-	
+
 }
 void FiveAxisCNC::IndependentControl3DFiveAxis(void)
 {
-	int i=0;
 	CalulateReferenceData();// Calcule vec_refr1, vec_refr2, 
 	CalculateRealPostisionData();// Calcule vec_realx1, vec_realx2, 
-
-	vec_Selectx_1= vec_realx_1;//vec_refr_1;  // Select velocity to calculate friction magnitude
-
 	vec_ew = vec_realx-vec_refr;
 	vec_ew_1 = vec_realx_1-vec_refr_1;
-//	CoefficientFilter();
+	CoefficientFilter();
 
-	CalculatePredictedFriction();
-	CalculatePredictedDisturbance();// Calculate Disturbance first to eliminate previous friction value
-
-	vec_PredictedOutput = prod(mt_M,vec_refr_2)+vec_PredictedFriction+vec_DOBd;
+	vec_PredictedOutput = prod(mt_M,vec_refr_2)+prod(mt_Kc,vec_realx_1)+ vec_Fc;
  	vec_OutputControl = vec_PredictedOutput +prod(mt_M,-prod(mt_Kvw,vec_ew_1)-prod(mt_Kpw,vec_ew));
-	UpdateDisturbanceObserverParameter();
 
-	vec_OutputControl(3) = -vec_OutputControl(3);
-	vec_OutputControl(1) = -vec_OutputControl(1);
+//	vec_OutputControl(3) = -vec_OutputControl(3);
+//	vec_OutputControl(1) = -vec_OutputControl(1);
 // no control motor Y2, A2 
 	vec_OutputControl(2) = 0.0;
 	vec_OutputControl(6) = 0.0;
-
-
-	vec_PredictedOutput = vec_PredictedFriction+vec_DOBd;
-
-
-//   	vec_OutputControl(1) = mt_KalmanKobsX(0,0);
-//   	vec_OutputControl(3) = vec_DOBd(0);
 // 		prod(mt_M,vec_refr_2-prod(mt_Kvw,vec_ew_1)-prod(mt_Kpw,vec_ew))
 //  		+prod(mt_Kc,vec_realx_1);
 
@@ -299,18 +279,516 @@ void FiveAxisCNC::IndependentControl3DFiveAxis(void)
 // 		+"vec_refr_2(1)"+ System::Convert::ToString(RmLabCNC::vec_refr_2(1))
 // 		+"vec_realx_1(0)"+ System::Convert::ToString(RmLabCNC::vec_realx_1(0))
 // 		+"vec_realx_1(1)"+ System::Convert::ToString(RmLabCNC::vec_realx_1(1));
-	double max_force[NUMBERAXIS] = {MAX_FORCE_X,MAX_FORCE_Y1,MAX_FORCE_Y2,MAX_FORCE_Z,MAX_TORQUE_C,MAX_TORQUE_A1,MAX_TORQUE_A2};
-	for(i=0;i<NUMBERAXIS;i++)
+}
+void FiveAxisCNC::EstimateFrictionValue(void)
+{
+	int i=0, j=0,selectAxis = 1;
+// 	matrix_sign_real_velocity_dotq(0,0)= Rmsign(vector_real_velocity_dotq(0));
+// 	matrix_sign_real_velocity_dotq(1,1)= Rmsign(vector_real_velocity_dotq(1));
+// 	matrix_sign_real_velocity_dotq(2,2)= Rmsign(vector_real_velocity_dotq(2));
+
+	matrix_sign_real_velocity_dotq(0,0)= Rmsign(vector_desired_velocity_dotqd(0));
+	matrix_sign_real_velocity_dotq(1,1)= Rmsign(vector_desired_velocity_dotqd(1));
+	matrix_sign_real_velocity_dotq(2,2)= Rmsign(vector_desired_velocity_dotqd(2));
+	switch (m_iSelectedFrictionModel)
 	{
-		if(vec_OutputControl(i) > max_force[i])
-			vec_OutputControl(i) = max_force[i];
-		else if(vec_OutputControl(i) < -max_force[i])
-			vec_OutputControl(i) = -max_force[i];
+	case 0:// No friction compensation
+
+		vector_estimated_friction_ff.clear();
+		break;
+	case 1:// Conventional static friction model Coulomb and viscous friction
+
+		     vector_estimated_friction_ff = prod(matrix_sign_real_velocity_dotq,vector_estimated_coulomb_friction_fcl)+prod(matrix_estimated_viscous_friction_c,vector_desired_velocity_dotqd);
+		break;
+	case 2://Proposed sinusoidal profile nonlinear static friction model Coulomb, viscous friction, and sinusoidal functions
+		     vector_estimated_friction_ff = prod(matrix_sign_real_velocity_dotq,vector_estimated_coulomb_friction_fcl)+prod(matrix_estimated_viscous_friction_c,vector_desired_velocity_dotqd);
+
+			 // Change friction in y axis to proposed sinusoidal profile friction model
+			 selectAxis = 1; // Select y axis
+					if ((vector_desired_velocity_dotqd(selectAxis)<=0.0)&&(vector_desired_acceleration_ddotqd(selectAxis)<=0))
+					{
+						vector_estimated_friction_ff(selectAxis) = matrix_sinusoidal_friction(selectAxis,0)*Rmsign(vector_desired_velocity_dotqd(selectAxis))+matrix_sinusoidal_friction(selectAxis,1)*vector_desired_velocity_dotqd(selectAxis)+
+													matrix_sinusoidal_friction(selectAxis,2)*sinf(matrix_sinusoidal_friction(selectAxis,3)*vector_desired_velocity_dotqd(selectAxis)*vector_desired_velocity_dotqd(selectAxis)/
+												    (matrix_sinusoidal_friction(selectAxis,4)*Rmsign(vector_desired_velocity_dotqd(selectAxis))-vector_desired_velocity_dotqd(selectAxis)));
+					} 
+					else if ((vector_desired_velocity_dotqd(selectAxis)<=0.0)&&(vector_desired_acceleration_ddotqd(selectAxis)>=0))
+						{ 
+							vector_estimated_friction_ff(selectAxis) = matrix_sinusoidal_friction(selectAxis,5)*Rmsign(vector_desired_velocity_dotqd(selectAxis))+matrix_sinusoidal_friction(selectAxis,6)*vector_desired_velocity_dotqd(selectAxis)+
+								matrix_sinusoidal_friction(selectAxis,7)*sinf(matrix_sinusoidal_friction(selectAxis,8)*vector_desired_velocity_dotqd(selectAxis)*vector_desired_velocity_dotqd(selectAxis)/
+								(matrix_sinusoidal_friction(selectAxis,9)*Rmsign(vector_desired_velocity_dotqd(selectAxis))-vector_desired_velocity_dotqd(selectAxis)));
+						} 
+						else if ((vector_desired_velocity_dotqd(selectAxis)>=0.0)&&(vector_desired_acceleration_ddotqd(selectAxis)>=0))
+					{
+						vector_estimated_friction_ff(selectAxis) = matrix_sinusoidal_friction(selectAxis,10)*Rmsign(vector_desired_velocity_dotqd(selectAxis))+matrix_sinusoidal_friction(selectAxis,11)*vector_desired_velocity_dotqd(selectAxis)+
+													matrix_sinusoidal_friction(selectAxis,12)*sinf(matrix_sinusoidal_friction(selectAxis,13)*vector_desired_velocity_dotqd(selectAxis)*vector_desired_velocity_dotqd(selectAxis)/
+												    (matrix_sinusoidal_friction(selectAxis,14)*Rmsign(vector_desired_velocity_dotqd(selectAxis))-vector_desired_velocity_dotqd(selectAxis)));
+					} 
+					else if ((vector_desired_velocity_dotqd(selectAxis)>=0.0)&&(vector_desired_acceleration_ddotqd(selectAxis)<=0))
+					{
+						vector_estimated_friction_ff(selectAxis) = matrix_sinusoidal_friction(selectAxis,15)*Rmsign(vector_desired_velocity_dotqd(selectAxis))+matrix_sinusoidal_friction(selectAxis,15)*vector_desired_velocity_dotqd(selectAxis)+
+													matrix_sinusoidal_friction(selectAxis,17)*sinf(matrix_sinusoidal_friction(selectAxis,18)*vector_desired_velocity_dotqd(selectAxis)*vector_desired_velocity_dotqd(selectAxis)/
+												    (matrix_sinusoidal_friction(selectAxis,19)*Rmsign(vector_desired_velocity_dotqd(selectAxis))-vector_desired_velocity_dotqd(selectAxis)));
+					} 
+
+		break;
+	case 3: // Conventional the comlomb-viscous-stribeck friction model
+			for (i=0;i<SLMCCSIZE;i++)
+			{
+	//			vector_estimated_friction_ff(i) = expf(-(vector_desired_velocity_dotqd(i)*vector_desired_velocity_dotqd(i))/(matrix_stribeck_friction(i,3)*matrix_stribeck_friction(i,3)));
+
+				vector_estimated_friction_ff(i) = ( matrix_stribeck_friction(i,0)+ (matrix_stribeck_friction(i,1)-matrix_stribeck_friction(i,0))*
+					expf(-(vector_desired_velocity_dotqd(i)*vector_desired_velocity_dotqd(i))/(matrix_stribeck_friction(i,3)*matrix_stribeck_friction(i,3))))*Rmsign(vector_desired_velocity_dotqd(i))
+					+matrix_stribeck_friction(i,2)*vector_desired_velocity_dotqd(i);
+			}
+		break;
+	case 4: // proposed the comlomb-viscous-eccentric friction model
+
+		for (i=0;i<SLMCCSIZE;i++)
+		{
+			vector_estimated_friction_ff(i) = matrix_sinusoidal_friction(i,0)*Rmsign(vector_desired_velocity_dotqd(i))
+				+matrix_sinusoidal_friction(i,1)*vector_desired_velocity_dotqd(i)+matrix_sinusoidal_friction(i,2)*sinf(vector_desired_position_qd(i)*3.14-matrix_sinusoidal_friction(i,3));
+		}
+		break;
+	case 5:
+		//Proposed gaussians nonlinear static friction model Coulomb, viscous friction, and gaussian functions
+
+		vector_estimated_friction_ff = prod(matrix_sign_real_velocity_dotq,vector_nominal_coulomb_friction_fncl)+prod(matrix_nominal_viscous_friction_cn,vector_real_velocity_dotq);
+		for (i=0;i<SLMCCSIZE;i++)
+		{
+			if (vector_real_velocity_dotq(i)>0.0)
+			{
+				for (j=0;j<matrix_number_peak(0,i);j++)
+				{
+					vector_estimated_friction_ff(i) = vector_estimated_friction_ff(i)+ 
+						matrix_peak_height(i,j)*gaussian(vector_real_velocity_dotq(i),matrix_peak_position(i,j),matrix_peak_width(i,j));
+				}
+			} 
+			else
+			{
+				for (j=0;j<matrix_number_peak(1,i);j++)
+				{
+					vector_estimated_friction_ff(i) = vector_estimated_friction_ff(i)+ 
+						matrix_peak_height(SLMCCSIZE+i,j)*gaussian(vector_real_velocity_dotq(i),matrix_peak_position(SLMCCSIZE+i,j),matrix_peak_width(SLMCCSIZE+i,j));
+				}
+			}
+		}
+
+		break;
+	default:
+		break;
+	}
+}
+void FiveAxisCNC::ThreeAxisMachineController(void)
+{
+	switch (m_iSelectedControllerType)
+	{
+	case 0:
+		ThreeAxisMachinePDTrackingController();
+		break;
+	case 1:
+		ThreeAxisMachinePDContouringController();
+		break;
+	case 2:
+		ThreeAxisMachineSlidingModeContouringController();
+		break;
+	case 3:
+		ThreeAxisMachineSlidingModeContouringController();
+		break;
+	default:
+		break;
+	}
+//	ThreeAxisMachineSlidingModeContouringController();
+//	ThreeAxisMachinePDTrackingController();
+}
+void FiveAxisCNC::ThreeAxisMachineControllerInRegulation(void)
+{
+	vector_tracking_error_ew = vector_real_position_q-vector_desired_position_qd;
+	vector_tracking_error_dotew = vector_real_velocity_dotq - vector_desired_velocity_dotqd;
+
+	vector_control_force_fu = prod(matrix_estimated_weight_M,vector_desired_acceleration_ddotqd)+
+		prod(matrix_estimated_weight_M,-prod(matrix_TC_gain_Kp,vector_tracking_error_ew)-prod(matrix_TC_gain_Kd,vector_tracking_error_dotew));
+	// Out put control voltage to X,Y,Z only
+	for (int i=0;i<3;i++)
+	{
+		if (fabs(vector_control_force_fu(i))>MAXCONTROLFORCE)
+			vector_control_force_fu(i) = Rmsign(vector_control_force_fu(i))*MAXCONTROLFORCE;
+	}
+	// 	vector_control_force_fu(0) = 0.0;
+	// 	vector_control_force_fu(1) = 0.0;
+	// 	vector_control_force_fu(2) = 0.0;
+
+	vec_OutputControl(0) = vector_control_force_fu(0);
+	vec_OutputControl(1) = vector_control_force_fu(1);
+	vec_OutputControl(3) = vector_control_force_fu(2);
+}
+void FiveAxisCNC::ThreeAxisMachinePDTrackingController(void)
+{
+	double tempNormal;
+	vector_tracking_error_ew = vector_real_position_q-vector_desired_position_qd;
+	vector_tracking_error_dotew = vector_real_velocity_dotq - vector_desired_velocity_dotqd;
+
+	tempNormal = sqrtf(vector_desired_velocity_dotqd(0)*vector_desired_velocity_dotqd(0)+vector_desired_velocity_dotqd(1)*vector_desired_velocity_dotqd(1)+vector_desired_velocity_dotqd(2)*vector_desired_velocity_dotqd(2));
+
+	if (tempNormal<=0.0)
+	{
+		tempNormal = 1.0;
 	}
 
+	matrix_rotation_R(0,0)= vector_desired_velocity_dotqd(0)/tempNormal;
+	matrix_rotation_R(1,0)= vector_desired_velocity_dotqd(1)/tempNormal;
+	matrix_rotation_R(2,0)= vector_desired_velocity_dotqd(2)/tempNormal;
+	tempNormal = sqrtf(vector_desired_acceleration_ddotqd(0)*vector_desired_acceleration_ddotqd(0)+vector_desired_acceleration_ddotqd(1)*vector_desired_acceleration_ddotqd(1)+vector_desired_acceleration_ddotqd(2)*vector_desired_acceleration_ddotqd(2));
+	if (tempNormal<=0.0)
+	{
+		tempNormal = 1.0;
+	}
+	// 	matrix_rotation_R(0,1)= vector_desired_acceleration_ddotqd(0)/tempNormal;
+	// 	matrix_rotation_R(1,1)= vector_desired_acceleration_ddotqd(1)/tempNormal;
+	// 	matrix_rotation_R(2,1)= vector_desired_acceleration_ddotqd(2)/tempNormal;
+
+	matrix_rotation_R(0,1)= vector_desired_acceleration_ddotqd(0);
+	matrix_rotation_R(1,1)= vector_desired_acceleration_ddotqd(1);
+	matrix_rotation_R(2,1)= vector_desired_acceleration_ddotqd(2);
+
+	matrix_rotation_R(0,2)= matrix_rotation_R(1,0)*matrix_rotation_R(2,1)-matrix_rotation_R(2,0)*matrix_rotation_R(1,1);
+	matrix_rotation_R(1,2)= matrix_rotation_R(2,0)*matrix_rotation_R(0,1)-matrix_rotation_R(0,0)*matrix_rotation_R(2,1);
+	matrix_rotation_R(2,2)= matrix_rotation_R(0,0)*matrix_rotation_R(1,1)-matrix_rotation_R(1,0)*matrix_rotation_R(0,1);
+
+	tempNormal = sqrtf(matrix_rotation_R(0,2)*matrix_rotation_R(0,2)+matrix_rotation_R(1,2)*matrix_rotation_R(1,2)+matrix_rotation_R(2,2)*matrix_rotation_R(2,2));
+	if (tempNormal<=0.0)
+	{
+		tempNormal = 1.0;
+	}
+	matrix_rotation_R(0,2)= matrix_rotation_R(0,2)/tempNormal;
+	matrix_rotation_R(1,2)= matrix_rotation_R(1,2)/tempNormal;
+	matrix_rotation_R(2,2)= matrix_rotation_R(2,2)/tempNormal;
+
+
+	matrix_rotation_R(0,1)= matrix_rotation_R(1,2)*matrix_rotation_R(2,0)-matrix_rotation_R(2,2)*matrix_rotation_R(1,0);
+	matrix_rotation_R(1,1)= matrix_rotation_R(2,2)*matrix_rotation_R(0,0)-matrix_rotation_R(0,2)*matrix_rotation_R(2,0);
+	matrix_rotation_R(2,1)= matrix_rotation_R(0,2)*matrix_rotation_R(1,0)-matrix_rotation_R(1,2)*matrix_rotation_R(0,0);
+
+
+	matrix_rotation_RT = trans(matrix_rotation_R);
+
+	vector_contour_error_el = prod(matrix_rotation_RT,vector_tracking_error_ew);
+
+
+	EstimateFrictionValue();
+	// Simple P Controller
+	vector_estimated_control_force_fu = prod(matrix_estimated_weight_M,vector_desired_acceleration_ddotqd)+
+		vector_estimated_friction_ff+vector_estimated_gravitational_force_g;
+	vector_control_force_fu = vector_estimated_control_force_fu+
+					prod(matrix_estimated_weight_M,-prod(matrix_TC_gain_Kp,vector_tracking_error_ew)-prod(matrix_TC_gain_Kd,vector_tracking_error_dotew));
+	// Out put control voltage to X,Y,Z only
+	for (int i=0;i<3;i++)
+	{
+		if (fabs(vector_control_force_fu(i))>MAXCONTROLFORCE)
+			vector_control_force_fu(i) = Rmsign(vector_control_force_fu(i))*MAXCONTROLFORCE;
+	}
+	// 	vector_control_force_fu(0) = 0.0;
+	// 	vector_control_force_fu(1) = 0.0;
+	// 	vector_control_force_fu(2) = 0.0;
+
+	vec_OutputControl(0) = vector_control_force_fu(0);
+	vec_OutputControl(1) = vector_control_force_fu(1);
+	vec_OutputControl(3) = vector_control_force_fu(2);
+}
+void FiveAxisCNC::ThreeAxisMachinePDContouringController(void)
+{
+	double tempNormal;
+	vector_tracking_error_ew = vector_real_position_q-vector_desired_position_qd;
+	vector_tracking_error_dotew = vector_real_velocity_dotq - vector_desired_velocity_dotqd;
+
+	tempNormal = sqrtf(vector_desired_velocity_dotqd(0)*vector_desired_velocity_dotqd(0)+vector_desired_velocity_dotqd(1)*vector_desired_velocity_dotqd(1)+vector_desired_velocity_dotqd(2)*vector_desired_velocity_dotqd(2));
+
+	if (tempNormal<=0.0)
+	{
+		tempNormal = 1.0;
+	}
+
+	matrix_rotation_R(0,0)= vector_desired_velocity_dotqd(0)/tempNormal;
+	matrix_rotation_R(1,0)= vector_desired_velocity_dotqd(1)/tempNormal;
+	matrix_rotation_R(2,0)= vector_desired_velocity_dotqd(2)/tempNormal;
+	tempNormal = sqrtf(vector_desired_acceleration_ddotqd(0)*vector_desired_acceleration_ddotqd(0)+vector_desired_acceleration_ddotqd(1)*vector_desired_acceleration_ddotqd(1)+vector_desired_acceleration_ddotqd(2)*vector_desired_acceleration_ddotqd(2));
+	if (tempNormal<=0.0)
+	{
+		tempNormal = 1.0;
+	}
+	// 	matrix_rotation_R(0,1)= vector_desired_acceleration_ddotqd(0)/tempNormal;
+	// 	matrix_rotation_R(1,1)= vector_desired_acceleration_ddotqd(1)/tempNormal;
+	// 	matrix_rotation_R(2,1)= vector_desired_acceleration_ddotqd(2)/tempNormal;
+
+	matrix_rotation_R(0,1)= vector_desired_acceleration_ddotqd(0);
+	matrix_rotation_R(1,1)= vector_desired_acceleration_ddotqd(1);
+	matrix_rotation_R(2,1)= vector_desired_acceleration_ddotqd(2);
+
+	matrix_rotation_R(0,2)= matrix_rotation_R(1,0)*matrix_rotation_R(2,1)-matrix_rotation_R(2,0)*matrix_rotation_R(1,1);
+	matrix_rotation_R(1,2)= matrix_rotation_R(2,0)*matrix_rotation_R(0,1)-matrix_rotation_R(0,0)*matrix_rotation_R(2,1);
+	matrix_rotation_R(2,2)= matrix_rotation_R(0,0)*matrix_rotation_R(1,1)-matrix_rotation_R(1,0)*matrix_rotation_R(0,1);
+
+	tempNormal = sqrtf(matrix_rotation_R(0,2)*matrix_rotation_R(0,2)+matrix_rotation_R(1,2)*matrix_rotation_R(1,2)+matrix_rotation_R(2,2)*matrix_rotation_R(2,2));
+	if (tempNormal<=0.0)
+	{
+		tempNormal = 1.0;
+	}
+	matrix_rotation_R(0,2)= matrix_rotation_R(0,2)/tempNormal;
+	matrix_rotation_R(1,2)= matrix_rotation_R(1,2)/tempNormal;
+	matrix_rotation_R(2,2)= matrix_rotation_R(2,2)/tempNormal;
+
+
+	matrix_rotation_R(0,1)= matrix_rotation_R(1,2)*matrix_rotation_R(2,0)-matrix_rotation_R(2,2)*matrix_rotation_R(1,0);
+	matrix_rotation_R(1,1)= matrix_rotation_R(2,2)*matrix_rotation_R(0,0)-matrix_rotation_R(0,2)*matrix_rotation_R(2,0);
+	matrix_rotation_R(2,1)= matrix_rotation_R(0,2)*matrix_rotation_R(1,0)-matrix_rotation_R(1,2)*matrix_rotation_R(0,0);
+
+	matrix_previous_rotation_RT = matrix_rotation_RT;
+	matrix_rotation_RT = trans(matrix_rotation_R);
+	
+	matrix_previous_rotation_dotRT = matrix_rotation_dotRT;
+	matrix_rotation_dotRT = (matrix_rotation_RT-matrix_previous_rotation_RT)/(float)m_fSampTime;
+
+	matrix_rotation_ddotRT = (matrix_rotation_dotRT-matrix_previous_rotation_dotRT)/(float)m_fSampTime;
+
+
+	vector_contour_error_el = prod(matrix_rotation_RT,vector_tracking_error_ew);
+	vector_contour_error_dotel =  prod(matrix_rotation_dotRT,vector_tracking_error_ew)+ prod(matrix_rotation_RT,vector_tracking_error_dotew);
+
+
+	EstimateFrictionValue();
+
+	// Disturbance estimation
+
+	switch (m_iSelectedDisturbanceObserver)
+	{
+	case 0: // No disturbance observer
+		vector_estimated_disturbance_d.clear(); 
+		break;
+	case 1: // Disturbance estimated on Mqdot , velovity error estimation Conventional one
+		vector_temporary = prod(matrix_estimated_weight_M,vector_desired_velocity_dotqd);
+		vector_temporary = prod(matrix_disturbance_gain_Kd,vector_temporary);
+		vector_estimated_disturbance_d = vector_temporary;// save -KdM_hatq_dot in vector_estimated_disturbance_d
+		vector_temporary = vector_control_force_fu-vector_estimated_friction_ff-vector_estimated_gravitational_force_g-vector_disturbance_estimator_de+vector_temporary;
+		vector_temporary = prod(matrix_disturbance_gain_Kd,vector_temporary);
+		vector_disturbance_estimator_de =vector_disturbance_estimator_de+(float)m_fSampTime*vector_temporary;
+		vector_estimated_disturbance_d = vector_disturbance_estimator_de-vector_estimated_disturbance_d;
+		break;
+	case 2:  // Disturbance estimated on qddot acceleration error estimation One
+		vector_estimated_disturbance_d.clear(); 
+
+		break;
+	case 3:  // Adaptive friction compensation 
+		//vector_temporary = prod(matrix_estimated_weight_M,vector_real_velocity_dotq);
+		vector_temporary = prod(matrix_disturbance_gain_Kd,vector_desired_velocity_dotqd);
+		vector_estimated_disturbance_d = vector_temporary;// save -KdM_hatq_dot in vector_estimated_disturbance_d
+		vector_temporary = vector_control_force_fu-vector_estimated_friction_ff -prod(matrix_estimated_weight_M,vector_desired_acceleration_ddotqd)
+			-vector_estimated_gravitational_force_g-vector_disturbance_estimator_de+vector_temporary;
+		vector_temporary = prod(matrix_disturbance_gain_Kd,vector_temporary);
+		vector_disturbance_estimator_de =vector_disturbance_estimator_de+(float)m_fSampTime*vector_temporary;
+		vector_estimated_disturbance_d = vector_disturbance_estimator_de-vector_estimated_disturbance_d;
+		break;
+	default:
+		break;
+	}
+
+
+
+	// Simple PD contouring Controller
+	vector_estimated_control_force_fu = prod(matrix_estimated_weight_M,vector_desired_acceleration_ddotqd)+
+		vector_estimated_friction_ff+vector_estimated_gravitational_force_g+vector_estimated_disturbance_d;
+
+	vector_temporary = prod(matrix_TC_gain_Kp,vector_contour_error_el)+prod(matrix_TC_gain_Kd,vector_contour_error_dotel)
+		+prod(matrix_rotation_ddotRT,vector_tracking_error_ew)+2.0*prod(matrix_rotation_dotRT,vector_tracking_error_dotew);
+	vector_temporary = prod(matrix_rotation_R,vector_temporary);
+
+	vector_control_force_fu = vector_estimated_control_force_fu-
+		prod(matrix_estimated_weight_M,vector_temporary);
+
+// 	vector_control_force_fu = vector_estimated_control_force_fu-
+// 		prod(matrix_estimated_weight_M,prod(matrix_rotation_R,prod(matrix_TC_gain_Kp,vector_contour_error_el)+prod(matrix_TC_gain_Kd,vector_contour_error_dotel)
+// 								+prod(matrix_rotation_ddotRT,vector_tracking_error_ew)+2.0*prod(matrix_rotation_dotRT,vector_tracking_error_dotew)));
+	// Out put control voltage to X,Y,Z only
+	for (int i=0;i<3;i++)
+	{
+		if (fabs(vector_control_force_fu(i))>MAXCONTROLFORCE)
+			vector_control_force_fu(i) = Rmsign(vector_control_force_fu(i))*MAXCONTROLFORCE;
+	}
+	// 	vector_control_force_fu(0) = 0.0;
+	// 	vector_control_force_fu(1) = 0.0;
+	// 	vector_control_force_fu(2) = 0.0;
+
+	vec_OutputControl(0) = vector_control_force_fu(0);
+	vec_OutputControl(1) = vector_control_force_fu(1);
+	vec_OutputControl(3) = vector_control_force_fu(2);
+}
+void FiveAxisCNC::ThreeAxisMachineSlidingModeContouringController(void)
+{
+	double tempNormal;
+// 	CalulateReferenceData();// Calcule vec_refr1, vec_refr2, 
+// 	CalculateRealPostisionData();// Calcule vec_realx1, vec_realx2, 
+	vector_tracking_error_ew = vector_real_position_q-vector_desired_position_qd;
+	vector_tracking_error_dotew = vector_real_velocity_dotq - vector_desired_velocity_dotqd;
+
+	tempNormal = sqrtf(vector_desired_velocity_dotqd(0)*vector_desired_velocity_dotqd(0)+vector_desired_velocity_dotqd(1)*vector_desired_velocity_dotqd(1)+vector_desired_velocity_dotqd(2)*vector_desired_velocity_dotqd(2));
+	
+	if (tempNormal<=0.0)
+	{
+		tempNormal = 1.0;
+	}
+
+	matrix_rotation_R(0,0)= vector_desired_velocity_dotqd(0)/tempNormal;
+	matrix_rotation_R(1,0)= vector_desired_velocity_dotqd(1)/tempNormal;
+	matrix_rotation_R(2,0)= vector_desired_velocity_dotqd(2)/tempNormal;
+	tempNormal = sqrtf(vector_desired_acceleration_ddotqd(0)*vector_desired_acceleration_ddotqd(0)+vector_desired_acceleration_ddotqd(1)*vector_desired_acceleration_ddotqd(1)+vector_desired_acceleration_ddotqd(2)*vector_desired_acceleration_ddotqd(2));
+	if (tempNormal<=0.0)
+	{
+		tempNormal = 1.0;
+	}
+// 	matrix_rotation_R(0,1)= vector_desired_acceleration_ddotqd(0)/tempNormal;
+// 	matrix_rotation_R(1,1)= vector_desired_acceleration_ddotqd(1)/tempNormal;
+// 	matrix_rotation_R(2,1)= vector_desired_acceleration_ddotqd(2)/tempNormal;
+
+	matrix_rotation_R(0,1)= vector_desired_acceleration_ddotqd(0);
+	matrix_rotation_R(1,1)= vector_desired_acceleration_ddotqd(1);
+	matrix_rotation_R(2,1)= vector_desired_acceleration_ddotqd(2);
+
+	matrix_rotation_R(0,2)= matrix_rotation_R(1,0)*matrix_rotation_R(2,1)-matrix_rotation_R(2,0)*matrix_rotation_R(1,1);
+	matrix_rotation_R(1,2)= matrix_rotation_R(2,0)*matrix_rotation_R(0,1)-matrix_rotation_R(0,0)*matrix_rotation_R(2,1);
+	matrix_rotation_R(2,2)= matrix_rotation_R(0,0)*matrix_rotation_R(1,1)-matrix_rotation_R(1,0)*matrix_rotation_R(0,1);
+
+	tempNormal = sqrtf(matrix_rotation_R(0,2)*matrix_rotation_R(0,2)+matrix_rotation_R(1,2)*matrix_rotation_R(1,2)+matrix_rotation_R(2,2)*matrix_rotation_R(2,2));
+	if (tempNormal<=0.0)
+	{
+		tempNormal = 1.0;
+	}
+	matrix_rotation_R(0,2)= matrix_rotation_R(0,2)/tempNormal;
+	matrix_rotation_R(1,2)= matrix_rotation_R(1,2)/tempNormal;
+	matrix_rotation_R(2,2)= matrix_rotation_R(2,2)/tempNormal;
+
+
+	matrix_rotation_R(0,1)= matrix_rotation_R(1,2)*matrix_rotation_R(2,0)-matrix_rotation_R(2,2)*matrix_rotation_R(1,0);
+	matrix_rotation_R(1,1)= matrix_rotation_R(2,2)*matrix_rotation_R(0,0)-matrix_rotation_R(0,2)*matrix_rotation_R(2,0);
+	matrix_rotation_R(2,1)= matrix_rotation_R(0,2)*matrix_rotation_R(1,0)-matrix_rotation_R(1,2)*matrix_rotation_R(0,0);
+
+	matrix_previous_rotation_RT = matrix_rotation_RT;
+
+	matrix_rotation_RT = trans(matrix_rotation_R);
+// 	matrix_rotation_RT(1,0)= matrix_rotation_R(0,1);matrix_rotation_RT(0,1)= matrix_rotation_R(1,0);matrix_rotation_RT(0,2)= matrix_rotation_R(2,0);
+// 	matrix_rotation_RT(2,0)= matrix_rotation_R(0,2);matrix_rotation_RT(2,1)= matrix_rotation_R(1,2);matrix_rotation_RT(1,2)= matrix_rotation_R(2,1);
+// 	matrix_rotation_RT(0,0)= matrix_rotation_R(0,0);matrix_rotation_RT(1,1)= matrix_rotation_R(1,1);matrix_rotation_RT(2,2)= matrix_rotation_R(2,2);
+
+
+	matrix_previous_rotation_dotRT = matrix_rotation_dotRT;
+	matrix_rotation_dotRT = (matrix_rotation_RT-matrix_previous_rotation_RT)/(float)m_fSampTime;
+
+	matrix_rotation_ddotRT = (matrix_rotation_dotRT-matrix_previous_rotation_dotRT)/(float)m_fSampTime;
+
+
+	vector_contour_error_el = prod(matrix_rotation_RT,vector_tracking_error_ew);
+	vector_contour_error_dotel =  prod(matrix_rotation_dotRT,vector_tracking_error_ew)+ prod(matrix_rotation_RT,vector_tracking_error_dotew);
+
+	vector_sliding_surface_s = vector_contour_error_dotel+prod(matrix_SLMCC_gain_lambda,vector_contour_error_el);
+
+	matrix_SLMCC_sign_L(0,0) = Rmsign(vector_sliding_surface_s(0));
+	matrix_SLMCC_sign_L(1,1) = Rmsign(vector_sliding_surface_s(1));
+	matrix_SLMCC_sign_L(2,2) = Rmsign(vector_sliding_surface_s(2));
+
+	EstimateFrictionValue();
+
+	// Disturbance estimation
+
+	switch (m_iSelectedDisturbanceObserver)
+	{
+	case 0: // No disturbance observer
+		vector_estimated_disturbance_d.clear(); 
+		break;
+	case 1: // Disturbance estimated on Mqdot , velovity error estimation Conventional one
+		vector_temporary = prod(matrix_estimated_weight_M,vector_desired_velocity_dotqd);
+		vector_temporary = prod(matrix_disturbance_gain_Kd,vector_temporary);
+		vector_estimated_disturbance_d = vector_temporary;// save -KdM_hatq_dot in vector_estimated_disturbance_d
+		vector_temporary = vector_control_force_fu-vector_estimated_friction_ff-vector_estimated_gravitational_force_g-vector_disturbance_estimator_de+vector_temporary;
+		vector_temporary = prod(matrix_disturbance_gain_Kd,vector_temporary);
+		vector_disturbance_estimator_de =vector_disturbance_estimator_de+(float)m_fSampTime*vector_temporary;
+		vector_estimated_disturbance_d = vector_disturbance_estimator_de-vector_estimated_disturbance_d;
+		break;
+	case 2:  // Disturbance estimated on qddot acceleration error estimation One
+		vector_estimated_disturbance_d.clear(); 
+
+		break;
+	case 3:  // Adaptive friction compensation 
+		//vector_temporary = prod(matrix_estimated_weight_M,vector_real_velocity_dotq);
+		vector_temporary = prod(matrix_disturbance_gain_Kd,vector_desired_velocity_dotqd);
+		vector_estimated_disturbance_d = vector_temporary;// save -KdM_hatq_dot in vector_estimated_disturbance_d
+		vector_temporary = vector_control_force_fu-vector_estimated_friction_ff -prod(matrix_estimated_weight_M,vector_desired_acceleration_ddotqd)
+										-vector_estimated_gravitational_force_g-vector_disturbance_estimator_de+vector_temporary;
+		vector_temporary = prod(matrix_disturbance_gain_Kd,vector_temporary);
+		vector_disturbance_estimator_de =vector_disturbance_estimator_de+(float)m_fSampTime*vector_temporary;
+		vector_estimated_disturbance_d = vector_disturbance_estimator_de-vector_estimated_disturbance_d;
+		break;
+	default:
+		break;
+	}
+
+
+//  	vector_disturbance_estimator_de = vector_disturbance_estimator_de+ prod(matrix_disturbance_gain_Kd,(vector_control_force_fu-vector_estimated_friction_ff-
+//  	vector_estimated_gravitational_force_g-vector_disturbance_estimator_de+prod(matrix_disturbance_gain_Kd,prod(matrix_estimated_weight_M,vector_desired_velocity_dotqd))));
+//  	vector_estimated_disturbance_d = vector_disturbance_estimator_de- prod(matrix_disturbance_gain_Kd,prod(matrix_estimated_weight_M,vector_desired_velocity_dotqd));
+
+
+
+	vector_estimated_control_force_fu =  prod(matrix_estimated_weight_M,vector_desired_acceleration_ddotqd)+vector_estimated_friction_ff+vector_estimated_gravitational_force_g+vector_estimated_disturbance_d;
+
+	vector_temporary = prod(matrix_rotation_RT,vector_tracking_error_ew);
+	vector_temporary = prod(matrix_SLMCC_gain_lambda,vector_temporary);
+	vector_temporary = vector_temporary+prod(matrix_rotation_ddotRT,vector_tracking_error_ew)+2.0*prod(matrix_rotation_dotRT,vector_tracking_error_dotew);
+	vector_temporary = prod(matrix_rotation_R,vector_temporary);
+	vector_temporary = vector_desired_acceleration_ddotqd-vector_temporary;
+	vector_temporary = prod(matrix_estimated_weight_M,vector_temporary);
+//	vector_control_force_fu = vector_temporary;
+
+	vector_control_force_fu = vector_temporary+vector_estimated_friction_ff+vector_estimated_gravitational_force_g+vector_estimated_disturbance_d;
+	vector_temporary = prod(matrix_SLMCC_gain_A,vector_sliding_surface_s);
+	
+	vector_control_force_fu = vector_control_force_fu- prod(matrix_rotation_R,vector_temporary);
 	
 
+	vector_temporary = prod(matrix_SLMCC_sign_L,vector_SLMCC_gain_k);
+	vector_control_force_fu = vector_control_force_fu- prod(matrix_rotation_R,vector_temporary);
+	vector_switching_force = prod(matrix_rotation_R,vector_temporary);
 
+// 	vector_control_force_fu =  prod(matrix_estimated_weight_M,(vector_desired_acceleration_ddotqd-prod(matrix_rotation_R,(prod(matrix_SLMCC_gain_lambda,prod(trans(matrix_rotation_R),vector_tracking_error_ew))+
+// 		prod(trans(matrix_rotation_ddotR),vector_tracking_error_ew)+2.0*prod(trans(matrix_rotation_dotR),vector_tracking_error_dotew)))))+
+// 		vector_estimated_friction_ff+vector_estimated_gravitational_force_g+vector_estimated_disturbance_d-
+// 		prod(matrix_rotation_R,prod(matrix_SLMCC_gain_A,vector_sliding_surface_s))-prod(matrix_rotation_R,prod(matrix_SLMCC_sign_L,vector_SLMCC_gain_k));
+
+
+	// Simple PD Controller
+// 	vector_control_force_fu = prod(matrix_estimated_weight_M,vector_desired_acceleration_ddotqd)+
+// 		vector_estimated_friction_ff+vector_estimated_gravitational_force_g+
+// 		prod(matrix_estimated_weight_M,-prod(matrix_TC_gain_Kp,vector_tracking_error_ew)-prod(matrix_TC_gain_Kd,vector_tracking_error_dotew));
+	// Out put control voltage to X,Y,Z only
+	for (int i=0;i<3;i++)
+	{
+		if (fabs(vector_control_force_fu(i))>MAXCONTROLFORCE)
+			vector_control_force_fu(i) = Rmsign(vector_control_force_fu(i))*MAXCONTROLFORCE;
+	}
+// 	vector_control_force_fu(0) = 0.0;
+// 	vector_control_force_fu(1) = 0.0;
+// 	vector_control_force_fu(2) = 0.0;
+
+	vec_OutputControl(0) = vector_control_force_fu(0);
+	vec_OutputControl(1) = vector_control_force_fu(1);
+	vec_OutputControl(3) = vector_control_force_fu(2);
+	//	vec_OutputControl(3) = -vec_OutputControl(3);
+	//	vec_OutputControl(1) = -vec_OutputControl(1);
+	// no control motor Y2, A2 
+	// 		prod(mt_M,vec_refr_2-prod(mt_Kvw,vec_ew_1)-prod(mt_Kpw,vec_ew))
+	//  		+prod(mt_Kc,vec_realx_1);
+
+
+	// 	m_strDebugString = "vec_refr_2(0)"+ System::Convert::ToString(RmLabCNC::vec_refr_2(0))
+	// 		+"vec_refr_2(1)"+ System::Convert::ToString(RmLabCNC::vec_refr_2(1))
+	// 		+"vec_realx_1(0)"+ System::Convert::ToString(RmLabCNC::vec_realx_1(0))
+	// 		+"vec_realx_1(1)"+ System::Convert::ToString(RmLabCNC::vec_realx_1(1));
 }
 void FiveAxisCNC::CoefficientFilter(void)
 {
@@ -327,188 +805,28 @@ void FiveAxisCNC::CoefficientFilter(void)
 		}
 	}
 
-}
-double FiveAxisCNC::gaussian(double x, double pos, double wid)
-{
-	//%  gaussian(x,pos,wid) = gaussian peak centered on pos, half-width=wid
-	//%  x may be scalar, vector, or matrix, pos and wid both scalar
-	//%  T. C. O'Haver, 1988
-	//% Example: gaussian([1 2 3],1,2) gives result [0.5000    1.0000    0.5000]
-	return exp(-((x-pos)/(0.6005612*wid))*((x-pos)/(0.6005612*wid)));
-}
-void FiveAxisCNC::CalculatePredictedFriction(void)
-{
-	int i=0,j=0;
-//	vec_Selectx_1
-	switch (m_iFrictionType)
-	{
-	case 0: // No friction compensation
-		for (i=0;i<NUMBERAXIS;i++)
-		{
-			vec_PredictedFriction(i) = 0;
-		}
-		break;
-	case 1:     // Static friction (Stribek, Couloumb, viscous ) 
-
-//		mt_StaticFricData(NUM_COUNTER*2,NFRICTIONDATA)  (2,4) [(Forward,backward), (Coulomb, Stribek, StribekVelocity, Viscousity)]
-
-		for (i=0; i<NUMBERAXIS; i++)
-		{
-			if (vec_Selectx_1(i)>=0)
-			{
-				vec_PredictedFriction(i) =  mt_StaticFricData(i*2,0)+
-											(mt_StaticFricData(i*2,1)-mt_StaticFricData(i*2,0))*exp(-mt_StaticFricData(i*2,2)*mt_StaticFricData(i*2,2)*vec_Selectx_1(i)*vec_Selectx_1(i))
-											+mt_StaticFricData(i*2,3)*vec_Selectx_1(i);
-			} 
-			else
-			{
-				vec_PredictedFriction(i) =  -mt_StaticFricData(i*2+1,0)-
-					(mt_StaticFricData(i*2+1,1)-mt_StaticFricData(i*2+1,0))*exp(-mt_StaticFricData(i*2+1,2)*mt_StaticFricData(i*2+1,2)*vec_Selectx_1(i)*vec_Selectx_1(i))
-					+mt_StaticFricData(i*2+1,3)*vec_Selectx_1(i);
-			}
-		}
-
-		break;
-	case 2:     // Dynamic friction (General maxwell slip model) 
-		for (i=0; i<NUMBERAXIS; i++)
-		{
-			vec_PredictedFriction(i) = 0.0;
-			if (fabs(vec_Selectx_1(i))>vec_SlidingVel(i))// Sliding regime  Use static friction model
-			{
-				if (vec_Selectx_1(i)>=0)
-				{
-					vec_PredictedFriction(i) =  mt_StaticFricData(i*2,0)+
-						(mt_StaticFricData(i*2,1)-mt_StaticFricData(i*2,0))*exp(-mt_StaticFricData(i*2,2)*mt_StaticFricData(i*2,2)*vec_Selectx_1(i)*vec_Selectx_1(i))
-						+mt_StaticFricData(i*2,3)*vec_Selectx_1(i);
-				} 
-				else
-				{
-					vec_PredictedFriction(i) =  -mt_StaticFricData(i*2+1,0)-
-						(mt_StaticFricData(i*2+1,1)-mt_StaticFricData(i*2+1,0))*exp(-mt_StaticFricData(i*2+1,2)*mt_StaticFricData(i*2+1,2)*vec_Selectx_1(i)*vec_Selectx_1(i))
-						+mt_StaticFricData(i*2+1,3)*vec_Selectx_1(i);
-				}
-			}else  // PreSliding regime  Use General maxwell slip model
-			{
-				if (vec_Selectx_1(i)>=0)
-				{
-					for (j=0;j<vec_GMSElement(i);j++)///vec_GMSElement(i) =  (Number element on axis i).
-					{
-						if (mt_GMSForceF(i,j)<mt_GMSForceW(i,j))
-						{
-							mt_GMSForceF(i,j) = mt_GMSForceF(i,j)+m_fSampTime*mt_GMSStiffK(i,j)*vec_Selectx_1(i);
-						}
-						vec_PredictedFriction(i) = vec_PredictedFriction(i)+ mt_GMSForceF(i,j);
-					}
-				} 
-				else
-				{
-					for (j=0;j<vec_GMSElement(i);j++)///mt_GMSModel  (Axis 1..i,Number element, Element 1...
-					{
-						if (mt_GMSForceF(i,j)> (-mt_GMSForceW(i,j)))
-						{
-							mt_GMSForceF(i,j) = mt_GMSForceF(i,j)+m_fSampTime*mt_GMSStiffK(i,j)*vec_Selectx_1(i);
-						}
-						vec_PredictedFriction(i) = vec_PredictedFriction(i)+ mt_GMSForceF(i,j);
-					}
-				}
-
-			}
-		}
-		break;
-	case 3:     // Static nonlinear friction (Couloumb, viscous, nonlinear gaussians )  mt_PeakHeight,mt_PeakPos,mt_PeakWid,mt_NumberPeak,
-
-		for (i=0;i<NUMBERAXIS;i++)
-		{
-			
-			if (vec_Selectx_1(i)>=0)
-			{
-				vec_PredictedFriction(i) = vec_NominalFc(i)+vec_NominalFv(i)*vec_Selectx_1(i);
-				for (j=0;j<vec_NumberPeak(i*2);j++)
-				{
-					vec_PredictedFriction(i) = vec_PredictedFriction(i)+ mt_PeakHeight(i*2,j)*gaussian(vec_Selectx_1(i),mt_PeakPos(i*2,j),mt_PeakWid(i*2,j));
-				}
-			}
-			else
-			{
-				vec_PredictedFriction(i) = -vec_NominalFc(i)+vec_NominalFv(i)*vec_Selectx_1(i);
-				for (j=0;j<vec_NumberPeak(i*2+1);j++)
-				{
-					vec_PredictedFriction(i) = vec_PredictedFriction(i)+ mt_PeakHeight(i*2+1,j)*gaussian(vec_Selectx_1(i),mt_PeakPos(i*2+1,j),mt_PeakWid(i*2+1,j));
-				}
-			}
-
-		}
-
-		break;
-	}
-}
-void FiveAxisCNC::CalculatePredictedDisturbance(void)
-{
-	int i=0;
-	switch (m_iDOBModel) // Calculate disturbance base on different disturbance observer 
-	{
-	case 0:  // No disturbance observer
-		for (i=0;i<NUMBERAXIS;i++)
-		{
-			vec_DOBd(i) = 0;
-		}
-		break;
-	case 1:  // General disturbance observer
-		vec_DOBew_1 = vec_DOBEstimatedx_1 - vec_realx_1;
-		vec_DOBd = vec_DOBd + ((float)m_fSampTime) * prod(mt_DOBKd,vec_DOBew_1);
-//		vec_DOBd = vec_DOBd + (m_fSampTime) * prod(mt_DOBKd,vec_DOBew_1);
-		break;
-	case 2:  // Disturbance observer use Kalman filter
-// 		for (i=1;i<NUMBERAXIS;i++)
-// 		{
-// 			vec_DOBd(i) = 0;
-// 		}
-//		vec_KalmanState(0)= vec_KalmanEsX(i);
-		vec_KalmanMesured(0)= vec_realx(0);
-		vec_KalmanMesured(1)= vec_realx_1(0);
-		vec_KalmanMesured(2)= vec_DOBd(0);
-
-// 		vec_KalmanState = prod(prod((mt_KalmanIX-prod(mt_KalmanKobsX,mt_KalmanCX)),mt_KalmanAX),vec_KalmanState)+
-// 						 prod((mt_KalmanIX-prod(mt_KalmanKobsX,mt_KalmanCX)),vec_KalmanState)*vec_OutputControl(0);vec_KalmanBX
-
-		vec_KalmanState = prod(prod((mt_KalmanIX-prod(mt_KalmanKobsX,mt_KalmanCX)),mt_KalmanAX),vec_KalmanState)+
-							prod((mt_KalmanIX-prod(mt_KalmanKobsX,mt_KalmanCX)),vec_KalmanBX)*(vec_OutputControl(0)-vec_PredictedFriction(0))+
-							prod(mt_KalmanKobsX,vec_KalmanMesured);	
-
-		vec_DOBd(0) = -vec_KalmanState(2);
-
-		break;
-	}
-
-}
-void FiveAxisCNC::UpdateDisturbanceObserverParameter(void)
-{
-	switch (m_iDOBModel) // Calculate disturbance base on different disturbance observer 
-	{
-	case 0:  // No disturbance observer
-		break;
-	case 1:  // General disturbance observer
-		vec_DOBEstimatedx_1 = vec_realx_1+((float)m_fSampTime)*(prod(mt_DOBKv,vec_DOBew_1)+prod(mt_1_M,vec_OutputControl-vec_PredictedFriction-vec_DOBd));
-		break;
-	case 2:  // Disturbance observer use Kalman filter
-		break;
-	}
-
-}
-void FiveAxisCNC::CalculateDisturbanceObserve(void)
-{
+	
 
 }
 void FiveAxisCNC::ResetReferenceData(void)
 {
+
 	vec_refr.clear();vec_Pre_refr.clear();
 	vec_refr_1.clear();vec_Pre_refr_1.clear();
+	vector_desired_velocity_dotqd.clear();
+	vector_desired_position_qd.clear();
+	vector_previous_desired_position_qd.clear();
+	vector_previous_desired_velocity_dotqd.clear();
 }
 void FiveAxisCNC::ResetRealData(void)
 {
 	vec_realx.clear();vec_Pre_realx.clear();
 	vec_realx_1.clear();vec_Pre_realx_1.clear();
-	vec_realx_2.clear();;
+	vec_realx_2.clear();
+
+	vector_real_position_q.clear();
+	vector_previous_real_position_q.clear();
+	vector_real_velocity_dotq.clear();
 }
 void FiveAxisCNC::CalulateReferenceData(void)
 {
@@ -564,174 +882,138 @@ void FiveAxisCNC::CalculateRealPostisionData(void)
 	vec_realx_1 = (vec_realx - vec_Pre_realx)/(float)m_fSampTime;//  mm/s
 	vec_realx_2 = (vec_realx_1 - vec_Pre_realx_1)/(float)m_fSampTime;///m_fSampTime; 
 }
-void FiveAxisCNC::InitNonlinearFrictionData(System::String^ fileNLF)
+double FiveAxisCNC::gaussian(double x, double pos, double wid)
 {
-	int i=0,j=0;
-
-	try
-	{
-		FileStream^ BinaryDataFileStream = gcnew FileStream(fileNLF, FileMode::Open);
-		BinaryReader^ BinaryDataReader = gcnew BinaryReader(BinaryDataFileStream);
-
-//	while (BinaryDataReader->BaseStream->Position < BinaryDataReader->BaseStream->Length)
-		{
-			
-			for (i=0;i<NUMBERAXIS;i++)
-			{
-				vec_NominalFc(i) = BinaryDataReader->ReadDouble(); // Read nominal Couloumb Friction
-				vec_NominalFv(i) = BinaryDataReader->ReadDouble(); // Read nominal viscous coefficient
-
-				vec_NumberPeak(i*2)=BinaryDataReader->ReadByte();
-				for (j=0;j<((int)vec_NumberPeak(i*2));j++)
-				{
-					mt_PeakHeight(i*2,j) = BinaryDataReader->ReadDouble();
-					mt_PeakPos(i*2,j) = BinaryDataReader->ReadDouble();
-					mt_PeakWid(i*2,j) = BinaryDataReader->ReadDouble();
-				}
-				vec_NumberPeak(i*2+1)=BinaryDataReader->ReadByte();
-				for (j=0;j<((int)vec_NumberPeak(i*2+1));j++)
-				{
-					mt_PeakHeight(i*2+1,j) = BinaryDataReader->ReadDouble();
-					mt_PeakPos(i*2+1,j) = BinaryDataReader->ReadDouble();
-					mt_PeakWid(i*2+1,j) = BinaryDataReader->ReadDouble();
-				}
-			}
-				
-		}
-		//			Console::WriteLine(BinaryDataReader->ReadInt32().ToString());
-		BinaryDataFileStream->Close( );
-
-
-	}
-	catch (Exception^ e)
-	{
-		//		if (dynamic_cast<FileNotFoundException^>(e))
-		//			Console::WriteLine("File '{0}' not found", fileName);
-		//		else
-		//			Console::WriteLine("Exception: ({0})", e);
-		//		return -1;
-
-	}
+	//%  gaussian(x,pos,wid) = gaussian peak centered on pos, half-width=wid
+	//%  x may be scalar, vector, or matrix, pos and wid both scalar
+	//%  T. C. O'Haver, 1988
+	//% Example: gaussian([1 2 3],1,2) gives result [0.5000    1.0000    0.5000]
+	return exp(-((x-pos)/(0.6005612*wid))*((x-pos)/(0.6005612*wid)));
 }
-void FiveAxisCNC::InitGMSModelData(System::String^ fileGMS)
+void FiveAxisCNC::InitControllerParameters(System::String^ FileControllerParameters)
 {
 	int i=0,j=0;
 	try
 	{
-		FileStream^ BinaryDataFileStream = gcnew FileStream(fileGMS, FileMode::Open);
-		BinaryReader^ BinaryDataReader = gcnew BinaryReader(BinaryDataFileStream);
+		FileStream^ ControllerParametersFileStream = gcnew FileStream(FileControllerParameters, FileMode::Open);
+		BinaryReader^ ControllerParametersBinaryReader = gcnew BinaryReader(ControllerParametersFileStream);
 
-		//	while (BinaryDataReader->BaseStream->Position < BinaryDataReader->BaseStream->Length)
+	//	while (ControllerParametersBinaryReader->BaseStream->Position < ControllerParametersBinaryReader->BaseStream->Length)
 		{
-
-			for (i=0;i<NUMBERAXIS;i++)
+			// Read conventional system dynamic parameters and friction
+			ControllerParametersBinaryReader->ReadByte();  //  fwrite(FID_in,NumberAxis,'uint8');
+			for (i=0;i<SLMCCSIZE;i++)// Read conventional friction model
 			{
-				vec_SlidingVel(i)=BinaryDataReader->ReadDouble(); // Siliding regime velocity
-				vec_GMSElement(i)=BinaryDataReader->ReadByte(); // Number element of GMS model for axis i
-				for (j=0;j<((int)vec_GMSElement(i));j++)
+				matrix_weight_M(i,i)=  ControllerParametersBinaryReader->ReadDouble();
+				matrix_inverse_weight_M(i,i) = 1.0/matrix_weight_M(i,i);
+				matrix_viscous_friction_c(i,i) = ControllerParametersBinaryReader->ReadDouble();
+				vector_coulomb_friction_fcl(i) = ControllerParametersBinaryReader->ReadDouble();
+				vector_gravitational_force_g(i) = ControllerParametersBinaryReader->ReadDouble();
+
+				matrix_estimated_weight_M(i,i)=  ControllerParametersBinaryReader->ReadDouble();
+				matrix_inverse_estimated_weight_M(i,i) = 1.0/matrix_estimated_weight_M(i,i);
+				matrix_estimated_viscous_friction_c(i,i) = ControllerParametersBinaryReader->ReadDouble();
+				vector_estimated_coulomb_friction_fcl(i) = ControllerParametersBinaryReader->ReadDouble();
+				vector_estimated_gravitational_force_g(i) = ControllerParametersBinaryReader->ReadDouble();
+			}
+			//    Tracking controller gain 
+			for (i=0;i<SLMCCSIZE;i++)
+			{
+				matrix_TC_gain_Kp(i,i)= ControllerParametersBinaryReader->ReadDouble();
+				matrix_TC_gain_Kd(i,i)= ControllerParametersBinaryReader->ReadDouble();
+			}
+			//    Sliding model contouring controller gain
+			for (i=0;i<SLMCCSIZE;i++)
+			{
+				matrix_SLMCC_gain_lambda(i,i)= ControllerParametersBinaryReader->ReadDouble();
+				matrix_SLMCC_gain_A(i,i)= ControllerParametersBinaryReader->ReadDouble();
+				matrix_disturbance_gain_Kd(i,i)= ControllerParametersBinaryReader->ReadDouble();
+				vector_SLMCC_gain_k(i)= ControllerParametersBinaryReader->ReadDouble();
+			}
+
+			//NUM_ECCENTRICFRIC_DATA NUM_STRIBECKFRIC_DATA
+			//  the stribeck coulomb-viscous friction model parameters  3 Axis x 5 data parameter for each axis *************************************
+			for (i=0;i<SLMCCSIZE;i++)
+			{
+				for (j=0;j<NUM_STRIBECKFRIC_DATA ;j++)
 				{
-					mt_GMSForceW(i,j) = BinaryDataReader->ReadDouble();
-					mt_GMSStiffK(i,j) = BinaryDataReader->ReadDouble();
+					matrix_stribeck_friction(i,j) = ControllerParametersBinaryReader->ReadDouble();
+				}
+			}
+			//  Sinusoial profile coulomb-viscous-eccentric friction model parameters  3 Axis x 4 data parameter for each axis *************************************
+			for (i=0;i<SLMCCSIZE;i++)
+			{
+				for (j=0;j<NUM_ECCENTRICFRIC_DATA ;j++)
+				{
+					matrix_sinusoidal_friction(i,j) = ControllerParametersBinaryReader->ReadDouble();
 				}
 			}
 
+// 			//  Sinusoial profile Nonlinear friction model parameters  3 Axis x 20 data parameter for each axis *************************************
+// 			for (i=0;i<SLMCCSIZE;i++)
+// 			{
+// 				for (j=0;j<NUM_SINFRIC_DATA ;j++)
+// 				{
+// 					matrix_sinusoidal_friction(i,j) = ControllerParametersBinaryReader->ReadDouble();
+// 				}
+// 			}
+
+
+
+
+// 			//  Gaussians Nonlinear friction model parameters *************************************
+// 			for (i=0;i<SLMCCSIZE;i++)
+// 			{
+// 				matrix_nominal_viscous_friction_cn(i,i)= ControllerParametersBinaryReader->ReadDouble();
+// 				vector_nominal_coulomb_friction_fncl(i)= ControllerParametersBinaryReader->ReadDouble();
+// 				// Forward direction gaussian function parameters
+// 				matrix_number_peak(0,i) = ControllerParametersBinaryReader->ReadByte();  
+// 				for (j=0;j<matrix_number_peak(0,i) ;j++)
+// 				{
+// 
+// 					matrix_peak_height(i,j) = ControllerParametersBinaryReader->ReadDouble();
+// 					matrix_peak_position(i,j) = ControllerParametersBinaryReader->ReadDouble();
+// 					matrix_peak_width(i,j) = ControllerParametersBinaryReader->ReadDouble();
+// 				}
+// 				// Backward direction gaussian function parameters
+// 				matrix_number_peak(1,i) = ControllerParametersBinaryReader->ReadByte();
+// 				for (j=0;j<matrix_number_peak(1,i) ;j++)
+// 				{
+// 
+// 					matrix_peak_height(SLMCCSIZE+i,j) = ControllerParametersBinaryReader->ReadDouble();
+// 					matrix_peak_position(SLMCCSIZE+i,j) = ControllerParametersBinaryReader->ReadDouble();
+// 					matrix_peak_width(SLMCCSIZE+i,j) = ControllerParametersBinaryReader->ReadDouble();
+// 				}
+// 			}
+
+
+
 		}
-		//			Console::WriteLine(BinaryDataReader->ReadInt32().ToString());
-		BinaryDataFileStream->Close( );
+		ControllerParametersFileStream->Close();
+		m_strDebugString = m_strDebugString+ FileControllerParameters+ "Read ok";
 	}
 	catch (Exception^ e)
 	{
-		//		if (dynamic_cast<FileNotFoundException^>(e))
-		//			Console::WriteLine("File '{0}' not found", fileName);
-		//		else
-		//			Console::WriteLine("Exception: ({0})", e);
-		//		return -1;
+		m_strDebugString = m_strDebugString+ FileControllerParameters+ "Cant read"+e->ToString();
 	}
+
+
+
+   InitControlVariable();
+
+
+
 }
-void FiveAxisCNC::InitKalmanFilterModelData(System::String^ fileKalmanFilter)
-{
-	int i=0,j=0,k=0;
-
-	// Reset kalman filter
-		for (i=1;i<NUMBERAXIS;i++)
-		{
-			vec_DOBd(i) = 0;
-		}
-		vec_KalmanState.clear();
-
-	try
-	{
-		FileStream^ BinaryDataFileStream = gcnew FileStream(fileKalmanFilter, FileMode::Open);
-		BinaryReader^ BinaryDataReader = gcnew BinaryReader(BinaryDataFileStream);
-
-		//	while (BinaryDataReader->BaseStream->Position < BinaryDataReader->BaseStream->Length)
-		{
-			for (i=0;i<NUMBERAXIS;i++)
-			{
-// 				mt_KalmanIX.resize(NUMSTATE,NUMSTATE); //Kalman filter
-// 				mt_KalmanKobsX.resize(NUMSTATE,NUMMEASURED); 
-// 				mt_KalmanAX.resize(NUMSTATE,NUMSTATE); 
-// 				mt_KalmanBX.resize(NUMSTATE,1); 
-// 				mt_KalmanCX.resize(NUMMEASURED,NUMSTATE);    // (2,3)
-
-				for (j=0;j<NUMSTATE;j++)
-				{
-					for (k=0;k<NUMSTATE;k++)
-					{
-						mt_KalmanIX(j,k) = BinaryDataReader->ReadDouble();
-					}
-				}
-
-				for (j=0;j<NUMSTATE;j++)
-				{
-					for (k=0;k<NUMMEASURED;k++)
-					{
-						mt_KalmanKobsX(j,k) = BinaryDataReader->ReadDouble();
-					}
-				}
-
-				for (j=0;j<NUMSTATE;j++)
-				{
-					for (k=0;k<NUMSTATE;k++)
-					{
-						mt_KalmanAX(j,k) = BinaryDataReader->ReadDouble();
-					}
-				}
-
-				for (j=0;j<NUMSTATE;j++)
-				{
-					vec_KalmanBX(j) = BinaryDataReader->ReadDouble();
-				}
-
-				for (j=0;j<NUMMEASURED;j++)
-				{
-					for (k=0;k<NUMSTATE;k++)
-					{
-						mt_KalmanCX(j,k) = BinaryDataReader->ReadDouble();
-					}
-				}
-			}
-		}
-		//			Console::WriteLine(BinaryDataReader->ReadInt32().ToString());
-		BinaryDataFileStream->Close( );
-	}
-	catch (Exception^ e)
-	{
-		//		if (dynamic_cast<FileNotFoundException^>(e))
-		//			Console::WriteLine("File '{0}' not found", fileName);
-		//		else
-		//			Console::WriteLine("Exception: ({0})", e);
-		//		return -1;
-	}
-}
-void FiveAxisCNC::InitGlobalVariable(System::String^ FileGlobalVariable,System::String^ FileNonlinearFriction,System::String^ FileGMSModel)
+void FiveAxisCNC::InitGlobalVariable(System::String^ FileGlobalVariable) // Not using any more change to InitControllerParameters
 {
 //	System::String^ strRead,variableName,variableValue;
 	StreamReader^ GlobalVariableFileStream;
 	double m_fOmega0,m_fOmega1,m_fOmega2,m_fOmega3,m_fOmega4;
 // Default value if we can not find GlobalVariable.txt file
 	//m_fOmega0 = 120;m_fOmega1 = 100;  // High feedback gain
-	m_fOmega0 = 60;m_fOmega1 = 100; m_fOmega2 = 70; // Low feedback gain
+	//m_fOmega0 = 120;  unstable
+	//m_fOmega0 = 20;  stable
+	m_fOmega0 = 20;m_fOmega1 = 20; m_fOmega2 = 20; // Low feedback gain 
 	 m_fOmega3 = 30;  m_fOmega4 = 20; 
 	// 0    1    2   3   4   
 	// X    Y    Z   C   A
@@ -800,13 +1082,14 @@ void FiveAxisCNC::InitGlobalVariable(System::String^ FileGlobalVariable,System::
 		//			Console::WriteLine("problem reading file '{0}'", fileName);
 	}
 
-	InitNonlinearFrictionData(FileNonlinearFriction);
-	InitGMSModelData(FileGMSModel);
+
     InitControlVariable();
 
 }
 void FiveAxisCNC::InitControlVariable()
 {
+	vector_disturbance_estimator_de.clear();
+	ResetRealData();
 		m_fCNCStartX = 0.0;
 		m_fCNCStartY = 0.0;
 		m_fCNCStartZ = 0.0;
@@ -816,6 +1099,7 @@ void FiveAxisCNC::InitControlVariable()
 		m_CNCRefPos.X =  0.0;
 		m_CNCRefPos.Y =  0.0;
 		m_CNCRefPos.Z =  0.0;
+
 		m_fexpTnow = 0.0;
 		m_fexpRunT = 0.0;
 		m_fexpRunTPre = 0.0;
@@ -902,6 +1186,7 @@ void FiveAxisCNC::InitControlVariable()
 //		m_fCNCFeedRate = 0.0; // Give not zero value for avoid divide zero
 		m_fNextCNCFeedRate = 0.0;
 
+
 }
 void FiveAxisCNC::OpenGcodeFile(System::String^ FileGcodeProgram)
 {
@@ -949,34 +1234,74 @@ void FiveAxisCNC::OpenBinaryFile(System::String^ FileDataAnalysis)
 }
 void FiveAxisCNC::SaveDataToBinaryFile()
 {
-//			vec_realx = vec_refr;
+//			Old program
+// 			DataAnalysisBinaryWriter->Write(m_fexpTnowReal);
+// 			DataAnalysisBinaryWriter->Write(m_fexpTnowCounter);
+// 			DataAnalysisBinaryWriter->Write(vec_refr(0));
+// 			DataAnalysisBinaryWriter->Write(vec_refr(1));
+// 			DataAnalysisBinaryWriter->Write(vec_refr(3));
+// 			DataAnalysisBinaryWriter->Write(vec_refr(4));
+// 			DataAnalysisBinaryWriter->Write(vec_refr(5));
+// 			DataAnalysisBinaryWriter->Write(vec_realx(0));
+// 			DataAnalysisBinaryWriter->Write(vec_realx(1));
+// 			DataAnalysisBinaryWriter->Write(vec_realx(3));
+// 			DataAnalysisBinaryWriter->Write(vec_realx(4));
+// 			DataAnalysisBinaryWriter->Write(vec_realx(5));
+// 			DataAnalysisBinaryWriter->Write(vec_ew(0));//vec_ew(0)   vec_refr_1(0)
+// 			DataAnalysisBinaryWriter->Write(vec_ew(1));//vec_ew(1)
+// 			DataAnalysisBinaryWriter->Write(vec_ew(3));//vec_ew(3)
+// 			DataAnalysisBinaryWriter->Write(vec_ew(4));//vec_ew(3)
+// 			DataAnalysisBinaryWriter->Write(vec_ew(5));//vec_ew(3)
+// 			DataAnalysisBinaryWriter->Write(vec_OutputControl(0));
+// 			DataAnalysisBinaryWriter->Write(vec_OutputControl(1));
+// 			DataAnalysisBinaryWriter->Write(vec_OutputControl(3));
+// 			DataAnalysisBinaryWriter->Write(vec_OutputControl(4));
+// 			DataAnalysisBinaryWriter->Write(vec_OutputControl(5));
+// 			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(0));
+// 			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(1));
+// 			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(3));
+// 			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(4));
+// 			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(5));
+
+			//			new program
 			DataAnalysisBinaryWriter->Write(m_fexpTnowReal);
 			DataAnalysisBinaryWriter->Write(m_fexpTnowCounter);
-			DataAnalysisBinaryWriter->Write(vec_refr(0));
-			DataAnalysisBinaryWriter->Write(vec_refr(1));
-			DataAnalysisBinaryWriter->Write(vec_refr(3));
-			DataAnalysisBinaryWriter->Write(vec_refr(4));
-			DataAnalysisBinaryWriter->Write(vec_refr(5));
-			DataAnalysisBinaryWriter->Write(vec_realx(0));
-			DataAnalysisBinaryWriter->Write(vec_realx(1));
-			DataAnalysisBinaryWriter->Write(vec_realx(3));
-			DataAnalysisBinaryWriter->Write(vec_realx(4));
-			DataAnalysisBinaryWriter->Write(vec_realx(5));
-			DataAnalysisBinaryWriter->Write(vec_ew(0));//vec_ew(0)   vec_refr_1(0)
-			DataAnalysisBinaryWriter->Write(vec_ew(1));//vec_ew(1)
-			DataAnalysisBinaryWriter->Write(vec_ew(3));//vec_ew(3)
-			DataAnalysisBinaryWriter->Write(vec_ew(4));//vec_ew(3)
-			DataAnalysisBinaryWriter->Write(vec_ew(5));//vec_ew(3)
-			DataAnalysisBinaryWriter->Write(vec_OutputControl(0));
-			DataAnalysisBinaryWriter->Write(vec_OutputControl(1));
-			DataAnalysisBinaryWriter->Write(vec_OutputControl(3));
-			DataAnalysisBinaryWriter->Write(vec_OutputControl(4));
-			DataAnalysisBinaryWriter->Write(vec_OutputControl(5));
-			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(0));
-			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(1));
-			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(3));
-			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(4));
-			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(5));
+			DataAnalysisBinaryWriter->Write(vector_desired_position_qd(0));
+			DataAnalysisBinaryWriter->Write(vector_desired_position_qd(1));
+			DataAnalysisBinaryWriter->Write(vector_desired_position_qd(2));
+			DataAnalysisBinaryWriter->Write(vector_desired_position_qd(2));
+			DataAnalysisBinaryWriter->Write(vector_desired_position_qd(2));
+			DataAnalysisBinaryWriter->Write(vector_real_position_q(0));
+			DataAnalysisBinaryWriter->Write(vector_real_position_q(1));
+			DataAnalysisBinaryWriter->Write(vector_real_position_q(2));
+			DataAnalysisBinaryWriter->Write(vector_real_position_q(0));
+			DataAnalysisBinaryWriter->Write(vector_real_position_q(0));
+
+// 			DataAnalysisBinaryWriter->Write(vector_tracking_error_ew(0));//vec_ew(0)   vec_refr_1(0)    //vector_contour_error_el
+// 			DataAnalysisBinaryWriter->Write(vector_tracking_error_ew(1));//vec_ew(1)
+// 			DataAnalysisBinaryWriter->Write(vector_tracking_error_ew(2));//vec_ew(3)
+// 			DataAnalysisBinaryWriter->Write(vector_tracking_error_ew(2));//vec_ew(3)
+// 			DataAnalysisBinaryWriter->Write(vector_tracking_error_ew(2));//vec_ew(3)
+
+			DataAnalysisBinaryWriter->Write(vector_contour_error_el(0));//vec_ew(0)   vec_refr_1(0)    //vector_contour_error_el
+			DataAnalysisBinaryWriter->Write(vector_contour_error_el(1));//vec_ew(1)
+			DataAnalysisBinaryWriter->Write(vector_contour_error_el(2));//vec_ew(3)
+			DataAnalysisBinaryWriter->Write(vector_contour_error_el(2));//vec_ew(3)
+			DataAnalysisBinaryWriter->Write(vector_contour_error_el(2));//vec_ew(3)
+
+			DataAnalysisBinaryWriter->Write(vector_control_force_fu(0));
+			DataAnalysisBinaryWriter->Write(vector_control_force_fu(1));
+			DataAnalysisBinaryWriter->Write(vector_control_force_fu(2));
+			DataAnalysisBinaryWriter->Write(vector_control_force_fu(3));
+			DataAnalysisBinaryWriter->Write(vector_control_force_fu(4));
+			DataAnalysisBinaryWriter->Write(vector_estimated_control_force_fu(0));
+			DataAnalysisBinaryWriter->Write(vector_estimated_control_force_fu(1));
+			DataAnalysisBinaryWriter->Write(vector_estimated_control_force_fu(2));
+			DataAnalysisBinaryWriter->Write(vector_estimated_control_force_fu(3));
+			DataAnalysisBinaryWriter->Write(vector_estimated_control_force_fu(4));
+
+
+
 
 
 //			DataAnalysisBinaryWriter->Write(vec_realx_1(0));
@@ -999,12 +1324,19 @@ void FiveAxisCNC::GetNextPointRefInRegulation() {
 		m_fSampTime = 0.005;
 	}
 
-		vec_Pre_refr =vec_refr;
-		vec_refr(0) = m_CNCRefPos.X ;
-		vec_refr(1) = m_CNCRefPos.Y;
-		vec_refr(3) = m_CNCRefPos.Z;
-		vec_refr(4) = m_CNCRefPos.C;
-		vec_refr(5) = m_CNCRefPos.A;
+// 		vec_Pre_refr =vec_refr;
+// 		vec_refr(0) = m_CNCRefPos.X ;
+// 		vec_refr(1) = m_CNCRefPos.Y;
+// 		vec_refr(3) = m_CNCRefPos.Z;
+// 		vec_refr(4) = m_CNCRefPos.C;
+// 		vec_refr(5) = m_CNCRefPos.A;
+
+		vector_next_desired_position_data(0) =  m_CNCRefPos.X ;
+		vector_next_desired_position_data(1) =  m_CNCRefPos.Y;
+		vector_next_desired_position_data(3) =  m_CNCRefPos.Z;
+		vector_next_desired_position_data(4) =  m_CNCRefPos.C;
+		vector_next_desired_position_data(5) =  m_CNCRefPos.A;
+		SetRefPosition(vector_next_desired_position_data);
 }
 void FiveAxisCNC::GetNextPointRefInGCodePath() {
 	double referenceTime;
@@ -1087,11 +1419,13 @@ void FiveAxisCNC::GetNextPointRefInGCodePath() {
 			m_fMath_Theta = PI*m_fexpTnow/m_fMath_Time;
 			m_CNCRefPos.X =  cosf(m_fMath_Theta)*m_fMath_a*cosf(m_fMath_Theta)*(4*sinf(m_fMath_Theta)*sinf(m_fMath_Theta)-1)+ m_fMath_a;
 			m_CNCRefPos.Y =  sinf(m_fMath_Theta)*m_fMath_a*cosf(m_fMath_Theta)*(4*sinf(m_fMath_Theta)*sinf(m_fMath_Theta)-1);
+			m_CNCRefPos.Z =  m_CNCRefPos.X;
 			break;
 		case LISSAJOUS:
 			m_fMath_Theta = 2*PI*m_fexpTnow/m_fMath_Time;
 			m_CNCRefPos.X =  m_fMath_a*sinf(m_fMath_n*m_fMath_Theta + m_fMath_c)-m_fMath_a*sinf(m_fMath_c);
 			m_CNCRefPos.Y =  m_fMath_b*sinf(m_fMath_Theta);
+			m_CNCRefPos.Z =  m_fMath_b*sinf(m_fMath_Theta);
 			break;
 		case TUNINGPROCESS:
 //			m_fMath_Theta = 2*PI*m_fexpTnow/m_fMath_Time;
@@ -1101,6 +1435,13 @@ void FiveAxisCNC::GetNextPointRefInGCodePath() {
 			if (m_iTuningMotor == LINEAR_MOTOR_C){  m_CNCRefPos.C =  m_fMath_r*cosf(m_fMath_w*m_fexpTnow)-m_fMath_r;};
 			if (m_iTuningMotor == LINEAR_MOTOR_A1){  m_CNCRefPos.A =  m_fMath_r*cosf(m_fMath_w*m_fexpTnow)-m_fMath_r;};
 			break;
+		case CURVE3D:
+			m_fMath_Theta = m_fMath_b*2*PI*m_fexpTnow/m_fMath_Time;
+			m_CNCRefPos.X =  m_fMath_a*cosf(m_fMath_Theta)-m_fMath_a;
+			m_CNCRefPos.Y =  m_fMath_a*sinf(m_fMath_Theta);
+			m_CNCRefPos.Z =  m_fMath_a*sinf(m_fMath_Theta);
+			//m_CNCRefPos.Z =  0.0;//m_fMath_a*sinf(m_fMath_Theta);
+			break;
 		default:
 			break;
 		}
@@ -1108,6 +1449,14 @@ void FiveAxisCNC::GetNextPointRefInGCodePath() {
 	default:
 		;//;
 	}
+	
+	vector_next_desired_position_data(0) =  m_CNCRefPos.X ;
+	vector_next_desired_position_data(1) =  m_CNCRefPos.Y;
+	vector_next_desired_position_data(3) =  m_CNCRefPos.Z;
+	vector_next_desired_position_data(4) =  m_CNCRefPos.C;
+	vector_next_desired_position_data(5) =  m_CNCRefPos.A;
+	SetRefPosition(vector_next_desired_position_data);
+
 		if ((m_fexpTnow+m_fexpRunTPre)>(m_fexpRunT+DOUBLE_TOLERANCE))
 		{
 			if (!m_bNextGcodeFINISH)
@@ -1116,13 +1465,13 @@ void FiveAxisCNC::GetNextPointRefInGCodePath() {
 			m_bPathFinish = TRUE;
 			// 		m_CNCRefPos.X = m_fCNCEndX;
 			// 		m_CNCRefPos.Y = m_fCNCEndY;
-			vec_Pre_refr =vec_refr;
-			//		theta = m_fOmg*m_fexpTnow;
-			vec_refr(0) = m_CNCRefPos.X ;
-			vec_refr(1) = m_CNCRefPos.Y;
-			vec_refr(3) = m_CNCRefPos.Z;
-			vec_refr(4) = m_CNCRefPos.C;
-			vec_refr(5) = m_CNCRefPos.A;
+// 			vec_Pre_refr =vec_refr;
+// 			//		theta = m_fOmg*m_fexpTnow;
+// 			vec_refr(0) = m_CNCRefPos.X ;
+// 			vec_refr(1) = m_CNCRefPos.Y;
+// 			vec_refr(3) = m_CNCRefPos.Z;
+// 			vec_refr(4) = m_CNCRefPos.C;
+// 			vec_refr(5) = m_CNCRefPos.A;
 			// 		GenerateReferenceData();// Also done in GetNextRef();
 			//  		GetRealPostisionData();
 			m_fexpTnow = m_fexpTnowReal-m_fexpRunT;
@@ -1131,24 +1480,30 @@ void FiveAxisCNC::GetNextPointRefInGCodePath() {
 			}else
 			{
 				m_bGcodeFINISH = TRUE;
-				vec_refr(0) = m_fCNCEndX ;
-				vec_refr(1) = m_fCNCEndY;
-				vec_refr(3) = m_fCNCEndZ;
-				vec_refr(4) = m_fCNCEndC;
-				vec_refr(5) = m_fCNCEndA;
+// 				vec_refr(0) = m_fCNCEndX ;
+// 				vec_refr(1) = m_fCNCEndY;
+// 				vec_refr(3) = m_fCNCEndZ;
+// 				vec_refr(4) = m_fCNCEndC;
+// 				vec_refr(5) = m_fCNCEndA;
+// 				vec_refr(0) = m_CNCRefPos.X ;
+// 				vec_refr(1) = m_CNCRefPos.Y;
+// 				vec_refr(3) = m_CNCRefPos.Z;
+// 				vec_refr(4) = m_CNCRefPos.C;
+// 				vec_refr(5) = m_CNCRefPos.A;
 			}
 		}
-		else
-		{
-			//		theta = m_fOmg*m_fexpTnow;
-			vec_Pre_refr =vec_refr;
-			vec_refr(0) = m_CNCRefPos.X ;
-			vec_refr(1) = m_CNCRefPos.Y;
-			vec_refr(3) = m_CNCRefPos.Z;
-			vec_refr(4) = m_CNCRefPos.C;
-			vec_refr(5) = m_CNCRefPos.A;
-		}	
+// 		else
+// 		{
+// 			//		theta = m_fOmg*m_fexpTnow;
+// 			vec_Pre_refr =vec_refr;
+// 			vec_refr(0) = m_CNCRefPos.X ;
+// 			vec_refr(1) = m_CNCRefPos.Y;
+// 			vec_refr(3) = m_CNCRefPos.Z;
+// 			vec_refr(4) = m_CNCRefPos.C;
+// 			vec_refr(5) = m_CNCRefPos.A;
+// 		}	
 }
+
 double FiveAxisCNC::GetGcodeVariableValue(System::String^  gcodeString,unsigned int &indexStart)
 {
 	System::String^ stringNumber;
@@ -1205,6 +1560,7 @@ bool FiveAxisCNC::AnalyseNextGcodeLine(System::String^ strGcodeLine)
 				if (tempGcmd == 62)  // Mathematical Curve machining detected
 				{
 					m_bMathematicalCurve = TRUE;
+					IsNextGcodeMovement = TRUE;
 					m_iNextMoveType =4; // Mathematical Curve machining detected
 				}
 				if (tempGcmd == 63)  // Mathematical Curve machining detected
@@ -1249,15 +1605,28 @@ bool FiveAxisCNC::AnalyseNextGcodeLine(System::String^ strGcodeLine)
 				}
 				break;
 			case 'C':
-
-				//			m_fCNCEndZ =(int)GetGcodeVariableValue(strRead, index);
-			    m_fNextCNCEndC =GetGcodeVariableValue(strGcodeLine, index);
-				IsNextGcodeMovement = TRUE;
-
-				if (m_iMathCurveNumber == TUNINGPROCESS)
+				if (!m_bMathematicalCurve)
 				{
-					m_fMath_r = m_fNextCNCEndC;
-					m_iTuningMotor = LINEAR_MOTOR_C;
+					//			m_fCNCEndZ =(int)GetGcodeVariableValue(strRead, index);
+					m_fNextCNCEndC =GetGcodeVariableValue(strGcodeLine, index);
+					IsNextGcodeMovement = TRUE;
+
+					if (m_iMathCurveNumber == TUNINGPROCESS)
+					{
+						m_fMath_r = m_fNextCNCEndC;
+						m_iTuningMotor = LINEAR_MOTOR_C;
+					}
+				}else
+				{
+					if (strGcodeLine[index+1]=='U') //Figure 3D Curve CUR
+					{
+						index = index +3;
+						m_iMathCurveNumber = CURVE3D;
+					}
+					else
+					{
+						index = index +1;
+					}
 				}
 				break;
 			case 'A':
@@ -1272,7 +1641,6 @@ bool FiveAxisCNC::AnalyseNextGcodeLine(System::String^ strGcodeLine)
 					m_iTuningMotor = LINEAR_MOTOR_A1;
 				}
 				break;
-
 			case 'I':
 
 				m_fNextCNCI = GetGcodeVariableValue(strGcodeLine, index);
@@ -1284,17 +1652,9 @@ bool FiveAxisCNC::AnalyseNextGcodeLine(System::String^ strGcodeLine)
 				IsNextGcodeMovement = TRUE;
 				break;
 			case 'R':
-				if (strGcodeLine[index+1]=='E')
-				{
-					index = index +1;
-					m_fMath_Repeat =GetGcodeVariableValue(strGcodeLine, index);
-				} else
-				{
-					m_fNextCNCRadius = GetGcodeVariableValue(strGcodeLine, index);
-					IsNextGcodeMovement = TRUE;	
-				}
 
-
+				m_fNextCNCRadius = GetGcodeVariableValue(strGcodeLine, index);
+				IsNextGcodeMovement = TRUE;
 				break;
 			case 'M':
 
@@ -1343,7 +1703,7 @@ bool FiveAxisCNC::AnalyseNextGcodeLine(System::String^ strGcodeLine)
 				if (m_iMathCurveNumber == TUNINGPROCESS)
 				{
 					m_fMath_w = GetGcodeVariableValue(strGcodeLine, index);
-					m_fMath_Time = m_fMath_Repeat*2.0*PI/m_fMath_w;// Repeat turning process in to m_fMath_Repeat time
+					m_fMath_Time = 2.0*PI/m_fMath_w;
 				}
 				//			m_fGcodeS = GetGcodeVariableValue(strRead, index);
 
@@ -1584,7 +1944,7 @@ void FiveAxisCNC::GetNextGCodeLine()
 	m_fOmg = m_fNextOmg;
 	m_fCNCFeedRate = m_fNextCNCFeedRate;
 
-	m_fAccFirstTime = m_fNextAccFirstTime;
+//	m_fAccFirstTime = m_fNextAccFirstTime;
 	m_fCNCPH = m_fNextCNCPH;
 	m_fCNCPE = m_fNextCNCPE;
 //	m_fStartddotOmg = m_fNextStartddotOmg;
@@ -1638,7 +1998,7 @@ void FiveAxisCNC::GetNextGCodeLine()
 				if (m_fCNCFeedRate > DOUBLE_TOLERANCE)
 				{
 					m_fAccEndTime = m_fAccFirstTime+ (sqrtf((m_fCNCEndX-m_fCNCPosTwoX)*(m_fCNCEndX-m_fCNCPosTwoX)
-						+(m_fCNCEndY-m_fCNCPosTwoY)*(m_fCNCEndY-m_fCNCPosTwoY))) /m_fCNCFeedRate;
+						+(m_fCNCEndY-m_fCNCPosTwoY)*(m_fCNCEndY-m_fCNCPosTwoY)+(m_fCNCEndZ-m_fCNCPosTwoZ)*(m_fCNCEndZ-m_fCNCPosTwoZ))) /m_fCNCFeedRate;
 				}else
 				{
 					m_fAccEndTime = m_fAccFirstTime;
@@ -1668,7 +2028,7 @@ void FiveAxisCNC::GetNextGCodeLine()
 				if (m_fCNCFeedRate > DOUBLE_TOLERANCE)
 				{
 					m_fAccEndTime = m_fAccFirstTime+ (sqrtf((m_fCNCEndX-m_fCNCPosTwoX)*(m_fCNCEndX-m_fCNCPosTwoX)
-						+(m_fCNCEndY-m_fCNCPosTwoY)*(m_fCNCEndY-m_fCNCPosTwoY))) /m_fCNCFeedRate;
+						+(m_fCNCEndY-m_fCNCPosTwoY)*(m_fCNCEndY-m_fCNCPosTwoY)+(m_fCNCEndZ-m_fCNCPosTwoZ)*(m_fCNCEndZ-m_fCNCPosTwoZ))) /m_fCNCFeedRate;
 				}else
 				{
 					m_fAccEndTime = m_fAccFirstTime;
@@ -2416,9 +2776,38 @@ void FiveAxisCNC::SendOutputControl()
 {
 	IOModule.OutputAllMotor(vec_OutputControl);
 }
-vector<double> FiveAxisCNC::GetOutputControl()
+void FiveAxisCNC::SendOutputToVirtualSystem()
 {
-	return vec_OutputControl;
+	
+	vector_real_velocity_dotq = vector_real_velocity_dotq+ (float)m_fSampTime*prod(matrix_inverse_weight_M,(vector_control_force_fu-
+						prod(matrix_sign_real_velocity_dotq,vector_coulomb_friction_fcl)-prod(matrix_viscous_friction_c,vector_real_velocity_dotq)-vector_gravitational_force_g));
+	vector_previous_real_position_q = vector_real_position_q;
+	vector_real_position_q = vector_real_position_q+ (float)m_fSampTime*vector_real_velocity_dotq;
+
+	m_CNCRealPos.X = vector_real_position_q(0);
+	m_CNCRealPos.Y = vector_real_position_q(1);
+	m_CNCRealPos.Z = vector_real_position_q(2);
+
+}
+String^ FiveAxisCNC::DebugDataString()
+{
+//	Read MX , gainlandaX, nomial coulombx"
+
+//   m_strDebugString = "matrix_weight_M(2,2)--"+ m_strDebugString+ System::Convert::ToString(matrix_weight_M(2,2))+" "+ System::Convert::ToString(matrix_viscous_friction_c(0,0))+" "+ System::Convert::ToString(vector_nominal_coulomb_friction_fncl(0));
+
+	m_strDebugString = m_strDebugString+"gama0--"+ System::Convert::ToString(matrix_TC_gain_Kp(1,1))+" "+"gama1--"+ System::Convert::ToString(matrix_stribeck_friction(1,1))+" "+"gama2--"+ System::Convert::ToString(matrix_sinusoidal_friction(1,2))+" ";
+	
+	
+	
+	return m_strDebugString;
+}
+void FiveAxisCNC::SpinStart(double OutputForce)
+{
+	IOModule.OutputOneMotor(3,OutputForce);
+}
+void FiveAxisCNC::SpinStop()
+{
+	IOModule.OutputOneMotor(3,0.0);
 }
 void FiveAxisCNC::CloseBinaryFile()
 {
@@ -2463,143 +2852,63 @@ void FiveAxisCNC::InitVariableName(System::String^ strName,double fValue)
 {
 
 	// Weight 
-	if (strName == "MX") {mt_M(0,0) = fValue;mt_1_M(0,0) = 1.0/fValue;}
-	if (strName == "MY1") {mt_M(1,1) = fValue;mt_1_M(1,1) = 1.0/fValue;}
-	if (strName == "MY2") {mt_M(2,2) = fValue;mt_1_M(2,2) = 1.0/fValue;}
-	if (strName == "MZ") {mt_M(3,3) = fValue;mt_1_M(3,3) = 1.0/fValue;}
-	if (strName == "MC") {mt_M(4,4) = fValue;mt_1_M(4,4) = 1.0/fValue;}
-	if (strName == "MA1"){ mt_M(5,5) = fValue;mt_1_M(5,5) = 1.0/fValue;}
-	if (strName == "MA2"){ mt_M(6,6) = fValue;mt_1_M(6,6) = 1.0/fValue;}
+	if (strName == "MX") mt_M(0,0) = fValue;
+	if (strName == "MY1") mt_M(1,1) = fValue;
+	if (strName == "MY2") mt_M(2,2) = fValue;
+	if (strName == "MZ") mt_M(3,3) = fValue;
+	if (strName == "MC") mt_M(4,4) = fValue;
+	if (strName == "MA1") mt_M(5,5) = fValue;
+	if (strName == "MA2") mt_M(6,6) = fValue;
 
-	// Frequency  Coefficient update
-	if (strName == "WX") {mt_Kvw(0,0) = fValue;mt_Kpw(0,0) = fValue*fValue;}
-	if (strName == "WY1"){mt_Kvw(1,1) = fValue;mt_Kpw(1,1) = fValue*fValue;}
-	if (strName == "WY2"){mt_Kvw(2,2) = fValue;mt_Kpw(2,2) = fValue*fValue;}
-	if (strName == "WZ") {mt_Kvw(3,3) = fValue;mt_Kpw(3,3) = fValue*fValue;}
-	if (strName == "WC") {mt_Kvw(4,4) = fValue;mt_Kpw(4,4) = fValue*fValue;}
-	if (strName == "WA1") {mt_Kvw(5,5) = fValue;mt_Kpw(5,5) = fValue*fValue;}
-	if (strName == "WA2"){mt_Kvw(6,6) = fValue;mt_Kpw(6,6) = fValue*fValue;}
 	// PID Coefficient update
-	if (strName == "Kpwx") {mt_Kpw(0,0) = mt_Kpw(0,0)*fValue;}
-	if (strName == "Kvwx") {mt_Kvw(0,0) = mt_Kvw(0,0)*fValue;}
-	if (strName == "Kiwx") {}
-	if (strName == "XDOBKd") {mt_DOBKd(0,0) = fValue;}
-	if (strName == "XDOBKv") {mt_DOBKv(0,0) = fValue;}
+	if (strName == "OmegaX") mt_M(6,6) = fValue;
+	if (strName == "OmegaY1") mt_M(6,6) = fValue;
+	if (strName == "Kpw") mt_M(6,6) = fValue;
+	if (strName == "Kvw") mt_M(6,6) = fValue;
+	if (strName == "Kiw") mt_M(6,6) = fValue;
 
-	if (strName == "Kpwy1") {mt_Kpw(1,1) = mt_Kpw(1,1)*fValue;}
-	if (strName == "Kvwy1") {mt_Kvw(1,1) = mt_Kvw(1,1)*fValue;}
-	if (strName == "Kiwy1") {}
-	if (strName == "Y1DOBKd") {mt_DOBKd(1,1) = fValue;}
-	if (strName == "Y2DOBKv") {mt_DOBKv(1,1) = fValue;}
-
-	if (strName == "Kpwy2") {mt_Kpw(2,2) = mt_Kpw(2,2)*fValue;}
-	if (strName == "Kvwy2") {mt_Kvw(2,2) = mt_Kvw(2,2)*fValue;}
-	if (strName == "Kiwy2") {}
-	if (strName == "Y2DOBKd") {mt_DOBKd(2,2) = fValue;}
-	if (strName == "Y2DOBKv") {mt_DOBKv(2,2) = fValue;}
-
-	if (strName == "Kpwz") {mt_Kpw(3,3) = mt_Kpw(3,3)*fValue;}
-	if (strName == "Kvwz") {mt_Kvw(3,3) = mt_Kvw(3,3)*fValue;}
-	if (strName == "Kiwz") {}
-	if (strName == "ZDOBKd") {mt_DOBKd(3,3) = fValue;}
-	if (strName == "ZDOBKv") {mt_DOBKv(3,3) = fValue;}
-
-	if (strName == "Kpwc") {mt_Kpw(4,4) = mt_Kpw(4,4)*fValue;}
-	if (strName == "Kvwc") {mt_Kvw(4,4) = mt_Kvw(4,4)*fValue;}
-	if (strName == "Kiwc") {}
-	if (strName == "CDOBKd") {mt_DOBKd(4,4) = fValue;}
-	if (strName == "CDOBKv") {mt_DOBKv(4,4) = fValue;}
-
-	if (strName == "Kpwa1") {mt_Kpw(5,5) = mt_Kpw(5,5)*fValue;}
-	if (strName == "Kvwa1") {mt_Kvw(5,5) = mt_Kvw(5,5)*fValue;}
-	if (strName == "Kiwa1") {}
-	if (strName == "A1DOBKd") {mt_DOBKd(5,5) = fValue;}
-	if (strName == "A1DOBKv") {mt_DOBKv(5,5) = fValue;}
-
-	if (strName == "Kpwa2") {mt_Kpw(6,6) = mt_Kpw(6,6)*fValue;}
-	if (strName == "Kvwa2") {mt_Kvw(6,6) = mt_Kvw(6,6)*fValue;}
-	if (strName == "Kiwa2") {}
-	if (strName == "A2DOBKd") {mt_DOBKd(6,6) = fValue;}
-	if (strName == "A2DOBKv") {mt_DOBKv(6,6) = fValue;}
 	// Change PID matrix
 // 	mt_Kpw(0,0) = m_fOmega0*m_fOmega0; mt_Kpw(1,1) = m_fOmega1*m_fOmega1;
 // 	mt_Kvw(0,0) = 2*m_fOmegaX; mt_Kvw(1,1) = 2*m_fOmegaY1;
 // 	mt_Kvw(0,0) = 2*m_fOmegaX; mt_Kvw(1,1) = 2*m_fOmegaY1;
 
 
-// 	// Coefficient update
-// 	// X Axis 
-// 	if (strName == "XFWao") vec_FcFW(0) = fValue;  if (strName == "XBWao") vec_FcBW(0) = fValue;
-// 	if (strName == "XFWa1") vec_FbrFW(0) = fValue; if (strName == "XBWa1") vec_FbrBW(0) = fValue;
-// 	if (strName == "XFWvs") vec_FvsFW(0) = fValue; if (strName == "XBWvs") vec_FvsBW(0) = fValue;
-// 	if (strName == "XFWa2") vec_KcFW(0) = fValue;  if (strName == "XBWa2") vec_KcBW(0) = fValue;
-// 	// Y1 Axis 
-// 	if (strName == "Y1FWao") vec_FcFW(1) = fValue;  if (strName == "Y1BWao") vec_FcBW(1) = fValue;
-// 	if (strName == "Y1FWa1") vec_FbrFW(1) = fValue; if (strName == "Y1BWa1") vec_FbrBW(1) = fValue;
-// 	if (strName == "Y1FWvs") vec_FvsFW(1) = fValue; if (strName == "Y1BWvs") vec_FvsBW(1) = fValue;
-// 	if (strName == "Y1FWa2") vec_KcFW(1) = fValue;  if (strName == "Y1BWa2") vec_KcBW(1) = fValue;
-// 	// Y2 Axis 
-// 	if (strName == "Y2FWao") vec_FcFW(2) = fValue;  if (strName == "Y2BWao") vec_FcBW(2) = fValue;
-// 	if (strName == "Y2FWa1") vec_FbrFW(2) = fValue; if (strName == "Y2BWa1") vec_FbrBW(2) = fValue;
-// 	if (strName == "Y2FWvs") vec_FvsFW(2) = fValue; if (strName == "Y2BWvs") vec_FvsBW(2) = fValue;
-// 	if (strName == "Y2FWa2") vec_KcFW(2) = fValue;  if (strName == "Y2BWa2") vec_KcBW(2) = fValue;
-// 	// Z Axis 
-// 	if (strName == "ZFWao") vec_FcFW(3) = fValue;  if (strName == "ZBWao") vec_FcBW(3) = fValue;
-// 	if (strName == "ZFWa1") vec_FbrFW(3) = fValue; if (strName == "ZBWa1") vec_FbrBW(3) = fValue;
-// 	if (strName == "ZFWvs") vec_FvsFW(3) = fValue; if (strName == "ZBWvs") vec_FvsBW(3) = fValue;
-// 	if (strName == "ZFWa2") vec_KcFW(3) = fValue;  if (strName == "ZBWa2") vec_KcBW(3) = fValue;
-// 	// C Axis 
-// 	if (strName == "CFWao") vec_FcFW(4) = fValue;  if (strName == "CBWao") vec_FcBW(4) = fValue;
-// 	if (strName == "CFWa1") vec_FbrFW(4) = fValue; if (strName == "CBWa1") vec_FbrBW(4) = fValue;
-// 	if (strName == "CFWvs") vec_FvsFW(4) = fValue; if (strName == "CBWvs") vec_FvsBW(4) = fValue;
-// 	if (strName == "CFWa2") vec_KcFW(4) = fValue;  if (strName == "CBWa2") vec_KcBW(4) = fValue;
-// 	// A1 Axis 
-// 	if (strName == "A1FWao") vec_FcFW(5) = fValue;  if (strName == "A1BWao") vec_FcBW(5) = fValue;
-// 	if (strName == "A1FWa1") vec_FbrFW(5) = fValue; if (strName == "A1BWa1") vec_FbrBW(5) = fValue;
-// 	if (strName == "A1FWvs") vec_FvsFW(5) = fValue; if (strName == "A1BWvs") vec_FvsBW(5) = fValue;
-// 	if (strName == "A1FWa2") vec_KcFW(5) = fValue;  if (strName == "A1BWa2") vec_KcBW(5) = fValue;
-// 	// A2 Axis 
-// 	if (strName == "A2FWao") vec_FcFW(6) = fValue;  if (strName == "A2BWao") vec_FcBW(6) = fValue;
-// 	if (strName == "A2FWa1") vec_FbrFW(6) = fValue; if (strName == "A2BWa1") vec_FbrBW(6) = fValue;
-// 	if (strName == "A2FWvs") vec_FvsFW(6) = fValue; if (strName == "A2BWvs") vec_FvsBW(6) = fValue;
-// 	if (strName == "A2FWa2") vec_KcFW(6) = fValue;  if (strName == "A2BWa2") vec_KcBW(6) = fValue;
-
-	// Static friction model parameters
+	// Coefficient update
 	// X Axis 
-	if (strName == "XFWao")  mt_StaticFricData(0,0) = fValue;  if (strName == "XBWao") mt_StaticFricData(1,0) = fValue;
-	if (strName == "XFWa1")  mt_StaticFricData(0,1) = fValue; if (strName == "XBWa1") mt_StaticFricData(1,1) = fValue;
-	if (strName == "XFWvs")  mt_StaticFricData(0,2) = fValue; if (strName == "XBWvs") mt_StaticFricData(1,2) = fValue;
-	if (strName == "XFWa2")  mt_StaticFricData(0,3) = fValue;  if (strName == "XBWa2") mt_StaticFricData(1,3) = fValue;
+	if (strName == "XFWao") vec_FcFW(0) = fValue;  if (strName == "XBWao") vec_FcBW(0) = fValue;
+	if (strName == "XFWa1") vec_FbrFW(0) = fValue; if (strName == "XBWa1") vec_FbrBW(0) = fValue;
+	if (strName == "XFWvs") vec_FvsFW(0) = fValue; if (strName == "XBWvs") vec_FvsBW(0) = fValue;
+	if (strName == "XFWa2") vec_KcFW(0) = fValue;  if (strName == "XBWa2") vec_KcBW(0) = fValue;
 	// Y1 Axis 
-	if (strName == "Y1FWao")  mt_StaticFricData(2,0) = fValue;  if (strName == "Y1BWao")  mt_StaticFricData(3,0) = fValue;
-	if (strName == "Y1FWa1")  mt_StaticFricData(2,1) = fValue; if (strName == "Y1BWa1")  mt_StaticFricData(3,1) = fValue;
-	if (strName == "Y1FWvs")  mt_StaticFricData(2,2) = fValue; if (strName == "Y1BWvs")  mt_StaticFricData(3,2) = fValue;
-	if (strName == "Y1FWa2")  mt_StaticFricData(2,3) = fValue;  if (strName == "Y1BWa2")  mt_StaticFricData(3,3) = fValue;
+	if (strName == "Y1FWao") vec_FcFW(1) = fValue;  if (strName == "Y1BWao") vec_FcBW(1) = fValue;
+	if (strName == "Y1FWa1") vec_FbrFW(1) = fValue; if (strName == "Y1BWa1") vec_FbrBW(1) = fValue;
+	if (strName == "Y1FWvs") vec_FvsFW(1) = fValue; if (strName == "Y1BWvs") vec_FvsBW(1) = fValue;
+	if (strName == "Y1FWa2") vec_KcFW(1) = fValue;  if (strName == "Y1BWa2") vec_KcBW(1) = fValue;
 	// Y2 Axis 
-	if (strName == "Y2FWao")  mt_StaticFricData(4,0) = fValue;  if (strName == "Y2BWao")  mt_StaticFricData(5,0) = fValue;
-	if (strName == "Y2FWa1")  mt_StaticFricData(4,1) = fValue; if (strName == "Y2BWa1")  mt_StaticFricData(5,1) = fValue;
-	if (strName == "Y2FWvs")  mt_StaticFricData(4,2) = fValue; if (strName == "Y2BWvs")  mt_StaticFricData(5,2) = fValue;
-	if (strName == "Y2FWa2")  mt_StaticFricData(4,3) = fValue;  if (strName == "Y2BWa2")  mt_StaticFricData(5,3) = fValue;
+	if (strName == "Y2FWao") vec_FcFW(2) = fValue;  if (strName == "Y2BWao") vec_FcBW(2) = fValue;
+	if (strName == "Y2FWa1") vec_FbrFW(2) = fValue; if (strName == "Y2BWa1") vec_FbrBW(2) = fValue;
+	if (strName == "Y2FWvs") vec_FvsFW(2) = fValue; if (strName == "Y2BWvs") vec_FvsBW(2) = fValue;
+	if (strName == "Y2FWa2") vec_KcFW(2) = fValue;  if (strName == "Y2BWa2") vec_KcBW(2) = fValue;
 	// Z Axis 
-	if (strName == "ZFWao")  mt_StaticFricData(6,0) = fValue;  if (strName == "ZBWao")  mt_StaticFricData(7,0) = fValue;
-	if (strName == "ZFWa1")  mt_StaticFricData(6,1) = fValue; if (strName == "ZBWa1")  mt_StaticFricData(7,1) = fValue;
-	if (strName == "ZFWvs")  mt_StaticFricData(6,2) = fValue; if (strName == "ZBWvs")  mt_StaticFricData(7,2) = fValue;
-	if (strName == "ZFWa2")  mt_StaticFricData(6,3) = fValue;  if (strName == "ZBWa2")  mt_StaticFricData(7,3) = fValue;
+	if (strName == "ZFWao") vec_FcFW(3) = fValue;  if (strName == "ZBWao") vec_FcBW(3) = fValue;
+	if (strName == "ZFWa1") vec_FbrFW(3) = fValue; if (strName == "ZBWa1") vec_FbrBW(3) = fValue;
+	if (strName == "ZFWvs") vec_FvsFW(3) = fValue; if (strName == "ZBWvs") vec_FvsBW(3) = fValue;
+	if (strName == "ZFWa2") vec_KcFW(3) = fValue;  if (strName == "ZBWa2") vec_KcBW(3) = fValue;
 	// C Axis 
-	if (strName == "CFWao")  mt_StaticFricData(8,0) = fValue;  if (strName == "CBWao")  mt_StaticFricData(9,0) = fValue;
-	if (strName == "CFWa1")  mt_StaticFricData(8,1) = fValue; if (strName == "CBWa1")  mt_StaticFricData(9,1) = fValue;
-	if (strName == "CFWvs")  mt_StaticFricData(8,2) = fValue; if (strName == "CBWvs")  mt_StaticFricData(9,2) = fValue;
-	if (strName == "CFWa2")  mt_StaticFricData(8,3) = fValue;  if (strName == "CBWa2")  mt_StaticFricData(9,3) = fValue;
+	if (strName == "CFWao") vec_FcFW(4) = fValue;  if (strName == "CBWao") vec_FcBW(4) = fValue;
+	if (strName == "CFWa1") vec_FbrFW(4) = fValue; if (strName == "CBWa1") vec_FbrBW(4) = fValue;
+	if (strName == "CFWvs") vec_FvsFW(4) = fValue; if (strName == "CBWvs") vec_FvsBW(4) = fValue;
+	if (strName == "CFWa2") vec_KcFW(4) = fValue;  if (strName == "CBWa2") vec_KcBW(4) = fValue;
 	// A1 Axis 
-	if (strName == "A1FWao")  mt_StaticFricData(10,0) = fValue;  if (strName == "A1BWao")  mt_StaticFricData(11,0) = fValue;
-	if (strName == "A1FWa1")  mt_StaticFricData(10,1) = fValue; if (strName == "A1BWa1")  mt_StaticFricData(11,1) = fValue;
-	if (strName == "A1FWvs")  mt_StaticFricData(10,2) = fValue; if (strName == "A1BWvs")  mt_StaticFricData(11,2) = fValue;
-	if (strName == "A1FWa2")  mt_StaticFricData(10,3) = fValue;  if (strName == "A1BWa2")  mt_StaticFricData(11,3) = fValue;
+	if (strName == "A1FWao") vec_FcFW(5) = fValue;  if (strName == "A1BWao") vec_FcBW(5) = fValue;
+	if (strName == "A1FWa1") vec_FbrFW(5) = fValue; if (strName == "A1BWa1") vec_FbrBW(5) = fValue;
+	if (strName == "A1FWvs") vec_FvsFW(5) = fValue; if (strName == "A1BWvs") vec_FvsBW(5) = fValue;
+	if (strName == "A1FWa2") vec_KcFW(5) = fValue;  if (strName == "A1BWa2") vec_KcBW(5) = fValue;
 	// A2 Axis 
-	if (strName == "A2FWao")  mt_StaticFricData(12,0) = fValue;  if (strName == "A2BWao")  mt_StaticFricData(13,0) = fValue;
-	if (strName == "A2FWa1")  mt_StaticFricData(12,1) = fValue; if (strName == "A2BWa1")  mt_StaticFricData(13,1) = fValue;
-	if (strName == "A2FWvs")  mt_StaticFricData(12,2) = fValue; if (strName == "A2BWvs")  mt_StaticFricData(13,2) = fValue;
-	if (strName == "A2FWa2")  mt_StaticFricData(12,3) = fValue;  if (strName == "A2BWa2")  mt_StaticFricData(13,3) = fValue;
+	if (strName == "A2FWao") vec_FcFW(6) = fValue;  if (strName == "A2BWao") vec_FcBW(6) = fValue;
+	if (strName == "A2FWa1") vec_FbrFW(6) = fValue; if (strName == "A2BWa1") vec_FbrBW(6) = fValue;
+	if (strName == "A2FWvs") vec_FvsFW(6) = fValue; if (strName == "A2BWvs") vec_FvsBW(6) = fValue;
+	if (strName == "A2FWa2") vec_KcFW(6) = fValue;  if (strName == "A2BWa2") vec_KcBW(6) = fValue;
 
 }
 double FiveAxisCNC::GetStaticVariable(System::String^ strName)

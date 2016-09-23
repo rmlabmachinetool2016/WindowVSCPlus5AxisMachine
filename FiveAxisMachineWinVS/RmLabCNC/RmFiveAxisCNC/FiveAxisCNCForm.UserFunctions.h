@@ -24,6 +24,21 @@ void FiveAxisCNCForm::ShowGraph()
 	double  realPositionX,realPositionY,realPositionZ;
 	try
 	{
+	//	(_T("c:\\test"), _T("c:\\test1"), true);
+	//	File.Copy(FileBinaryData,FileBinaryDataMoveToMatlabDir,true);
+	//	using namespace std; 
+	//	CopyFile("temp","temp1",true);
+		//File.Copy("temp","temp1",true);
+		System::IO::File::Copy(FileBinaryData,FileBinaryDataMoveToMatlabDir,true);
+	}
+	catch (Exception^ e)
+	{
+		
+	}
+
+	try
+	{
+		
 		FileStream^ BinaryDataFileStream = gcnew FileStream(FileBinaryData, FileMode::Open);
 		BinaryReader^ BinaryDataReader = gcnew BinaryReader(BinaryDataFileStream);
 		StreamWriter^ StreamTextWriter = gcnew StreamWriter(FileTextToWrite);
@@ -86,15 +101,19 @@ void FiveAxisCNCForm::ShowGraph()
 			this->chartRealReferenceContour->Series["ReferenceContour"]->Points->AddXY(m_fRefX,m_fRefY);
  			this->chartRealReferenceContour->Series["XControlVoltage"]->Points->AddXY(m_fRealTime,m_fOutputControlX);
 			this->chartRealReferenceContour->Series["YControlVoltage"]->Points->AddXY(m_fRealTime,m_fOutputControlY);//m_fOutputControl1);
+			this->chartRealReferenceContour->Series["ZControlVoltage"]->Points->AddXY(m_fRealTime,m_fOutputControlZ);//m_fOutputControl1);
 			this->chartRealReferenceContour->Series["ew0Error"]->Points->AddXY(m_fRealTime,m_fewX);//m_fRefX_1);//m_few0);
 			this->chartRealReferenceContour->Series["ew1Error"]->Points->AddXY(m_fRealTime,m_fewY);//m_fRefY_1);//m_few1);
+			this->chartRealReferenceContour->Series["ew2Error"]->Points->AddXY(m_fRealTime,m_fewZ);//m_fRefY_1);//m_few1);
+
 			this->chartRealReferenceContour->Series["XPredictedVoltage"]->Points->AddXY(m_fRealTime,m_fPredictedOutputX);//m_fRefX_1);//m_fPredictedOutput0);
 			this->chartRealReferenceContour->Series["YPredictedVoltage"]->Points->AddXY(m_fRealTime,m_fPredictedOutputY);//m_fRefY_1);//m_fPredictedOutput1);
+			this->chartRealReferenceContour->Series["ZPredictedVoltage"]->Points->AddXY(m_fRealTime,m_fPredictedOutputZ);//m_fRefY_1);//m_fPredictedOutput1);
 
 			// Show basic graphs
-			this->chartRealReferenceContour->Series["RefX_Time"]->Enabled = true;
-			this->chartRealReferenceContour->Series["RefY_Time"]->Enabled = true;
-			this->chartRealReferenceContour->Series["RefZ_Time"]->Enabled = true;
+			this->chartRealReferenceContour->Series["RefX_Time"]->Enabled = false; // true
+			this->chartRealReferenceContour->Series["RefY_Time"]->Enabled = false;
+			this->chartRealReferenceContour->Series["RefZ_Time"]->Enabled = false;
 			// Disable some other series
 			this->chartRealReferenceContour->Series["RealX_1"]->Enabled = false;
 			this->chartRealReferenceContour->Series["RealX_2"]->Enabled = false;
@@ -178,11 +197,11 @@ void FiveAxisCNCForm::ShowGraph()
 
 	//Range of Chart
 //	this->chartRealReferenceContour->ChartAreas["ChartArea2"]->AxisX->Maximum = 36;
-	this->chartRealReferenceContour->ChartAreas["ChartArea2"]->AxisY->Maximum = 36;
+	this->chartRealReferenceContour->ChartAreas["ChartArea2"]->AxisY->Maximum = 500;//36;
 //	this->chartRealReferenceContour->ChartAreas["ChartArea2"]->AxisX->Minimum = -36;
-	this->chartRealReferenceContour->ChartAreas["ChartArea2"]->AxisY->Minimum = -36;
-	this->chartRealReferenceContour->ChartAreas["ChartArea4"]->AxisY->Maximum = 36;
-	this->chartRealReferenceContour->ChartAreas["ChartArea4"]->AxisY->Minimum = -36;
+	this->chartRealReferenceContour->ChartAreas["ChartArea2"]->AxisY->Minimum = -500;//-36;
+	this->chartRealReferenceContour->ChartAreas["ChartArea4"]->AxisY->Maximum = 500;//36;
+	this->chartRealReferenceContour->ChartAreas["ChartArea4"]->AxisY->Minimum = -500;//-36;
 	
 }
 void FiveAxisCNCForm::ClearGraph() 
@@ -192,10 +211,13 @@ void FiveAxisCNCForm::ClearGraph()
 	this->chartRealReferenceContour->Series["ReferenceContour"]->Points->Clear();
 	this->chartRealReferenceContour->Series["XControlVoltage"]->Points->Clear();
 	this->chartRealReferenceContour->Series["YControlVoltage"]->Points->Clear();
+	this->chartRealReferenceContour->Series["ZControlVoltage"]->Points->Clear();
 	this->chartRealReferenceContour->Series["ew0Error"]->Points->Clear();
 	this->chartRealReferenceContour->Series["ew1Error"]->Points->Clear();
+	this->chartRealReferenceContour->Series["ew2Error"]->Points->Clear();
 	this->chartRealReferenceContour->Series["XPredictedVoltage"]->Points->Clear();
 	this->chartRealReferenceContour->Series["YPredictedVoltage"]->Points->Clear();
+	this->chartRealReferenceContour->Series["ZPredictedVoltage"]->Points->Clear();
 	this->chartRealReferenceContour->Series["RefX_Time"]->Points->Clear();
 	this->chartRealReferenceContour->Series["RefY_Time"]->Points->Clear();
 	this->chartRealReferenceContour->Series["RefZ_Time"]->Points->Clear();
@@ -331,6 +353,9 @@ void FiveAxisCNCForm::FiveAxisCNCFormSettingSave()
 		};
 		StreamTextWriter->WriteLine("comboBoxProgramStartSetting "+comboBoxProgramStartSetting->SelectedIndex);
 		StreamTextWriter->WriteLine("comboBoxLoadSetting "+comboBoxLoadSetting->SelectedIndex);
+		StreamTextWriter->WriteLine("comboBoxControllerType "+comboBoxControllerType->SelectedIndex);
+		StreamTextWriter->WriteLine("comboBoxFrictionModel "+comboBoxFrictionModel->SelectedIndex);
+		StreamTextWriter->WriteLine("comboBoxDisturbanceObserver "+comboBoxDisturbanceObserver->SelectedIndex);
 		StreamTextWriter->Close();
 }
 void FiveAxisCNCForm::InitSettingStringScan(System::String^ scanString,System::String^ &strName,System::String^ &strValue)
@@ -396,6 +421,9 @@ void FiveAxisCNCForm::SettingFormVariable(System::String^ strName,System::String
 	if (strName == "radioButtonManualSpeedX100") radioButtonManualSpeedX100->Checked = true;
 	if (strName == "radioButtonManualSpeedX1000") radioButtonManualSpeedX1000->Checked = true;
 
+	if (strName == "comboBoxControllerType") comboBoxControllerType->SelectedIndex = System::Convert::ToByte(strValue);
+	if (strName == "comboBoxFrictionModel") {comboBoxFrictionModel->SelectedIndex = System::Convert::ToByte(strValue); }
+	if (strName == "comboBoxDisturbanceObserver") comboBoxDisturbanceObserver->SelectedIndex = System::Convert::ToByte(strValue);
 //    if (strName == "comboBoxProgramStartSetting") comboBoxProgramStartSetting->SelectedIndex = System::Convert::ToByte(strValue);
  //   if (strName == "comboBoxLoadSetting") comboBoxLoadSetting->SelectedIndex = System::Convert::ToByte(strValue);
 }
@@ -456,6 +484,14 @@ void FiveAxisCNCForm::FiveAxisCNCFormSettingInit()
 		m_iValue = 0;
 	}
 	FiveAxisCNCFormSettingLoad(m_iValue); 
-	
+}
+void FiveAxisCNCForm::UpdateSettingParameters() 
+{
+	NewGUIProcessing.SAMPLING_TIME = System::Convert::ToDouble(textBoxSampleTime->Text)/1000.0;//  change ms -> s;
+	RmLabFiveAxisCNC.m_iSelectedControllerType = comboBoxControllerType->SelectedIndex;
+	RmLabFiveAxisCNC.m_iSelectedFrictionModel = comboBoxFrictionModel->SelectedIndex;
+	RmLabFiveAxisCNC.m_iSelectedDisturbanceObserver = comboBoxDisturbanceObserver->SelectedIndex;
+	RmLabFiveAxisCNC.m_iSelectedCharacteristicCurveModel = comboBoxDisturbanceObserver->SelectedIndex;
+
 }
 #pragma endregion

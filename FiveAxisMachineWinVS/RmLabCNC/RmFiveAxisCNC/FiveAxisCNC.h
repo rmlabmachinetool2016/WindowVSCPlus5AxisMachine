@@ -4,7 +4,7 @@
 #include "StdAfx.h"
 #include "FiveAxisControlModule.h"
 #include "FiveAxisIOModule.h"
-#include "SimulationModel.h"
+
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 using namespace boost::numeric::ublas;
@@ -35,64 +35,77 @@ namespace RmLabCNC{
 	static const double DOUBLE_TOLERANCE                = 0.000001;
 	static const double PI = 3.1415926535897932384626433832795;
 
-	static const short NUMBERAXIS		 = 7;
-	static const short MTSIZE			 = 4;
-	static const short NUM_COUNTER		 = 7;
-	static const short PEAKLIMIT		 = 8;
-	static const short GMSELEMENT		 = 10;
-	static const short NFRICTIONDATA	 = 4;
-	static const short NUM_DIRECT		 = 2;
-	static const short NUMSTATE		 = 3; // Kalman filter
-	static const short NUMMEASURED		 = 2; // Kalman filter
+	static const short NUMBERAXIS					= 5;
+	static const short MTSIZE					= 4;
+	static const short SLMCCSIZE				= 3;
+	static const short NUM_COUNTER			= 7;
+	static const short NUM_DIRECT			= 2;
+	static const short NUM_PEAK			= 10;
+	static const short NUM_SINFRIC_DATA			= 20;
+	static const short NUM_ECCENTRICFRIC_DATA			= 4;
+	static const short NUM_STRIBECKFRIC_DATA			= 5;
 
 	static const short EIGHTCURVE = 1;
 	static const short TRIFOLIUM = 2;
 	static const short LISSAJOUS = 3;
 	static const short TUNINGPROCESS = 4;
-
-	static const double MAX_FORCE_X					= 36.0;					// N
-	static const double MAX_FORCE_Y1				= 36.0;					// N
-	static const double MAX_FORCE_Y2				= 36.0;					// N
-	static const double MAX_FORCE_Z					= 36.0;					// N
-	static const double MAX_TORQUE_C				= 2.0;					// N*m
-	static const double MAX_TORQUE_A1				= 5.0;					// N*m
-	static const double MAX_TORQUE_A2				= 5.0;					// N*m
+	static const short CURVE3D = 5;
+	static const short MAXCONTROLFORCE = 500;// N
 
 	static identity_matrix<double> mt_Identity;
 	matrix<double> mt_Test(5,5);
-	static matrix<double> mt_M,mt_1_M, mt_Kc, mt_Fbr,
+	static matrix<double>
+		matrix_temporary,
+		matrix_weight_M,matrix_inverse_weight_M,matrix_estimated_weight_M,matrix_inverse_estimated_weight_M,
+		matrix_previous_rotation_RT,matrix_rotation_RT,matrix_rotation_R,
+		matrix_previous_rotation_dotRT,matrix_rotation_dotRT,
+		matrix_rotation_ddotRT,
+		matrix_TC_gain_Kp,matrix_TC_gain_Kd,
+		matrix_SLMCC_gain_lambda,matrix_SLMCC_gain_A,matrix_SLMCC_sign_L,
+		matrix_disturbance_gain_Kd,
+		matrix_sign_real_velocity_dotq,
+		matrix_viscous_friction_c,matrix_estimated_viscous_friction_c,matrix_nominal_viscous_friction_cn,
+		matrix_number_peak,matrix_peak_height,matrix_peak_position,matrix_peak_width,
+		matrix_sinusoidal_friction,matrix_stribeck_friction,
+
+		mt_M, mt_Kc, mt_Fbr,
 		 
 		mt_Translate,mt_Ie,mt_rotR, mt_rotR_1, mt_rotR_2,
 		mt_rotRT, mt_rotRT_1, mt_rotRT_2,mt_Kvw,mt_Kpw,mt_Kiw,mt_Kvl,mt_Kpl,mt_Kil,
 		mt_MachineCordinate, mt_ToolCordinate, mt_WorkPieceCordinate,
 		mt_ContourWorkPieceCordinate,mt_ContourMachineCordinate,
 		
-		mt_NextrotR, mt_NextrotR_1,
-		   // Disturbance,Friction, observed disturbance variable
-		mt_DOBKd,mt_DOBKv,mt_PeakHeight,mt_PeakPos,mt_PeakWid,
-		mt_StaticFricData,mt_GMSForceF,mt_GMSForceW,mt_GMSStiffK,
+		mt_NextrotR, mt_NextrotR_1;
+	static vector<double> 
+		vector_temporary,vector_switching_force,vector_control_force_fu,vector_estimated_control_force_fu,
+		vector_real_position_q,
+		vector_previous_real_position_q,vector_real_velocity_dotq,
 
-		mt_KalmanIX,mt_KalmanKobsX,mt_KalmanAX,mt_KalmanCX   //Kalman filter
-		;
-	static vector<double> vec_el,vec_el_1,vec_el_2,vec_ew,vec_ew_1,vec_ew_2,
+		vector_desired_position_qd,vector_previous_desired_position_qd,
+		vector_desired_velocity_dotqd,vector_previous_desired_velocity_dotqd,
+		vector_desired_acceleration_ddotqd,
+		vector_SLMCC_gain_k,
+		vector_tracking_error_ew,vector_tracking_error_dotew,
+		vector_contour_error_el,vector_contour_error_dotel,
+		vector_estimated_friction_ff, 
+		vector_coulomb_friction_fcl,vector_estimated_coulomb_friction_fcl,vector_nominal_coulomb_friction_fncl,
+
+		vector_gravitational_force_g,vector_estimated_gravitational_force_g,
+		vector_disturbance_estimator_de,vector_estimated_disturbance_d,
+		vector_sliding_surface_s,
+
+		vector_next_desired_position_data,
+
+
+		vec_el,vec_el_1,vec_el_2,vec_ew,vec_ew_1,vec_ew_2,
 		 vec_Pre_refr_1,vec_Pre_refr, vec_refr,vec_refr_1,vec_refr_2,
-		 vec_Pre_realx, vec_Pre_realx_1, vec_realx,vec_realx_1,vec_Selectx_1,vec_realx_2,
+		 vec_Pre_realx, vec_Pre_realx_1, vec_realx,vec_realx_1,vec_realx_2,
 		 vec_OutputControl,vec_PredictedOutput, vec_Fc,
 		 vec_KcFW, vec_FcFW, vec_FbrFW, vec_FvsFW, vec_KcBW, vec_FcBW, vec_FbrBW, vec_FvsBW,
 
 		 vec_CNCVMAX, vec_CNCPMAX,
 		 vec_Nextrefr_1,vec_Nextrefr_2,
-		 vec_VelChange,vec_StartAcc,vec_EndAcc,vec_NextStartAcc,vec_NextEndAcc,
-   // Disturbance,Friction, observed disturbance variable
-		 vec_PredictedFriction,vec_PredictedDisturb,vec_DOBd,vec_SlidingVel,
-		 vec_NominalFc,vec_NominalFv,
-		 vec_DOBEstimatedx_1,vec_DOBew_1,vec_NumberPeak,
-		 vec_GMSElement,
-		 vec_KalmanMesured,vec_KalmanState,vec_KalmanBX   //Kalman filter
-		 ;
-
-
-
+		 vec_VelChange,vec_StartAcc,vec_EndAcc,vec_NextStartAcc,vec_NextEndAcc;
 // void InitStaticVariable()
 // 	{
 // 		mt_Identity.resize(MTSIZE);
@@ -164,7 +177,6 @@ public:
 
 	FiveAxisControlModule ControlModule;
 	FiveAxisIOModule IOModule;
-	SimulationModel SimulModule;
 	CNCPOSITION m_CNCRefPos,m_CNCPosManualStep,m_CNCTableOrigin,m_CNCRealPos,
 				m_CNCStartRefVel,m_NextCNCStartRefVel,m_CNCEndRefVel,m_NextCNCEndRefVel ;
 	double SAMPLING_TIME;
@@ -219,18 +231,17 @@ public:
 			m_fStartddotOmg,m_fEndddotOmg, m_fNextStartddotOmg,
 			m_fStartddotAcc,m_fEndddotAcc, m_fNextStartddotAcc,
 			m_fMaxAcc;
-	unsigned int m_iMoveType,m_iNextMoveType, m_iGcodeM, m_iNextGcodeM;
+	unsigned int m_iMoveType,m_iNextMoveType, m_iGcodeM, m_iNextGcodeM,
+		m_iSelectedControllerType,m_iSelectedFrictionModel,m_iSelectedDisturbanceObserver,m_iSelectedCharacteristicCurveModel;
 
 	// Mathematical curve data
 	unsigned int m_iMathCurveNumber, m_iTuningMotor;
-	double m_fMath_a,m_fMath_n,m_fMath_c,m_fMath_b,m_fMath_Time,m_fMath_Repeat,m_fMath_Theta,
+	double m_fMath_a,m_fMath_n,m_fMath_c,m_fMath_b,m_fMath_Time,m_fMath_Theta,
 		m_fMath_Thetadot,m_fMath_r,m_fMath_w;
 	double m_frotR_Pre_theta,m_frotR_theta,m_frotR_theta_1;
 
 	//end  Mathematical curve data
-	// Disturbance,Friction, observed disturbance variable
-	unsigned int m_iFrictionType, m_iDOBModel;
-	//end Disturbance,Friction, observed disturbance variable
+
 	System::String^ m_strDebugString;
 //
 	// Check about finish machining contour in Gcode file 
@@ -249,27 +260,27 @@ public:
 	// Continue to read next ref contour in Gcode file 
 	void IndependentControl2D(void);
 	void ContouringControl3DFiveAxis(void);
+	void ThreeAxisMachineController(void);
+	void ThreeAxisMachineControllerInRegulation(void);
 	void IndependentControl3DFiveAxis(void);
-	void CoefficientFilter(void);
-	// Friction, disturbance calculate
-	void CalculatePredictedFriction(void);
-	void CalculatePredictedDisturbance(void);
-	void UpdateDisturbanceObserverParameter(void);
-	void CalculateDisturbanceObserve(void);
+	void ThreeAxisMachineSlidingModeContouringController(void);
+	void ThreeAxisMachinePDTrackingController(void);
+	void ThreeAxisMachinePDContouringController(void);
+	
+	void EstimateFrictionValue(void);
 	double gaussian(double x, double pos, double wid);
 
+	void CoefficientFilter(void);
 	void ResetReferenceData(void);
 	void ResetRealData(void);
 	void CalulateReferenceData(void);
 	void CalculateRealPostisionData(void);
 
 	void InitVariableName(System::String^ strName,double fValue);
-	void InitNonlinearFrictionData(System::String^ fileNLF);
-	void InitGMSModelData(System::String^ fileGMS);
-	void InitKalmanFilterModelData(System::String^ fileKalmanFilter);
 	void InitControlVariable();
 	void rmsscanf(System::String^ scanString,System::String^ &strName,double &fValue);
-	void InitGlobalVariable(System::String^ FileGlobalVariable,System::String^ FileNonlinearFriction,System::String^ FileGMSModel);
+	void InitGlobalVariable(System::String^ FileGlobalVariable);
+	void InitControllerParameters(System::String^ FileControllerParameters);
 	void OpenGcodeFile(System::String^ FileGcodeProgram);
 	void OpenBinaryFile(System::String^ FileDataAnalysis);
 	void SaveDataToBinaryFile();
@@ -284,10 +295,13 @@ public:
 	double Rmsign(double refNumber); 
 	void GetAccelerationTime(void); 
 	void GetNextPointRefInRegulation();
-	void GetNextPointRefInGCodePath();	
+	void GetNextPointRefInGCodePath();		
 
 	void SendOutputControl();
-	vector<double> GetOutputControl();
+	void SendOutputToVirtualSystem();
+	System::String^ DebugDataString();
+	void SpinStart(double OutputForce);
+    void SpinStop();
 
 	void CloseBinaryFile();
 	void CloseGcodeFile();

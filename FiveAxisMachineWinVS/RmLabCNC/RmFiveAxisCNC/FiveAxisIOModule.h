@@ -34,17 +34,18 @@ public:
 // 	static const double RESONATE_LINER_ENC_Y1		= (1.0/10000000.0);		// m/pulse
 // 	static const double RESONATE_LINER_ENC_Y2		= (1.0/10000000.0);		// m/pulse
 // 	static const double RESONATE_LINER_ENC_Z		= (1.0/10000000.0);		// m/pulse
-
-	static const double RESONATE_LINER_ENC_X		= (1.0/10000.0);		// mm/pulse
-	static const double RESONATE_LINER_ENC_Y1		= (1.0/10000.0);		// mm/pulse
+														//PITCH 2 mm  
+														//ENC2RAD	(2.0*PI/(500.0*4.8*4.0))
+	static const double RESONATE_LINER_ENC_X		= 0.0001;//2/(500.0*4.8*4.0);	// mm/pulse
+	static const double RESONATE_LINER_ENC_Y1		= 0.0001;//2/(500.0*4.8*4.0);		// mm/pulse
 	static const double RESONATE_LINER_ENC_Y2		= (1.0/10000.0);		// mm/pulse
-	static const double RESONATE_LINER_ENC_Z		= (1.0/10000.0);		// mm/pulse
+	static const double RESONATE_LINER_ENC_Z		= 0.0001;//2/(500.0*4.8*4.0);		// mm/pulse
 	static const double RESONATE_ROTATION_ENC_C		= (360/1562500.0);	//(2.0*PI/1562500.0);	// rad/pulse
 	static const double RESONATE_ROTATION_ENC_A1	= (360/3125000.0);//(2.0*PI/3125000.0);	// rad/pulse
 	static const double RESONATE_ROTATION_ENC_A2	= (360/3125000.0);//(2.0*PI/3125000.0);	// rad/pulse
-	static const double MAX_FORCE_X					= 36.0;					// N
-	static const double MAX_FORCE_Y1				= 36.0;					// N
-	static const double MAX_FORCE_Y2				= 36.0;					// N
+	static const double MAX_FORCE_X					= 500.0;					// N  3 Axis Machine tool X axis
+	static const double MAX_FORCE_Y1				= 500.0;					// N  3 Axis Machine tool Y axis
+	static const double MAX_FORCE_Y2				= 500.0;					// N  3 Axis Machine tool Z axis
 	static const double MAX_FORCE_Z					= 36.0;					// N
 	static const double MAX_TORQUE_C				= 2.0;					// N*m
 	static const double MAX_TORQUE_A1				= 5.0;					// N*m
@@ -54,9 +55,9 @@ public:
 	static const short NUM_ROTATION_ACTUATOR	= 3;					// number of motor
 	static const short NUM_ACTUATOR			= 7;//NUM_ROTATION_ACTUATOR + NUM_LINEAR_ACTUATOR;
 	// number of actuator
-//	static const short NUM_COUNTER			= 7; // number of counter ch. Already defined
+	static const short NUM_COUNTER			= 7;//=NUM_ACTUATOR;			// number of counter ch.
 	
-	static const int DA_MAX_VOLT			= 10;
+	static const int DA_MAX_VOLT			= 10;  // Max voltage out put for 3 Axis machine tool is +-10 V
 	static const int DA_MIN_VOLT			= -10;//-DA_MAX_VOLT;
 
 // 	double MAX_FORCE_X, MAX_FORCE_Y1, MAX_FORCE_Y2, MAX_FORCE_Z, MAX_TORQUE_C, MAX_TORQUE_A1, MAX_TORQUE_A2;	

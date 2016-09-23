@@ -59,9 +59,6 @@
     <ClCompile Include="FiveAxisCNCForm.UserFunctions.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="SimulationModel.cpp">
-      <Filter>Five axis CNC Object</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -92,9 +89,6 @@
       <Filter>Five axis CNC Object\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AnalyseGraphModule.h">
-      <Filter>Five axis CNC Object\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SimulationModel.h">
       <Filter>Five axis CNC Object\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

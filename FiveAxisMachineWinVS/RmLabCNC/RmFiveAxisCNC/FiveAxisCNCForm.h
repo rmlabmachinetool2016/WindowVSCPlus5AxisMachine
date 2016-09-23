@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 namespace RmFiveAxisCNC{
 
 	using namespace System;
@@ -90,7 +90,7 @@ namespace RmFiveAxisCNC{
 	private: System::Windows::Forms::Button^  buttonLoadConfig;
 
 	private: System::Windows::Forms::PictureBox^  pictureBoxFiveAxisCNC;
-	private: System::Windows::Forms::Label^  label11;
+
 	private: System::Windows::Forms::TextBox^  textBoxA2Encoder;
 
 	private: System::Windows::Forms::TextBox^  textBoxA1Encoder;
@@ -105,7 +105,7 @@ namespace RmFiveAxisCNC{
 
 	private: System::Windows::Forms::TextBox^  textBoxXEncoder;
 
-	private: System::Windows::Forms::Label^  label10;
+
 	private: System::Windows::Forms::TextBox^  textBoxA2Position;
 
 	private: System::Windows::Forms::TextBox^  textBoxA1Position;
@@ -199,9 +199,17 @@ private: System::Windows::Forms::Label^  label17;
 private: System::Windows::Forms::Label^  label16;
 private: System::Windows::Forms::ComboBox^  comboBoxProgramStartSetting;
 private: System::Windows::Forms::CheckBox^  checkBoxLimitTime;
+private: System::Windows::Forms::TextBox^  textBoxSpinSpeed;
+private: System::Windows::Forms::CheckBox^  checkBoxSpinSetting;
+private: System::Windows::Forms::CheckBox^  checkBoxPositionUpdate;
+private: System::Windows::Forms::CheckBox^  checkBoxEncoderUpdate;
+private: System::Windows::Forms::ComboBox^  comboBoxControllerType;
 private: System::Windows::Forms::ComboBox^  comboBoxDisturbanceObserver;
 private: System::Windows::Forms::ComboBox^  comboBoxFrictionModel;
-private: System::Windows::Forms::ComboBox^  comboBoxControlMethod;
+private: System::Windows::Forms::Label^  label14;
+private: System::Windows::Forms::Label^  label11;
+private: System::Windows::Forms::Label^  label10;
+
 
 
 
@@ -259,6 +267,9 @@ private: System::ComponentModel::IContainer^  components;
 			System::Windows::Forms::DataVisualization::Charting::Series^  series21 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
 			System::Windows::Forms::DataVisualization::Charting::Series^  series22 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
 			System::Windows::Forms::DataVisualization::Charting::Series^  series23 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::Series^  series24 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::Series^  series25 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::Series^  series26 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
 			System::Windows::Forms::DataVisualization::Charting::Title^  title1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Title());
 			System::Windows::Forms::DataVisualization::Charting::Title^  title2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Title());
 			System::Windows::Forms::DataVisualization::Charting::Title^  title3 = (gcnew System::Windows::Forms::DataVisualization::Charting::Title());
@@ -268,9 +279,8 @@ private: System::ComponentModel::IContainer^  components;
 			this->tabPageMachining = (gcnew System::Windows::Forms::TabPage());
 			this->radioButton1 = (gcnew System::Windows::Forms::RadioButton());
 			this->tabPageExperiment = (gcnew System::Windows::Forms::TabPage());
-			this->comboBoxDisturbanceObserver = (gcnew System::Windows::Forms::ComboBox());
-			this->comboBoxFrictionModel = (gcnew System::Windows::Forms::ComboBox());
-			this->comboBoxControlMethod = (gcnew System::Windows::Forms::ComboBox());
+			this->textBoxSpinSpeed = (gcnew System::Windows::Forms::TextBox());
+			this->checkBoxSpinSetting = (gcnew System::Windows::Forms::CheckBox());
 			this->checkBoxLimitTime = (gcnew System::Windows::Forms::CheckBox());
 			this->textBoxDataFileName = (gcnew System::Windows::Forms::TextBox());
 			this->label15 = (gcnew System::Windows::Forms::Label());
@@ -284,6 +294,8 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonRecentConfig = (gcnew System::Windows::Forms::Button());
 			this->buttonLoadConfig = (gcnew System::Windows::Forms::Button());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->checkBoxPositionUpdate = (gcnew System::Windows::Forms::CheckBox());
+			this->checkBoxEncoderUpdate = (gcnew System::Windows::Forms::CheckBox());
 			this->buttonA1Plus = (gcnew System::Windows::Forms::Button());
 			this->buttonA1Minus = (gcnew System::Windows::Forms::Button());
 			this->buttonCPlus = (gcnew System::Windows::Forms::Button());
@@ -307,7 +319,6 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonUpdatePosition = (gcnew System::Windows::Forms::Button());
 			this->buttonSetOrigin = (gcnew System::Windows::Forms::Button());
 			this->pictureBoxFiveAxisCNC = (gcnew System::Windows::Forms::PictureBox());
-			this->label11 = (gcnew System::Windows::Forms::Label());
 			this->textBoxA2Encoder = (gcnew System::Windows::Forms::TextBox());
 			this->textBoxA1Encoder = (gcnew System::Windows::Forms::TextBox());
 			this->textBoxCEncoder = (gcnew System::Windows::Forms::TextBox());
@@ -315,7 +326,6 @@ private: System::ComponentModel::IContainer^  components;
 			this->textBoxY2Encoder = (gcnew System::Windows::Forms::TextBox());
 			this->textBoxY1Encoder = (gcnew System::Windows::Forms::TextBox());
 			this->textBoxXEncoder = (gcnew System::Windows::Forms::TextBox());
-			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->textBoxA2Position = (gcnew System::Windows::Forms::TextBox());
 			this->textBoxA1Position = (gcnew System::Windows::Forms::TextBox());
 			this->textBoxCPosition = (gcnew System::Windows::Forms::TextBox());
@@ -349,6 +359,12 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonShowGraph = (gcnew System::Windows::Forms::Button());
 			this->chartRealReferenceContour = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
 			this->Setting = (gcnew System::Windows::Forms::TabPage());
+			this->comboBoxDisturbanceObserver = (gcnew System::Windows::Forms::ComboBox());
+			this->comboBoxFrictionModel = (gcnew System::Windows::Forms::ComboBox());
+			this->label14 = (gcnew System::Windows::Forms::Label());
+			this->label11 = (gcnew System::Windows::Forms::Label());
+			this->label10 = (gcnew System::Windows::Forms::Label());
+			this->comboBoxControllerType = (gcnew System::Windows::Forms::ComboBox());
 			this->buttonLoadSelectedSetting = (gcnew System::Windows::Forms::Button());
 			this->comboBoxLoadSetting = (gcnew System::Windows::Forms::ComboBox());
 			this->label17 = (gcnew System::Windows::Forms::Label());
@@ -393,7 +409,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->FiveAxisCNCTabControl->Location = System::Drawing::Point(3, 4);
 			this->FiveAxisCNCTabControl->Name = L"FiveAxisCNCTabControl";
 			this->FiveAxisCNCTabControl->SelectedIndex = 1;
-			this->FiveAxisCNCTabControl->Size = System::Drawing::Size(983, 597);
+			this->FiveAxisCNCTabControl->Size = System::Drawing::Size(983, 647);
 			this->FiveAxisCNCTabControl->TabIndex = 0;
 			// 
 			// tabPageMachining
@@ -405,7 +421,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->tabPageMachining->Location = System::Drawing::Point(4, 25);
 			this->tabPageMachining->Name = L"tabPageMachining";
 			this->tabPageMachining->Padding = System::Windows::Forms::Padding(3);
-			this->tabPageMachining->Size = System::Drawing::Size(975, 568);
+			this->tabPageMachining->Size = System::Drawing::Size(975, 618);
 			this->tabPageMachining->TabIndex = 0;
 			this->tabPageMachining->Text = L"Machining Tab";
 			// 
@@ -413,7 +429,7 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			this->radioButton1->AutoSize = true;
 			this->radioButton1->Checked = true;
-			this->radioButton1->Location = System::Drawing::Point(19, 37);
+			this->radioButton1->Location = System::Drawing::Point(19, 40);
 			this->radioButton1->Name = L"radioButton1";
 			this->radioButton1->Size = System::Drawing::Size(119, 24);
 			this->radioButton1->TabIndex = 0;
@@ -424,9 +440,8 @@ private: System::ComponentModel::IContainer^  components;
 			// tabPageExperiment
 			// 
 			this->tabPageExperiment->BackColor = System::Drawing::Color::LightSteelBlue;
-			this->tabPageExperiment->Controls->Add(this->comboBoxDisturbanceObserver);
-			this->tabPageExperiment->Controls->Add(this->comboBoxFrictionModel);
-			this->tabPageExperiment->Controls->Add(this->comboBoxControlMethod);
+			this->tabPageExperiment->Controls->Add(this->textBoxSpinSpeed);
+			this->tabPageExperiment->Controls->Add(this->checkBoxSpinSetting);
 			this->tabPageExperiment->Controls->Add(this->checkBoxLimitTime);
 			this->tabPageExperiment->Controls->Add(this->textBoxDataFileName);
 			this->tabPageExperiment->Controls->Add(this->label15);
@@ -456,40 +471,34 @@ private: System::ComponentModel::IContainer^  components;
 			this->tabPageExperiment->Location = System::Drawing::Point(4, 25);
 			this->tabPageExperiment->Name = L"tabPageExperiment";
 			this->tabPageExperiment->Padding = System::Windows::Forms::Padding(3);
-			this->tabPageExperiment->Size = System::Drawing::Size(975, 568);
+			this->tabPageExperiment->Size = System::Drawing::Size(975, 618);
 			this->tabPageExperiment->TabIndex = 1;
 			this->tabPageExperiment->Text = L"Experiment Tab";
 			// 
-			// comboBoxDisturbanceObserver
+			// textBoxSpinSpeed
 			// 
-			this->comboBoxDisturbanceObserver->FormattingEnabled = true;
-			this->comboBoxDisturbanceObserver->Items->AddRange(gcnew cli::array< System::Object^  >(3) {L"No disturbance observer", L"General disturbance observer", 
-				L"Kalman filter disturbance observer"});
-			this->comboBoxDisturbanceObserver->Location = System::Drawing::Point(755, 395);
-			this->comboBoxDisturbanceObserver->Name = L"comboBoxDisturbanceObserver";
-			this->comboBoxDisturbanceObserver->Size = System::Drawing::Size(214, 28);
-			this->comboBoxDisturbanceObserver->TabIndex = 55;
+			this->textBoxSpinSpeed->BackColor = System::Drawing::SystemColors::InactiveBorder;
+			this->textBoxSpinSpeed->Location = System::Drawing::Point(125, 427);
+			this->textBoxSpinSpeed->Name = L"textBoxSpinSpeed";
+			this->textBoxSpinSpeed->Size = System::Drawing::Size(83, 26);
+			this->textBoxSpinSpeed->TabIndex = 54;
+			this->textBoxSpinSpeed->Text = L"20";
 			// 
-			// comboBoxFrictionModel
+			// checkBoxSpinSetting
 			// 
-			this->comboBoxFrictionModel->FormattingEnabled = true;
-			this->comboBoxFrictionModel->Items->AddRange(gcnew cli::array< System::Object^  >(4) {L"No friction conpensation", L"Static friction model", 
-				L"GMS friction model", L"Nonlinear Static Friction"});
-			this->comboBoxFrictionModel->Location = System::Drawing::Point(755, 361);
-			this->comboBoxFrictionModel->Name = L"comboBoxFrictionModel";
-			this->comboBoxFrictionModel->Size = System::Drawing::Size(214, 28);
-			this->comboBoxFrictionModel->TabIndex = 54;
-			// 
-			// comboBoxControlMethod
-			// 
-			this->comboBoxControlMethod->DisplayMember = L"1";
-			this->comboBoxControlMethod->FormattingEnabled = true;
-			this->comboBoxControlMethod->Items->AddRange(gcnew cli::array< System::Object^  >(4) {L"P Controller", L"PD Controller", 
-				L"PID Controller", L"SlidingModeControl"});
-			this->comboBoxControlMethod->Location = System::Drawing::Point(755, 327);
-			this->comboBoxControlMethod->Name = L"comboBoxControlMethod";
-			this->comboBoxControlMethod->Size = System::Drawing::Size(214, 28);
-			this->comboBoxControlMethod->TabIndex = 1;
+			this->checkBoxSpinSetting->AutoSize = true;
+			this->checkBoxSpinSetting->BackColor = System::Drawing::Color::White;
+			this->checkBoxSpinSetting->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->checkBoxSpinSetting->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->checkBoxSpinSetting->ForeColor = System::Drawing::Color::Red;
+			this->checkBoxSpinSetting->Location = System::Drawing::Point(127, 399);
+			this->checkBoxSpinSetting->Name = L"checkBoxSpinSetting";
+			this->checkBoxSpinSetting->Size = System::Drawing::Size(81, 20);
+			this->checkBoxSpinSetting->TabIndex = 53;
+			this->checkBoxSpinSetting->Text = L"Spin On";
+			this->checkBoxSpinSetting->UseVisualStyleBackColor = false;
+			this->checkBoxSpinSetting->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::checkBoxSpinSetting_MouseClick);
 			// 
 			// checkBoxLimitTime
 			// 
@@ -501,7 +510,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->checkBoxLimitTime->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->checkBoxLimitTime->ForeColor = System::Drawing::Color::Red;
-			this->checkBoxLimitTime->Location = System::Drawing::Point(169, 514);
+			this->checkBoxLimitTime->Location = System::Drawing::Point(169, 557);
 			this->checkBoxLimitTime->Name = L"checkBoxLimitTime";
 			this->checkBoxLimitTime->Size = System::Drawing::Size(83, 17);
 			this->checkBoxLimitTime->TabIndex = 52;
@@ -510,7 +519,7 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			// textBoxDataFileName
 			// 
-			this->textBoxDataFileName->Location = System::Drawing::Point(508, 352);
+			this->textBoxDataFileName->Location = System::Drawing::Point(508, 381);
 			this->textBoxDataFileName->Name = L"textBoxDataFileName";
 			this->textBoxDataFileName->Size = System::Drawing::Size(229, 26);
 			this->textBoxDataFileName->TabIndex = 51;
@@ -521,7 +530,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->label15->AutoSize = true;
 			this->label15->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->label15->Location = System::Drawing::Point(355, 355);
+			this->label15->Location = System::Drawing::Point(355, 385);
 			this->label15->Name = L"label15";
 			this->label15->Size = System::Drawing::Size(139, 20);
 			this->label15->TabIndex = 50;
@@ -537,7 +546,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->checkBoxSaveData->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->checkBoxSaveData->ForeColor = System::Drawing::Color::Blue;
-			this->checkBoxSaveData->Location = System::Drawing::Point(259, 514);
+			this->checkBoxSaveData->Location = System::Drawing::Point(259, 557);
 			this->checkBoxSaveData->Name = L"checkBoxSaveData";
 			this->checkBoxSaveData->Size = System::Drawing::Size(100, 20);
 			this->checkBoxSaveData->TabIndex = 49;
@@ -547,7 +556,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxTimeRun
 			// 
 			this->textBoxTimeRun->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxTimeRun->Location = System::Drawing::Point(169, 537);
+			this->textBoxTimeRun->Location = System::Drawing::Point(169, 582);
 			this->textBoxTimeRun->Name = L"textBoxTimeRun";
 			this->textBoxTimeRun->Size = System::Drawing::Size(83, 26);
 			this->textBoxTimeRun->TabIndex = 47;
@@ -558,7 +567,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->labelTimeDisplay->AutoSize = true;
 			this->labelTimeDisplay->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->labelTimeDisplay->Location = System::Drawing::Point(258, 540);
+			this->labelTimeDisplay->Location = System::Drawing::Point(258, 585);
 			this->labelTimeDisplay->Name = L"labelTimeDisplay";
 			this->labelTimeDisplay->Size = System::Drawing::Size(43, 20);
 			this->labelTimeDisplay->TabIndex = 28;
@@ -570,9 +579,9 @@ private: System::ComponentModel::IContainer^  components;
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
 			this->buttonSimulationStart->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), 
 				static_cast<System::Int32>(static_cast<System::Byte>(192)), static_cast<System::Int32>(static_cast<System::Byte>(0)));
-			this->buttonSimulationStart->Location = System::Drawing::Point(383, 466);
+			this->buttonSimulationStart->Location = System::Drawing::Point(383, 505);
 			this->buttonSimulationStart->Name = L"buttonSimulationStart";
-			this->buttonSimulationStart->Size = System::Drawing::Size(111, 42);
+			this->buttonSimulationStart->Size = System::Drawing::Size(111, 46);
 			this->buttonSimulationStart->TabIndex = 27;
 			this->buttonSimulationStart->Text = L"Start Simulation";
 			this->buttonSimulationStart->UseVisualStyleBackColor = true;
@@ -584,10 +593,10 @@ private: System::ComponentModel::IContainer^  components;
 			this->textBoxControlParameters->Font = (gcnew System::Drawing::Font(L"Times New Roman", 14.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
 			this->textBoxControlParameters->ForeColor = System::Drawing::SystemColors::HotTrack;
-			this->textBoxControlParameters->Location = System::Drawing::Point(508, 429);
+			this->textBoxControlParameters->Location = System::Drawing::Point(508, 413);
 			this->textBoxControlParameters->Multiline = true;
 			this->textBoxControlParameters->Name = L"textBoxControlParameters";
-			this->textBoxControlParameters->Size = System::Drawing::Size(461, 132);
+			this->textBoxControlParameters->Size = System::Drawing::Size(461, 195);
 			this->textBoxControlParameters->TabIndex = 26;
 			this->textBoxControlParameters->Text = L"Control Equation and Value";
 			// 
@@ -596,7 +605,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->label12->AutoSize = true;
 			this->label12->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->label12->Location = System::Drawing::Point(354, 330);
+			this->label12->Location = System::Drawing::Point(354, 358);
 			this->label12->Name = L"label12";
 			this->label12->Size = System::Drawing::Size(144, 20);
 			this->label12->TabIndex = 25;
@@ -604,9 +613,9 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			// textBoxConfigFilename
 			// 
-			this->textBoxConfigFilename->Location = System::Drawing::Point(508, 325);
+			this->textBoxConfigFilename->Location = System::Drawing::Point(508, 352);
 			this->textBoxConfigFilename->Name = L"textBoxConfigFilename";
-			this->textBoxConfigFilename->Size = System::Drawing::Size(229, 26);
+			this->textBoxConfigFilename->Size = System::Drawing::Size(461, 26);
 			this->textBoxConfigFilename->TabIndex = 24;
 			// 
 			// buttonRecentConfig
@@ -614,9 +623,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonRecentConfig->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->buttonRecentConfig->ForeColor = System::Drawing::Color::Navy;
-			this->buttonRecentConfig->Location = System::Drawing::Point(359, 419);
+			this->buttonRecentConfig->Location = System::Drawing::Point(359, 454);
 			this->buttonRecentConfig->Name = L"buttonRecentConfig";
-			this->buttonRecentConfig->Size = System::Drawing::Size(139, 27);
+			this->buttonRecentConfig->Size = System::Drawing::Size(139, 29);
 			this->buttonRecentConfig->TabIndex = 23;
 			this->buttonRecentConfig->Text = L"Recent config file";
 			this->buttonRecentConfig->UseVisualStyleBackColor = true;
@@ -627,9 +636,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonLoadConfig->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->buttonLoadConfig->ForeColor = System::Drawing::Color::Navy;
-			this->buttonLoadConfig->Location = System::Drawing::Point(359, 384);
+			this->buttonLoadConfig->Location = System::Drawing::Point(359, 416);
 			this->buttonLoadConfig->Name = L"buttonLoadConfig";
-			this->buttonLoadConfig->Size = System::Drawing::Size(139, 27);
+			this->buttonLoadConfig->Size = System::Drawing::Size(139, 29);
 			this->buttonLoadConfig->TabIndex = 22;
 			this->buttonLoadConfig->Text = L"Load config file";
 			this->buttonLoadConfig->UseVisualStyleBackColor = true;
@@ -637,6 +646,8 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			// groupBox1
 			// 
+			this->groupBox1->Controls->Add(this->checkBoxPositionUpdate);
+			this->groupBox1->Controls->Add(this->checkBoxEncoderUpdate);
 			this->groupBox1->Controls->Add(this->buttonA1Plus);
 			this->groupBox1->Controls->Add(this->buttonA1Minus);
 			this->groupBox1->Controls->Add(this->buttonCPlus);
@@ -660,7 +671,6 @@ private: System::ComponentModel::IContainer^  components;
 			this->groupBox1->Controls->Add(this->buttonUpdatePosition);
 			this->groupBox1->Controls->Add(this->buttonSetOrigin);
 			this->groupBox1->Controls->Add(this->pictureBoxFiveAxisCNC);
-			this->groupBox1->Controls->Add(this->label11);
 			this->groupBox1->Controls->Add(this->textBoxA2Encoder);
 			this->groupBox1->Controls->Add(this->textBoxA1Encoder);
 			this->groupBox1->Controls->Add(this->textBoxCEncoder);
@@ -668,7 +678,6 @@ private: System::ComponentModel::IContainer^  components;
 			this->groupBox1->Controls->Add(this->textBoxY2Encoder);
 			this->groupBox1->Controls->Add(this->textBoxY1Encoder);
 			this->groupBox1->Controls->Add(this->textBoxXEncoder);
-			this->groupBox1->Controls->Add(this->label10);
 			this->groupBox1->Controls->Add(this->textBoxA2Position);
 			this->groupBox1->Controls->Add(this->textBoxA1Position);
 			this->groupBox1->Controls->Add(this->textBoxCPosition);
@@ -685,21 +694,54 @@ private: System::ComponentModel::IContainer^  components;
 			this->groupBox1->Controls->Add(this->label3);
 			this->groupBox1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->groupBox1->Location = System::Drawing::Point(361, 6);
+			this->groupBox1->Location = System::Drawing::Point(361, 7);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(611, 313);
+			this->groupBox1->Size = System::Drawing::Size(611, 339);
 			this->groupBox1->TabIndex = 21;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Five Axis CNC Information";
+			// 
+			// checkBoxPositionUpdate
+			// 
+			this->checkBoxPositionUpdate->AutoSize = true;
+			this->checkBoxPositionUpdate->BackColor = System::Drawing::Color::White;
+			this->checkBoxPositionUpdate->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->checkBoxPositionUpdate->Checked = true;
+			this->checkBoxPositionUpdate->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->checkBoxPositionUpdate->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->checkBoxPositionUpdate->ForeColor = System::Drawing::Color::Blue;
+			this->checkBoxPositionUpdate->Location = System::Drawing::Point(33, 61);
+			this->checkBoxPositionUpdate->Name = L"checkBoxPositionUpdate";
+			this->checkBoxPositionUpdate->Size = System::Drawing::Size(121, 20);
+			this->checkBoxPositionUpdate->TabIndex = 67;
+			this->checkBoxPositionUpdate->Text = L"Position [mm]";
+			this->checkBoxPositionUpdate->UseVisualStyleBackColor = false;
+			this->checkBoxPositionUpdate->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::checkBoxPositionUpdate_MouseClick);
+			// 
+			// checkBoxEncoderUpdate
+			// 
+			this->checkBoxEncoderUpdate->AutoSize = true;
+			this->checkBoxEncoderUpdate->BackColor = System::Drawing::Color::White;
+			this->checkBoxEncoderUpdate->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->checkBoxEncoderUpdate->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->checkBoxEncoderUpdate->ForeColor = System::Drawing::Color::Blue;
+			this->checkBoxEncoderUpdate->Location = System::Drawing::Point(233, 61);
+			this->checkBoxEncoderUpdate->Name = L"checkBoxEncoderUpdate";
+			this->checkBoxEncoderUpdate->Size = System::Drawing::Size(129, 20);
+			this->checkBoxEncoderUpdate->TabIndex = 66;
+			this->checkBoxEncoderUpdate->Text = L"Encoder Value";
+			this->checkBoxEncoderUpdate->UseVisualStyleBackColor = false;
 			// 
 			// buttonA1Plus
 			// 
 			this->buttonA1Plus->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->buttonA1Plus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"buttonA1Plus.Image")));
-			this->buttonA1Plus->Location = System::Drawing::Point(184, 219);
+			this->buttonA1Plus->Location = System::Drawing::Point(184, 237);
 			this->buttonA1Plus->Name = L"buttonA1Plus";
-			this->buttonA1Plus->Size = System::Drawing::Size(31, 24);
+			this->buttonA1Plus->Size = System::Drawing::Size(31, 26);
 			this->buttonA1Plus->TabIndex = 65;
 			this->buttonA1Plus->UseVisualStyleBackColor = true;
 			this->buttonA1Plus->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::buttonA1Plus_MouseDown);
@@ -708,9 +750,9 @@ private: System::ComponentModel::IContainer^  components;
 			// buttonA1Minus
 			// 
 			this->buttonA1Minus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"buttonA1Minus.Image")));
-			this->buttonA1Minus->Location = System::Drawing::Point(147, 219);
+			this->buttonA1Minus->Location = System::Drawing::Point(147, 237);
 			this->buttonA1Minus->Name = L"buttonA1Minus";
-			this->buttonA1Minus->Size = System::Drawing::Size(31, 24);
+			this->buttonA1Minus->Size = System::Drawing::Size(31, 26);
 			this->buttonA1Minus->TabIndex = 64;
 			this->buttonA1Minus->UseVisualStyleBackColor = true;
 			this->buttonA1Minus->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::buttonA1Minus_MouseDown);
@@ -721,9 +763,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonCPlus->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->buttonCPlus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"buttonCPlus.Image")));
-			this->buttonCPlus->Location = System::Drawing::Point(184, 190);
+			this->buttonCPlus->Location = System::Drawing::Point(184, 206);
 			this->buttonCPlus->Name = L"buttonCPlus";
-			this->buttonCPlus->Size = System::Drawing::Size(31, 24);
+			this->buttonCPlus->Size = System::Drawing::Size(31, 26);
 			this->buttonCPlus->TabIndex = 63;
 			this->buttonCPlus->UseVisualStyleBackColor = true;
 			this->buttonCPlus->Click += gcnew System::EventHandler(this, &FiveAxisCNCForm::buttonCPlus_Click);
@@ -733,9 +775,9 @@ private: System::ComponentModel::IContainer^  components;
 			// buttonCMinus
 			// 
 			this->buttonCMinus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"buttonCMinus.Image")));
-			this->buttonCMinus->Location = System::Drawing::Point(147, 190);
+			this->buttonCMinus->Location = System::Drawing::Point(147, 206);
 			this->buttonCMinus->Name = L"buttonCMinus";
-			this->buttonCMinus->Size = System::Drawing::Size(31, 24);
+			this->buttonCMinus->Size = System::Drawing::Size(31, 26);
 			this->buttonCMinus->TabIndex = 62;
 			this->buttonCMinus->UseVisualStyleBackColor = true;
 			this->buttonCMinus->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::buttonCMinus_MouseDown);
@@ -744,7 +786,7 @@ private: System::ComponentModel::IContainer^  components;
 			// checkBoxPositionRegulation
 			// 
 			this->checkBoxPositionRegulation->AutoSize = true;
-			this->checkBoxPositionRegulation->Location = System::Drawing::Point(205, 281);
+			this->checkBoxPositionRegulation->Location = System::Drawing::Point(205, 304);
 			this->checkBoxPositionRegulation->Name = L"checkBoxPositionRegulation";
 			this->checkBoxPositionRegulation->Size = System::Drawing::Size(105, 24);
 			this->checkBoxPositionRegulation->TabIndex = 61;
@@ -756,18 +798,18 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			this->radioButtonManualSpeedX1000->Appearance = System::Windows::Forms::Appearance::Button;
 			this->radioButtonManualSpeedX1000->AutoSize = true;
-			this->radioButtonManualSpeedX1000->Location = System::Drawing::Point(500, 22);
+			this->radioButtonManualSpeedX1000->Location = System::Drawing::Point(500, 24);
 			this->radioButtonManualSpeedX1000->Name = L"radioButtonManualSpeedX1000";
-			this->radioButtonManualSpeedX1000->Size = System::Drawing::Size(66, 30);
+			this->radioButtonManualSpeedX1000->Size = System::Drawing::Size(57, 30);
 			this->radioButtonManualSpeedX1000->TabIndex = 60;
-			this->radioButtonManualSpeedX1000->Text = L"X1000";
+			this->radioButtonManualSpeedX1000->Text = L"X500";
 			this->radioButtonManualSpeedX1000->UseVisualStyleBackColor = true;
 			// 
 			// radioButtonManualSpeedX100
 			// 
 			this->radioButtonManualSpeedX100->Appearance = System::Windows::Forms::Appearance::Button;
 			this->radioButtonManualSpeedX100->AutoSize = true;
-			this->radioButtonManualSpeedX100->Location = System::Drawing::Point(415, 22);
+			this->radioButtonManualSpeedX100->Location = System::Drawing::Point(415, 24);
 			this->radioButtonManualSpeedX100->Name = L"radioButtonManualSpeedX100";
 			this->radioButtonManualSpeedX100->Size = System::Drawing::Size(65, 30);
 			this->radioButtonManualSpeedX100->TabIndex = 59;
@@ -778,7 +820,7 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			this->radioButtonManualSpeedX10->Appearance = System::Windows::Forms::Appearance::Button;
 			this->radioButtonManualSpeedX10->AutoSize = true;
-			this->radioButtonManualSpeedX10->Location = System::Drawing::Point(339, 22);
+			this->radioButtonManualSpeedX10->Location = System::Drawing::Point(339, 24);
 			this->radioButtonManualSpeedX10->Name = L"radioButtonManualSpeedX10";
 			this->radioButtonManualSpeedX10->Size = System::Drawing::Size(56, 30);
 			this->radioButtonManualSpeedX10->TabIndex = 58;
@@ -790,7 +832,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->radioButtonManualSpeedX1->Appearance = System::Windows::Forms::Appearance::Button;
 			this->radioButtonManualSpeedX1->AutoSize = true;
 			this->radioButtonManualSpeedX1->Checked = true;
-			this->radioButtonManualSpeedX1->Location = System::Drawing::Point(272, 22);
+			this->radioButtonManualSpeedX1->Location = System::Drawing::Point(272, 24);
 			this->radioButtonManualSpeedX1->Name = L"radioButtonManualSpeedX1";
 			this->radioButtonManualSpeedX1->Size = System::Drawing::Size(47, 30);
 			this->radioButtonManualSpeedX1->TabIndex = 48;
@@ -804,7 +846,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->labelManualSpeed->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->labelManualSpeed->ForeColor = System::Drawing::Color::Red;
-			this->labelManualSpeed->Location = System::Drawing::Point(6, 27);
+			this->labelManualSpeed->Location = System::Drawing::Point(6, 29);
 			this->labelManualSpeed->Name = L"labelManualSpeed";
 			this->labelManualSpeed->Size = System::Drawing::Size(240, 20);
 			this->labelManualSpeed->TabIndex = 57;
@@ -813,9 +855,9 @@ private: System::ComponentModel::IContainer^  components;
 			// buttonZMinus
 			// 
 			this->buttonZMinus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"buttonZMinus.Image")));
-			this->buttonZMinus->Location = System::Drawing::Point(147, 160);
+			this->buttonZMinus->Location = System::Drawing::Point(147, 173);
 			this->buttonZMinus->Name = L"buttonZMinus";
-			this->buttonZMinus->Size = System::Drawing::Size(31, 24);
+			this->buttonZMinus->Size = System::Drawing::Size(31, 26);
 			this->buttonZMinus->TabIndex = 56;
 			this->buttonZMinus->UseVisualStyleBackColor = true;
 			this->buttonZMinus->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::buttonZMinus_MouseDown);
@@ -826,9 +868,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonZPlus->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->buttonZPlus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"buttonZPlus.Image")));
-			this->buttonZPlus->Location = System::Drawing::Point(184, 160);
+			this->buttonZPlus->Location = System::Drawing::Point(184, 173);
 			this->buttonZPlus->Name = L"buttonZPlus";
-			this->buttonZPlus->Size = System::Drawing::Size(31, 24);
+			this->buttonZPlus->Size = System::Drawing::Size(31, 26);
 			this->buttonZPlus->TabIndex = 55;
 			this->buttonZPlus->UseVisualStyleBackColor = true;
 			this->buttonZPlus->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::buttonZPlus_MouseDown);
@@ -837,9 +879,9 @@ private: System::ComponentModel::IContainer^  components;
 			// buttonY1Minus
 			// 
 			this->buttonY1Minus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"buttonY1Minus.Image")));
-			this->buttonY1Minus->Location = System::Drawing::Point(147, 108);
+			this->buttonY1Minus->Location = System::Drawing::Point(147, 117);
 			this->buttonY1Minus->Name = L"buttonY1Minus";
-			this->buttonY1Minus->Size = System::Drawing::Size(31, 24);
+			this->buttonY1Minus->Size = System::Drawing::Size(31, 26);
 			this->buttonY1Minus->TabIndex = 54;
 			this->buttonY1Minus->UseVisualStyleBackColor = true;
 			this->buttonY1Minus->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::buttonY1Minus_MouseDown);
@@ -850,9 +892,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonY1Plus->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->buttonY1Plus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"buttonY1Plus.Image")));
-			this->buttonY1Plus->Location = System::Drawing::Point(184, 108);
+			this->buttonY1Plus->Location = System::Drawing::Point(184, 117);
 			this->buttonY1Plus->Name = L"buttonY1Plus";
-			this->buttonY1Plus->Size = System::Drawing::Size(31, 24);
+			this->buttonY1Plus->Size = System::Drawing::Size(31, 26);
 			this->buttonY1Plus->TabIndex = 53;
 			this->buttonY1Plus->UseVisualStyleBackColor = true;
 			this->buttonY1Plus->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::buttonY1Plus_MouseDown);
@@ -861,12 +903,13 @@ private: System::ComponentModel::IContainer^  components;
 			// buttonXMinus
 			// 
 			this->buttonXMinus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"buttonXMinus.Image")));
-			this->buttonXMinus->Location = System::Drawing::Point(147, 78);
+			this->buttonXMinus->Location = System::Drawing::Point(147, 85);
 			this->buttonXMinus->Name = L"buttonXMinus";
-			this->buttonXMinus->Size = System::Drawing::Size(31, 24);
+			this->buttonXMinus->Size = System::Drawing::Size(31, 26);
 			this->buttonXMinus->TabIndex = 52;
 			this->buttonXMinus->UseVisualStyleBackColor = true;
 			this->buttonXMinus->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::buttonXMinus_MouseDown);
+			this->buttonXMinus->MouseLeave += gcnew System::EventHandler(this, &FiveAxisCNCForm::buttonXMinus_MouseLeave);
 			this->buttonXMinus->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::buttonXMinus_MouseUp);
 			// 
 			// buttonXPlus
@@ -874,13 +917,14 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonXPlus->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->buttonXPlus->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"buttonXPlus.Image")));
-			this->buttonXPlus->Location = System::Drawing::Point(184, 78);
+			this->buttonXPlus->Location = System::Drawing::Point(184, 85);
 			this->buttonXPlus->Name = L"buttonXPlus";
-			this->buttonXPlus->Size = System::Drawing::Size(31, 24);
+			this->buttonXPlus->Size = System::Drawing::Size(31, 26);
 			this->buttonXPlus->TabIndex = 51;
 			this->buttonXPlus->UseVisualStyleBackColor = true;
 			this->buttonXPlus->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::buttonXPlus_MouseDown);
 			this->buttonXPlus->MouseEnter += gcnew System::EventHandler(this, &FiveAxisCNCForm::buttonXPlus_MouseEnter);
+			this->buttonXPlus->MouseLeave += gcnew System::EventHandler(this, &FiveAxisCNCForm::buttonXPlus_MouseLeave);
 			this->buttonXPlus->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &FiveAxisCNCForm::buttonXPlus_MouseUp);
 			// 
 			// label13
@@ -888,7 +932,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->label13->AutoSize = true;
 			this->label13->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->label13->Location = System::Drawing::Point(564, 252);
+			this->label13->Location = System::Drawing::Point(564, 273);
 			this->label13->Name = L"label13";
 			this->label13->Size = System::Drawing::Size(40, 20);
 			this->label13->TabIndex = 50;
@@ -897,7 +941,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxSampleTime
 			// 
 			this->textBoxSampleTime->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxSampleTime->Location = System::Drawing::Point(487, 250);
+			this->textBoxSampleTime->Location = System::Drawing::Point(487, 271);
 			this->textBoxSampleTime->Name = L"textBoxSampleTime";
 			this->textBoxSampleTime->Size = System::Drawing::Size(70, 26);
 			this->textBoxSampleTime->TabIndex = 49;
@@ -908,7 +952,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->label2->AutoSize = true;
 			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->label2->Location = System::Drawing::Point(380, 253);
+			this->label2->Location = System::Drawing::Point(380, 274);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(101, 20);
 			this->label2->TabIndex = 48;
@@ -919,9 +963,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonTestCounter->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->buttonTestCounter->ForeColor = System::Drawing::Color::Maroon;
-			this->buttonTestCounter->Location = System::Drawing::Point(465, 281);
+			this->buttonTestCounter->Location = System::Drawing::Point(465, 304);
 			this->buttonTestCounter->Name = L"buttonTestCounter";
-			this->buttonTestCounter->Size = System::Drawing::Size(139, 27);
+			this->buttonTestCounter->Size = System::Drawing::Size(139, 29);
 			this->buttonTestCounter->TabIndex = 46;
 			this->buttonTestCounter->Text = L"Test Counter";
 			this->buttonTestCounter->UseVisualStyleBackColor = true;
@@ -932,9 +976,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonUpdatePosition->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
 			this->buttonUpdatePosition->ForeColor = System::Drawing::Color::Maroon;
-			this->buttonUpdatePosition->Location = System::Drawing::Point(320, 281);
+			this->buttonUpdatePosition->Location = System::Drawing::Point(320, 304);
 			this->buttonUpdatePosition->Name = L"buttonUpdatePosition";
-			this->buttonUpdatePosition->Size = System::Drawing::Size(139, 27);
+			this->buttonUpdatePosition->Size = System::Drawing::Size(139, 29);
 			this->buttonUpdatePosition->TabIndex = 45;
 			this->buttonUpdatePosition->Text = L"Update Position";
 			this->buttonUpdatePosition->UseVisualStyleBackColor = true;
@@ -945,9 +989,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonSetOrigin->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->buttonSetOrigin->ForeColor = System::Drawing::Color::Maroon;
-			this->buttonSetOrigin->Location = System::Drawing::Point(33, 281);
+			this->buttonSetOrigin->Location = System::Drawing::Point(33, 304);
 			this->buttonSetOrigin->Name = L"buttonSetOrigin";
-			this->buttonSetOrigin->Size = System::Drawing::Size(139, 27);
+			this->buttonSetOrigin->Size = System::Drawing::Size(139, 29);
 			this->buttonSetOrigin->TabIndex = 27;
 			this->buttonSetOrigin->Text = L"Set Origin";
 			this->buttonSetOrigin->UseVisualStyleBackColor = true;
@@ -957,28 +1001,16 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			this->pictureBoxFiveAxisCNC->ImageLocation = L"5AxisMachineMiniLocked.jpg";
 			this->pictureBoxFiveAxisCNC->InitialImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pictureBoxFiveAxisCNC.InitialImage")));
-			this->pictureBoxFiveAxisCNC->Location = System::Drawing::Point(384, 61);
+			this->pictureBoxFiveAxisCNC->Location = System::Drawing::Point(384, 66);
 			this->pictureBoxFiveAxisCNC->Name = L"pictureBoxFiveAxisCNC";
-			this->pictureBoxFiveAxisCNC->Size = System::Drawing::Size(209, 184);
+			this->pictureBoxFiveAxisCNC->Size = System::Drawing::Size(209, 199);
 			this->pictureBoxFiveAxisCNC->TabIndex = 26;
 			this->pictureBoxFiveAxisCNC->TabStop = false;
-			// 
-			// label11
-			// 
-			this->label11->AutoSize = true;
-			this->label11->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->label11->ForeColor = System::Drawing::SystemColors::HotTrack;
-			this->label11->Location = System::Drawing::Point(229, 56);
-			this->label11->Name = L"label11";
-			this->label11->Size = System::Drawing::Size(127, 20);
-			this->label11->TabIndex = 44;
-			this->label11->Text = L"Encoder Value";
 			// 
 			// textBoxA2Encoder
 			// 
 			this->textBoxA2Encoder->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxA2Encoder->Location = System::Drawing::Point(233, 244);
+			this->textBoxA2Encoder->Location = System::Drawing::Point(233, 264);
 			this->textBoxA2Encoder->Name = L"textBoxA2Encoder";
 			this->textBoxA2Encoder->Size = System::Drawing::Size(123, 26);
 			this->textBoxA2Encoder->TabIndex = 43;
@@ -986,7 +1018,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxA1Encoder
 			// 
 			this->textBoxA1Encoder->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxA1Encoder->Location = System::Drawing::Point(233, 216);
+			this->textBoxA1Encoder->Location = System::Drawing::Point(233, 234);
 			this->textBoxA1Encoder->Name = L"textBoxA1Encoder";
 			this->textBoxA1Encoder->Size = System::Drawing::Size(123, 26);
 			this->textBoxA1Encoder->TabIndex = 42;
@@ -994,7 +1026,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxCEncoder
 			// 
 			this->textBoxCEncoder->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxCEncoder->Location = System::Drawing::Point(233, 188);
+			this->textBoxCEncoder->Location = System::Drawing::Point(233, 204);
 			this->textBoxCEncoder->Name = L"textBoxCEncoder";
 			this->textBoxCEncoder->Size = System::Drawing::Size(123, 26);
 			this->textBoxCEncoder->TabIndex = 41;
@@ -1002,7 +1034,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxZEncoder
 			// 
 			this->textBoxZEncoder->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxZEncoder->Location = System::Drawing::Point(233, 161);
+			this->textBoxZEncoder->Location = System::Drawing::Point(233, 174);
 			this->textBoxZEncoder->Name = L"textBoxZEncoder";
 			this->textBoxZEncoder->Size = System::Drawing::Size(123, 26);
 			this->textBoxZEncoder->TabIndex = 40;
@@ -1010,7 +1042,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxY2Encoder
 			// 
 			this->textBoxY2Encoder->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxY2Encoder->Location = System::Drawing::Point(233, 133);
+			this->textBoxY2Encoder->Location = System::Drawing::Point(233, 144);
 			this->textBoxY2Encoder->Name = L"textBoxY2Encoder";
 			this->textBoxY2Encoder->Size = System::Drawing::Size(123, 26);
 			this->textBoxY2Encoder->TabIndex = 39;
@@ -1018,7 +1050,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxY1Encoder
 			// 
 			this->textBoxY1Encoder->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxY1Encoder->Location = System::Drawing::Point(233, 105);
+			this->textBoxY1Encoder->Location = System::Drawing::Point(233, 114);
 			this->textBoxY1Encoder->Name = L"textBoxY1Encoder";
 			this->textBoxY1Encoder->Size = System::Drawing::Size(123, 26);
 			this->textBoxY1Encoder->TabIndex = 38;
@@ -1026,27 +1058,15 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxXEncoder
 			// 
 			this->textBoxXEncoder->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxXEncoder->Location = System::Drawing::Point(233, 78);
+			this->textBoxXEncoder->Location = System::Drawing::Point(233, 85);
 			this->textBoxXEncoder->Name = L"textBoxXEncoder";
 			this->textBoxXEncoder->Size = System::Drawing::Size(123, 26);
 			this->textBoxXEncoder->TabIndex = 37;
 			// 
-			// label10
-			// 
-			this->label10->AutoSize = true;
-			this->label10->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->label10->ForeColor = System::Drawing::SystemColors::HotTrack;
-			this->label10->Location = System::Drawing::Point(42, 56);
-			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(113, 20);
-			this->label10->TabIndex = 36;
-			this->label10->Text = L"Position(mm)";
-			// 
 			// textBoxA2Position
 			// 
 			this->textBoxA2Position->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxA2Position->Location = System::Drawing::Point(33, 244);
+			this->textBoxA2Position->Location = System::Drawing::Point(33, 264);
 			this->textBoxA2Position->Name = L"textBoxA2Position";
 			this->textBoxA2Position->Size = System::Drawing::Size(111, 26);
 			this->textBoxA2Position->TabIndex = 35;
@@ -1054,7 +1074,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxA1Position
 			// 
 			this->textBoxA1Position->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxA1Position->Location = System::Drawing::Point(33, 216);
+			this->textBoxA1Position->Location = System::Drawing::Point(33, 234);
 			this->textBoxA1Position->Name = L"textBoxA1Position";
 			this->textBoxA1Position->Size = System::Drawing::Size(111, 26);
 			this->textBoxA1Position->TabIndex = 34;
@@ -1062,7 +1082,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxCPosition
 			// 
 			this->textBoxCPosition->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxCPosition->Location = System::Drawing::Point(33, 188);
+			this->textBoxCPosition->Location = System::Drawing::Point(33, 204);
 			this->textBoxCPosition->Name = L"textBoxCPosition";
 			this->textBoxCPosition->Size = System::Drawing::Size(111, 26);
 			this->textBoxCPosition->TabIndex = 33;
@@ -1070,7 +1090,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxZPosition
 			// 
 			this->textBoxZPosition->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxZPosition->Location = System::Drawing::Point(33, 161);
+			this->textBoxZPosition->Location = System::Drawing::Point(33, 174);
 			this->textBoxZPosition->Name = L"textBoxZPosition";
 			this->textBoxZPosition->Size = System::Drawing::Size(111, 26);
 			this->textBoxZPosition->TabIndex = 32;
@@ -1078,7 +1098,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxY2Position
 			// 
 			this->textBoxY2Position->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxY2Position->Location = System::Drawing::Point(33, 133);
+			this->textBoxY2Position->Location = System::Drawing::Point(33, 144);
 			this->textBoxY2Position->Name = L"textBoxY2Position";
 			this->textBoxY2Position->Size = System::Drawing::Size(111, 26);
 			this->textBoxY2Position->TabIndex = 31;
@@ -1086,7 +1106,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxY1Position
 			// 
 			this->textBoxY1Position->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxY1Position->Location = System::Drawing::Point(33, 105);
+			this->textBoxY1Position->Location = System::Drawing::Point(33, 114);
 			this->textBoxY1Position->Name = L"textBoxY1Position";
 			this->textBoxY1Position->Size = System::Drawing::Size(111, 26);
 			this->textBoxY1Position->TabIndex = 30;
@@ -1094,7 +1114,7 @@ private: System::ComponentModel::IContainer^  components;
 			// textBoxXPosition
 			// 
 			this->textBoxXPosition->BackColor = System::Drawing::SystemColors::InactiveBorder;
-			this->textBoxXPosition->Location = System::Drawing::Point(33, 78);
+			this->textBoxXPosition->Location = System::Drawing::Point(33, 85);
 			this->textBoxXPosition->Name = L"textBoxXPosition";
 			this->textBoxXPosition->Size = System::Drawing::Size(111, 26);
 			this->textBoxXPosition->TabIndex = 29;
@@ -1106,7 +1126,7 @@ private: System::ComponentModel::IContainer^  components;
 				static_cast<System::Byte>(0)));
 			this->label9->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(128)), 
 				static_cast<System::Int32>(static_cast<System::Byte>(0)));
-			this->label9->Location = System::Drawing::Point(6, 247);
+			this->label9->Location = System::Drawing::Point(6, 268);
 			this->label9->Name = L"label9";
 			this->label9->Size = System::Drawing::Size(31, 20);
 			this->label9->TabIndex = 28;
@@ -1119,7 +1139,7 @@ private: System::ComponentModel::IContainer^  components;
 				static_cast<System::Byte>(0)));
 			this->label6->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(128)), 
 				static_cast<System::Int32>(static_cast<System::Byte>(0)));
-			this->label6->Location = System::Drawing::Point(6, 219);
+			this->label6->Location = System::Drawing::Point(6, 237);
 			this->label6->Name = L"label6";
 			this->label6->Size = System::Drawing::Size(31, 20);
 			this->label6->TabIndex = 27;
@@ -1131,7 +1151,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->label7->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->label7->ForeColor = System::Drawing::SystemColors::HotTrack;
-			this->label7->Location = System::Drawing::Point(6, 190);
+			this->label7->Location = System::Drawing::Point(6, 206);
 			this->label7->Name = L"label7";
 			this->label7->Size = System::Drawing::Size(21, 20);
 			this->label7->TabIndex = 26;
@@ -1143,7 +1163,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->label8->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->label8->ForeColor = System::Drawing::SystemColors::HotTrack;
-			this->label8->Location = System::Drawing::Point(6, 162);
+			this->label8->Location = System::Drawing::Point(6, 176);
 			this->label8->Name = L"label8";
 			this->label8->Size = System::Drawing::Size(20, 20);
 			this->label8->TabIndex = 25;
@@ -1156,7 +1176,7 @@ private: System::ComponentModel::IContainer^  components;
 				static_cast<System::Byte>(0)));
 			this->label5->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(128)), 
 				static_cast<System::Int32>(static_cast<System::Byte>(0)));
-			this->label5->Location = System::Drawing::Point(6, 135);
+			this->label5->Location = System::Drawing::Point(6, 146);
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(31, 20);
 			this->label5->TabIndex = 24;
@@ -1169,7 +1189,7 @@ private: System::ComponentModel::IContainer^  components;
 				static_cast<System::Byte>(0)));
 			this->label4->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(128)), 
 				static_cast<System::Int32>(static_cast<System::Byte>(0)));
-			this->label4->Location = System::Drawing::Point(6, 106);
+			this->label4->Location = System::Drawing::Point(6, 115);
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(31, 20);
 			this->label4->TabIndex = 23;
@@ -1181,7 +1201,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->label3->ForeColor = System::Drawing::SystemColors::HotTrack;
-			this->label3->Location = System::Drawing::Point(6, 78);
+			this->label3->Location = System::Drawing::Point(6, 85);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(21, 20);
 			this->label3->TabIndex = 22;
@@ -1192,7 +1212,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->labelConnectStatus->AutoSize = true;
 			this->labelConnectStatus->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->labelConnectStatus->Location = System::Drawing::Point(3, 423);
+			this->labelConnectStatus->Location = System::Drawing::Point(3, 458);
 			this->labelConnectStatus->Name = L"labelConnectStatus";
 			this->labelConnectStatus->Size = System::Drawing::Size(120, 20);
 			this->labelConnectStatus->TabIndex = 20;
@@ -1203,9 +1223,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonStop->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->buttonStop->ForeColor = System::Drawing::Color::Red;
-			this->buttonStop->Location = System::Drawing::Point(383, 519);
+			this->buttonStop->Location = System::Drawing::Point(383, 562);
 			this->buttonStop->Name = L"buttonStop";
-			this->buttonStop->Size = System::Drawing::Size(110, 42);
+			this->buttonStop->Size = System::Drawing::Size(110, 46);
 			this->buttonStop->TabIndex = 19;
 			this->buttonStop->Text = L"Stop";
 			this->buttonStop->UseVisualStyleBackColor = true;
@@ -1217,9 +1237,9 @@ private: System::ComponentModel::IContainer^  components;
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
 			this->buttonExperimentStartPause->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), 
 				static_cast<System::Int32>(static_cast<System::Byte>(192)), static_cast<System::Int32>(static_cast<System::Byte>(0)));
-			this->buttonExperimentStartPause->Location = System::Drawing::Point(214, 466);
+			this->buttonExperimentStartPause->Location = System::Drawing::Point(214, 505);
 			this->buttonExperimentStartPause->Name = L"buttonExperimentStartPause";
-			this->buttonExperimentStartPause->Size = System::Drawing::Size(109, 42);
+			this->buttonExperimentStartPause->Size = System::Drawing::Size(109, 46);
 			this->buttonExperimentStartPause->TabIndex = 18;
 			this->buttonExperimentStartPause->Text = L"Start Experiment";
 			this->buttonExperimentStartPause->UseVisualStyleBackColor = true;
@@ -1231,9 +1251,9 @@ private: System::ComponentModel::IContainer^  components;
 				static_cast<System::Byte>(0)));
 			this->buttonIOConnection->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), 
 				static_cast<System::Int32>(static_cast<System::Byte>(192)), static_cast<System::Int32>(static_cast<System::Byte>(0)));
-			this->buttonIOConnection->Location = System::Drawing::Point(5, 368);
+			this->buttonIOConnection->Location = System::Drawing::Point(5, 399);
 			this->buttonIOConnection->Name = L"buttonIOConnection";
-			this->buttonIOConnection->Size = System::Drawing::Size(110, 42);
+			this->buttonIOConnection->Size = System::Drawing::Size(110, 46);
 			this->buttonIOConnection->TabIndex = 17;
 			this->buttonIOConnection->Text = L"Conect to CNC";
 			this->buttonIOConnection->UseVisualStyleBackColor = true;
@@ -1244,9 +1264,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonEmergencyStop->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
 			this->buttonEmergencyStop->ForeColor = System::Drawing::Color::Red;
-			this->buttonEmergencyStop->Location = System::Drawing::Point(0, 510);
+			this->buttonEmergencyStop->Location = System::Drawing::Point(0, 553);
 			this->buttonEmergencyStop->Name = L"buttonEmergencyStop";
-			this->buttonEmergencyStop->Size = System::Drawing::Size(163, 52);
+			this->buttonEmergencyStop->Size = System::Drawing::Size(163, 56);
 			this->buttonEmergencyStop->TabIndex = 16;
 			this->buttonEmergencyStop->Text = L"Emergency Stop";
 			this->buttonEmergencyStop->UseVisualStyleBackColor = true;
@@ -1257,9 +1277,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonEditGcodeFile->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
 			this->buttonEditGcodeFile->ForeColor = System::Drawing::Color::Navy;
-			this->buttonEditGcodeFile->Location = System::Drawing::Point(214, 419);
+			this->buttonEditGcodeFile->Location = System::Drawing::Point(214, 454);
 			this->buttonEditGcodeFile->Name = L"buttonEditGcodeFile";
-			this->buttonEditGcodeFile->Size = System::Drawing::Size(139, 27);
+			this->buttonEditGcodeFile->Size = System::Drawing::Size(139, 29);
 			this->buttonEditGcodeFile->TabIndex = 6;
 			this->buttonEditGcodeFile->Text = L"Edit Gcode File";
 			this->buttonEditGcodeFile->UseVisualStyleBackColor = true;
@@ -1270,9 +1290,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonRecentGcode->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->buttonRecentGcode->ForeColor = System::Drawing::Color::Navy;
-			this->buttonRecentGcode->Location = System::Drawing::Point(214, 384);
+			this->buttonRecentGcode->Location = System::Drawing::Point(214, 416);
 			this->buttonRecentGcode->Name = L"buttonRecentGcode";
-			this->buttonRecentGcode->Size = System::Drawing::Size(139, 27);
+			this->buttonRecentGcode->Size = System::Drawing::Size(139, 29);
 			this->buttonRecentGcode->TabIndex = 5;
 			this->buttonRecentGcode->Text = L"Recent Gcode File";
 			this->buttonRecentGcode->UseVisualStyleBackColor = true;
@@ -1283,7 +1303,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->label1->AutoSize = true;
 			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->label1->Location = System::Drawing::Point(6, 328);
+			this->label1->Location = System::Drawing::Point(6, 355);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(46, 20);
 			this->label1->TabIndex = 4;
@@ -1291,7 +1311,7 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			// textBoxGcodeFilename
 			// 
-			this->textBoxGcodeFilename->Location = System::Drawing::Point(56, 322);
+			this->textBoxGcodeFilename->Location = System::Drawing::Point(56, 349);
 			this->textBoxGcodeFilename->Name = L"textBoxGcodeFilename";
 			this->textBoxGcodeFilename->Size = System::Drawing::Size(297, 26);
 			this->textBoxGcodeFilename->TabIndex = 3;
@@ -1301,9 +1321,9 @@ private: System::ComponentModel::IContainer^  components;
 			this->buttonLoadGcode->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->buttonLoadGcode->ForeColor = System::Drawing::Color::Navy;
-			this->buttonLoadGcode->Location = System::Drawing::Point(214, 352);
+			this->buttonLoadGcode->Location = System::Drawing::Point(214, 381);
 			this->buttonLoadGcode->Name = L"buttonLoadGcode";
-			this->buttonLoadGcode->Size = System::Drawing::Size(139, 27);
+			this->buttonLoadGcode->Size = System::Drawing::Size(139, 29);
 			this->buttonLoadGcode->TabIndex = 2;
 			this->buttonLoadGcode->Text = L"Load Gcode";
 			this->buttonLoadGcode->UseVisualStyleBackColor = true;
@@ -1319,7 +1339,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->textBoxGcodeContent->Multiline = true;
 			this->textBoxGcodeContent->Name = L"textBoxGcodeContent";
 			this->textBoxGcodeContent->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->textBoxGcodeContent->Size = System::Drawing::Size(352, 314);
+			this->textBoxGcodeContent->Size = System::Drawing::Size(352, 340);
 			this->textBoxGcodeContent->TabIndex = 1;
 			this->textBoxGcodeContent->Text = L"Show Gcode  content";
 			// 
@@ -1336,15 +1356,15 @@ private: System::ComponentModel::IContainer^  components;
 				static_cast<System::Byte>(0)));
 			this->tabPageResultGraph->Location = System::Drawing::Point(4, 25);
 			this->tabPageResultGraph->Name = L"tabPageResultGraph";
-			this->tabPageResultGraph->Size = System::Drawing::Size(975, 568);
+			this->tabPageResultGraph->Size = System::Drawing::Size(975, 618);
 			this->tabPageResultGraph->TabIndex = 2;
 			this->tabPageResultGraph->Text = L"Result Graph";
 			// 
 			// buttonAnotherGraph
 			// 
-			this->buttonAnotherGraph->Location = System::Drawing::Point(542, 488);
+			this->buttonAnotherGraph->Location = System::Drawing::Point(542, 529);
 			this->buttonAnotherGraph->Name = L"buttonAnotherGraph";
-			this->buttonAnotherGraph->Size = System::Drawing::Size(123, 29);
+			this->buttonAnotherGraph->Size = System::Drawing::Size(123, 31);
 			this->buttonAnotherGraph->TabIndex = 5;
 			this->buttonAnotherGraph->Text = L"Another Graph";
 			this->buttonAnotherGraph->UseVisualStyleBackColor = true;
@@ -1352,9 +1372,9 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			// buttonOpenResultFile
 			// 
-			this->buttonOpenResultFile->Location = System::Drawing::Point(399, 488);
+			this->buttonOpenResultFile->Location = System::Drawing::Point(399, 529);
 			this->buttonOpenResultFile->Name = L"buttonOpenResultFile";
-			this->buttonOpenResultFile->Size = System::Drawing::Size(123, 29);
+			this->buttonOpenResultFile->Size = System::Drawing::Size(123, 31);
 			this->buttonOpenResultFile->TabIndex = 4;
 			this->buttonOpenResultFile->Text = L"Result File";
 			this->buttonOpenResultFile->UseVisualStyleBackColor = true;
@@ -1362,9 +1382,9 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			// buttonZoomOut
 			// 
-			this->buttonZoomOut->Location = System::Drawing::Point(134, 488);
+			this->buttonZoomOut->Location = System::Drawing::Point(134, 529);
 			this->buttonZoomOut->Name = L"buttonZoomOut";
-			this->buttonZoomOut->Size = System::Drawing::Size(120, 29);
+			this->buttonZoomOut->Size = System::Drawing::Size(120, 31);
 			this->buttonZoomOut->TabIndex = 3;
 			this->buttonZoomOut->Text = L"Zoom Out";
 			this->buttonZoomOut->UseVisualStyleBackColor = true;
@@ -1372,9 +1392,9 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			// buttonClearGraph
 			// 
-			this->buttonClearGraph->Location = System::Drawing::Point(260, 488);
+			this->buttonClearGraph->Location = System::Drawing::Point(260, 529);
 			this->buttonClearGraph->Name = L"buttonClearGraph";
-			this->buttonClearGraph->Size = System::Drawing::Size(123, 29);
+			this->buttonClearGraph->Size = System::Drawing::Size(123, 31);
 			this->buttonClearGraph->TabIndex = 2;
 			this->buttonClearGraph->Text = L"Clear Graph";
 			this->buttonClearGraph->UseVisualStyleBackColor = true;
@@ -1382,9 +1402,9 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			// buttonShowGraph
 			// 
-			this->buttonShowGraph->Location = System::Drawing::Point(5, 488);
+			this->buttonShowGraph->Location = System::Drawing::Point(5, 529);
 			this->buttonShowGraph->Name = L"buttonShowGraph";
-			this->buttonShowGraph->Size = System::Drawing::Size(123, 29);
+			this->buttonShowGraph->Size = System::Drawing::Size(123, 31);
 			this->buttonShowGraph->TabIndex = 1;
 			this->buttonShowGraph->Text = L"Show Graph";
 			this->buttonShowGraph->UseVisualStyleBackColor = true;
@@ -1396,6 +1416,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->chartRealReferenceContour->BackImageTransparentColor = System::Drawing::Color::White;
 			this->chartRealReferenceContour->BackSecondaryColor = System::Drawing::Color::DimGray;
 			chartArea1->AlignmentOrientation = static_cast<System::Windows::Forms::DataVisualization::Charting::AreaAlignmentOrientations>((System::Windows::Forms::DataVisualization::Charting::AreaAlignmentOrientations::Vertical | System::Windows::Forms::DataVisualization::Charting::AreaAlignmentOrientations::Horizontal));
+			chartArea1->Area3DStyle->WallWidth = 10;
 			chartArea1->AxisX->LineColor = System::Drawing::Color::Lime;
 			chartArea1->AxisX->LineWidth = 2;
 			chartArea1->AxisX->MajorGrid->LineDashStyle = System::Windows::Forms::DataVisualization::Charting::ChartDashStyle::DashDot;
@@ -1417,7 +1438,7 @@ private: System::ComponentModel::IContainer^  components;
 			chartArea1->CursorY->IsUserSelectionEnabled = true;
 			chartArea1->InnerPlotPosition->Auto = false;
 			chartArea1->InnerPlotPosition->Height = 86;
-			chartArea1->InnerPlotPosition->Width = 90;
+			chartArea1->InnerPlotPosition->Width = 80;
 			chartArea1->InnerPlotPosition->X = 10;
 			chartArea1->InnerPlotPosition->Y = 2;
 			chartArea1->Name = L"ChartArea1";
@@ -1540,7 +1561,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->chartRealReferenceContour->Legends->Add(legend3);
 			this->chartRealReferenceContour->Legends->Add(legend4);
 			this->chartRealReferenceContour->Location = System::Drawing::Point(5, 3);
-			this->chartRealReferenceContour->Margin = System::Windows::Forms::Padding(1);
+			this->chartRealReferenceContour->Margin = System::Windows::Forms::Padding(2);
 			this->chartRealReferenceContour->Name = L"chartRealReferenceContour";
 			this->chartRealReferenceContour->Palette = System::Windows::Forms::DataVisualization::Charting::ChartColorPalette::Bright;
 			series1->ChartArea = L"ChartArea1";
@@ -1574,98 +1595,114 @@ private: System::ComponentModel::IContainer^  components;
 			series4->MarkerColor = System::Drawing::Color::Green;
 			series4->MarkerSize = 2;
 			series4->Name = L"YControlVoltage";
-			series5->ChartArea = L"ChartArea4";
+			series5->ChartArea = L"ChartArea2";
 			series5->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
-			series5->Color = System::Drawing::Color::Navy;
-			series5->Legend = L"LegendChart4";
-			series5->MarkerColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(0)), 
-				static_cast<System::Int32>(static_cast<System::Byte>(192)));
-			series5->MarkerSize = 2;
-			series5->Name = L"XPredictedVoltage";
+			series5->Color = System::Drawing::Color::Red;
+			series5->Legend = L"LegendChart2";
+			series5->Name = L"ZControlVoltage";
 			series6->ChartArea = L"ChartArea4";
 			series6->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
-			series6->Color = System::Drawing::Color::Green;
+			series6->Color = System::Drawing::Color::Navy;
 			series6->Legend = L"LegendChart4";
-			series6->MarkerColor = System::Drawing::Color::Green;
-			series6->MarkerSize = 2;
-			series6->Name = L"YPredictedVoltage";
-			series7->ChartArea = L"ChartArea3";
-			series7->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
-			series7->Color = System::Drawing::Color::Navy;
-			series7->Legend = L"LegendChart3";
-			series7->MarkerColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(0)), 
+			series6->MarkerColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(0)), 
 				static_cast<System::Int32>(static_cast<System::Byte>(192)));
+			series6->MarkerSize = 2;
+			series6->Name = L"XPredictedVoltage";
+			series7->ChartArea = L"ChartArea4";
+			series7->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series7->Color = System::Drawing::Color::Green;
+			series7->Legend = L"LegendChart4";
+			series7->MarkerColor = System::Drawing::Color::Green;
 			series7->MarkerSize = 2;
-			series7->Name = L"ew0Error";
+			series7->Name = L"YPredictedVoltage";
 			series8->ChartArea = L"ChartArea3";
 			series8->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
-			series8->Color = System::Drawing::Color::Green;
+			series8->Color = System::Drawing::Color::Navy;
 			series8->Legend = L"LegendChart3";
-			series8->MarkerColor = System::Drawing::Color::Green;
+			series8->MarkerColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(0)), 
+				static_cast<System::Int32>(static_cast<System::Byte>(192)));
 			series8->MarkerSize = 2;
-			series8->Name = L"ew1Error";
+			series8->Name = L"ew0Error";
 			series9->ChartArea = L"ChartArea3";
 			series9->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series9->Color = System::Drawing::Color::Green;
 			series9->Legend = L"LegendChart3";
-			series9->Name = L"ec0";
+			series9->MarkerColor = System::Drawing::Color::Green;
+			series9->MarkerSize = 2;
+			series9->Name = L"ew1Error";
 			series10->ChartArea = L"ChartArea3";
 			series10->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
 			series10->Legend = L"LegendChart3";
-			series10->Name = L"ec1";
-			series11->ChartArea = L"ChartArea2";
+			series10->Name = L"ec0";
+			series11->ChartArea = L"ChartArea3";
 			series11->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
-			series11->Enabled = false;
-			series11->Legend = L"LegendChart2";
-			series11->Name = L"RefX_1";
-			series12->ChartArea = L"ChartArea1";
+			series11->Legend = L"LegendChart3";
+			series11->Name = L"ec1";
+			series12->ChartArea = L"ChartArea2";
 			series12->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series12->Enabled = false;
 			series12->Legend = L"LegendChart2";
-			series12->Name = L"RefX_2";
-			series13->ChartArea = L"ChartArea4";
+			series12->Name = L"RefX_1";
+			series13->ChartArea = L"ChartArea1";
 			series13->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
-			series13->Legend = L"LegendChart4";
-			series13->Name = L"RefY_1";
+			series13->Legend = L"LegendChart2";
+			series13->Name = L"RefX_2";
 			series14->ChartArea = L"ChartArea4";
 			series14->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
 			series14->Legend = L"LegendChart4";
-			series14->Name = L"RefY_2";
-			series15->ChartArea = L"ChartArea2";
+			series14->Name = L"RefY_1";
+			series15->ChartArea = L"ChartArea4";
 			series15->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
-			series15->Legend = L"LegendChart2";
-			series15->Name = L"RealX_1";
+			series15->Legend = L"LegendChart4";
+			series15->Name = L"RefY_2";
 			series16->ChartArea = L"ChartArea2";
 			series16->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
 			series16->Legend = L"LegendChart2";
-			series16->Name = L"RealX_2";
-			series17->ChartArea = L"ChartArea4";
+			series16->Name = L"RealX_1";
+			series17->ChartArea = L"ChartArea2";
 			series17->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
-			series17->Legend = L"LegendChart4";
-			series17->Name = L"RealY_1";
+			series17->Legend = L"LegendChart2";
+			series17->Name = L"RealX_2";
 			series18->ChartArea = L"ChartArea4";
 			series18->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
 			series18->Legend = L"LegendChart4";
-			series18->Name = L"RealY_2";
-			series19->ChartArea = L"ChartArea2";
+			series18->Name = L"RealY_1";
+			series19->ChartArea = L"ChartArea4";
 			series19->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
-			series19->Legend = L"LegendChart2";
-			series19->Name = L"RefX_1_UX";
-			series19->YValuesPerPoint = 2;
-			series20->ChartArea = L"ChartArea4";
+			series19->Legend = L"LegendChart4";
+			series19->Name = L"RealY_2";
+			series20->ChartArea = L"ChartArea2";
 			series20->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
-			series20->Legend = L"LegendChart4";
-			series20->Name = L"RefY_1_UY";
-			series21->ChartArea = L"ChartArea3";
+			series20->Legend = L"LegendChart2";
+			series20->Name = L"RefX_1_UX";
+			series20->YValuesPerPoint = 2;
+			series21->ChartArea = L"ChartArea4";
 			series21->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
-			series21->Legend = L"LegendChart3";
-			series21->Name = L"RefX_Time";
+			series21->Legend = L"LegendChart4";
+			series21->Name = L"RefY_1_UY";
 			series22->ChartArea = L"ChartArea3";
 			series22->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
 			series22->Legend = L"LegendChart3";
-			series22->Name = L"RefY_Time";
+			series22->Name = L"RefX_Time";
 			series23->ChartArea = L"ChartArea3";
 			series23->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
 			series23->Legend = L"LegendChart3";
-			series23->Name = L"RefZ_Time";
+			series23->Name = L"RefY_Time";
+			series24->ChartArea = L"ChartArea3";
+			series24->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series24->Legend = L"LegendChart3";
+			series24->Name = L"RefZ_Time";
+			series25->ChartArea = L"ChartArea4";
+			series25->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series25->Color = System::Drawing::Color::Red;
+			series25->Legend = L"LegendChart4";
+			series25->Name = L"ZPredictedVoltage";
+			series26->ChartArea = L"ChartArea3";
+			series26->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series26->Color = System::Drawing::Color::Red;
+			series26->Legend = L"LegendChart3";
+			series26->MarkerColor = System::Drawing::Color::Red;
+			series26->Name = L"ew2Error";
 			this->chartRealReferenceContour->Series->Add(series1);
 			this->chartRealReferenceContour->Series->Add(series2);
 			this->chartRealReferenceContour->Series->Add(series3);
@@ -1689,7 +1726,10 @@ private: System::ComponentModel::IContainer^  components;
 			this->chartRealReferenceContour->Series->Add(series21);
 			this->chartRealReferenceContour->Series->Add(series22);
 			this->chartRealReferenceContour->Series->Add(series23);
-			this->chartRealReferenceContour->Size = System::Drawing::Size(967, 482);
+			this->chartRealReferenceContour->Series->Add(series24);
+			this->chartRealReferenceContour->Series->Add(series25);
+			this->chartRealReferenceContour->Series->Add(series26);
+			this->chartRealReferenceContour->Size = System::Drawing::Size(967, 522);
 			this->chartRealReferenceContour->TabIndex = 0;
 			this->chartRealReferenceContour->Text = L"Hello ";
 			title1->Alignment = System::Drawing::ContentAlignment::TopRight;
@@ -1736,6 +1776,12 @@ private: System::ComponentModel::IContainer^  components;
 			// Setting
 			// 
 			this->Setting->BackColor = System::Drawing::SystemColors::ActiveCaption;
+			this->Setting->Controls->Add(this->comboBoxDisturbanceObserver);
+			this->Setting->Controls->Add(this->comboBoxFrictionModel);
+			this->Setting->Controls->Add(this->label14);
+			this->Setting->Controls->Add(this->label11);
+			this->Setting->Controls->Add(this->label10);
+			this->Setting->Controls->Add(this->comboBoxControllerType);
 			this->Setting->Controls->Add(this->buttonLoadSelectedSetting);
 			this->Setting->Controls->Add(this->comboBoxLoadSetting);
 			this->Setting->Controls->Add(this->label17);
@@ -1744,15 +1790,73 @@ private: System::ComponentModel::IContainer^  components;
 			this->Setting->Location = System::Drawing::Point(4, 25);
 			this->Setting->Name = L"Setting";
 			this->Setting->Padding = System::Windows::Forms::Padding(3);
-			this->Setting->Size = System::Drawing::Size(975, 568);
+			this->Setting->Size = System::Drawing::Size(975, 618);
 			this->Setting->TabIndex = 3;
 			this->Setting->Text = L"Setting";
 			// 
+			// comboBoxDisturbanceObserver
+			// 
+			this->comboBoxDisturbanceObserver->FormattingEnabled = true;
+			this->comboBoxDisturbanceObserver->Items->AddRange(gcnew cli::array< System::Object^  >(4) {L"No disturbance observer", L"Velocity estimation based  Ba", 
+				L"Acceleration estimation based Khalick", L"AdaptiveFrictionCompensation Proposed Ba"});
+			this->comboBoxDisturbanceObserver->Location = System::Drawing::Point(674, 161);
+			this->comboBoxDisturbanceObserver->Name = L"comboBoxDisturbanceObserver";
+			this->comboBoxDisturbanceObserver->Size = System::Drawing::Size(291, 24);
+			this->comboBoxDisturbanceObserver->TabIndex = 10;
+			// 
+			// comboBoxFrictionModel
+			// 
+			this->comboBoxFrictionModel->FormattingEnabled = true;
+			this->comboBoxFrictionModel->Items->AddRange(gcnew cli::array< System::Object^  >(7) {L"No friction compensation", L"Coulomb viscous friction model", 
+				L"Sinusoidal friction model", L"The Stribeck-Coulomb-viscous  friction model", L"The Eccentric-Coulomb-viscous  friction model", 
+				L"Lugre dynamic friction", L"Lugre model using nonlinear static friction"});
+			this->comboBoxFrictionModel->Location = System::Drawing::Point(341, 161);
+			this->comboBoxFrictionModel->Name = L"comboBoxFrictionModel";
+			this->comboBoxFrictionModel->Size = System::Drawing::Size(291, 24);
+			this->comboBoxFrictionModel->TabIndex = 9;
+			// 
+			// label14
+			// 
+			this->label14->AutoSize = true;
+			this->label14->Location = System::Drawing::Point(697, 131);
+			this->label14->Name = L"label14";
+			this->label14->Size = System::Drawing::Size(176, 16);
+			this->label14->TabIndex = 8;
+			this->label14->Text = L"Select disturbance observer";
+			// 
+			// label11
+			// 
+			this->label11->AutoSize = true;
+			this->label11->Location = System::Drawing::Point(385, 131);
+			this->label11->Name = L"label11";
+			this->label11->Size = System::Drawing::Size(128, 16);
+			this->label11->TabIndex = 7;
+			this->label11->Text = L"Select friction model";
+			// 
+			// label10
+			// 
+			this->label10->AutoSize = true;
+			this->label10->Location = System::Drawing::Point(18, 131);
+			this->label10->Name = L"label10";
+			this->label10->Size = System::Drawing::Size(133, 16);
+			this->label10->TabIndex = 6;
+			this->label10->Text = L"Select controller type";
+			// 
+			// comboBoxControllerType
+			// 
+			this->comboBoxControllerType->FormattingEnabled = true;
+			this->comboBoxControllerType->Items->AddRange(gcnew cli::array< System::Object^  >(3) {L"PD Tracking controller", L"PD Contouring controller", 
+				L"Slidingmode contouring controller"});
+			this->comboBoxControllerType->Location = System::Drawing::Point(21, 161);
+			this->comboBoxControllerType->Name = L"comboBoxControllerType";
+			this->comboBoxControllerType->Size = System::Drawing::Size(291, 24);
+			this->comboBoxControllerType->TabIndex = 5;
+			// 
 			// buttonLoadSelectedSetting
 			// 
-			this->buttonLoadSelectedSetting->Location = System::Drawing::Point(475, 54);
+			this->buttonLoadSelectedSetting->Location = System::Drawing::Point(475, 59);
 			this->buttonLoadSelectedSetting->Name = L"buttonLoadSelectedSetting";
-			this->buttonLoadSelectedSetting->Size = System::Drawing::Size(59, 22);
+			this->buttonLoadSelectedSetting->Size = System::Drawing::Size(59, 24);
 			this->buttonLoadSelectedSetting->TabIndex = 4;
 			this->buttonLoadSelectedSetting->Text = L"Load";
 			this->buttonLoadSelectedSetting->UseVisualStyleBackColor = true;
@@ -1763,7 +1867,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->comboBoxLoadSetting->FormattingEnabled = true;
 			this->comboBoxLoadSetting->Items->AddRange(gcnew cli::array< System::Object^  >(5) {L"My last settings", L"Default settings", 
 				L"Settings for experiment", L"Settings for X,Y,Z,C,A tuning", L"Settings for machining"});
-			this->comboBoxLoadSetting->Location = System::Drawing::Point(164, 54);
+			this->comboBoxLoadSetting->Location = System::Drawing::Point(164, 59);
 			this->comboBoxLoadSetting->Name = L"comboBoxLoadSetting";
 			this->comboBoxLoadSetting->Size = System::Drawing::Size(291, 24);
 			this->comboBoxLoadSetting->TabIndex = 3;
@@ -1771,7 +1875,7 @@ private: System::ComponentModel::IContainer^  components;
 			// label17
 			// 
 			this->label17->AutoSize = true;
-			this->label17->Location = System::Drawing::Point(18, 61);
+			this->label17->Location = System::Drawing::Point(18, 66);
 			this->label17->Name = L"label17";
 			this->label17->Size = System::Drawing::Size(81, 16);
 			this->label17->TabIndex = 2;
@@ -1780,7 +1884,7 @@ private: System::ComponentModel::IContainer^  components;
 			// label16
 			// 
 			this->label16->AutoSize = true;
-			this->label16->Location = System::Drawing::Point(18, 21);
+			this->label16->Location = System::Drawing::Point(18, 23);
 			this->label16->Name = L"label16";
 			this->label16->Size = System::Drawing::Size(125, 16);
 			this->label16->TabIndex = 1;
@@ -1791,7 +1895,7 @@ private: System::ComponentModel::IContainer^  components;
 			this->comboBoxProgramStartSetting->FormattingEnabled = true;
 			this->comboBoxProgramStartSetting->Items->AddRange(gcnew cli::array< System::Object^  >(5) {L"Show my last settings", L"Show default settings", 
 				L"Show settings for experiment", L"Show settings for X,Y,Z,C,A tuning", L"Show settings for machining"});
-			this->comboBoxProgramStartSetting->Location = System::Drawing::Point(164, 14);
+			this->comboBoxProgramStartSetting->Location = System::Drawing::Point(164, 15);
 			this->comboBoxProgramStartSetting->Name = L"comboBoxProgramStartSetting";
 			this->comboBoxProgramStartSetting->Size = System::Drawing::Size(291, 24);
 			this->comboBoxProgramStartSetting->TabIndex = 1;
@@ -1912,9 +2016,9 @@ private: System::ComponentModel::IContainer^  components;
 			// 
 			// FiveAxisCNCForm
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(984, 599);
+			this->ClientSize = System::Drawing::Size(984, 649);
 			this->Controls->Add(this->FiveAxisCNCTabControl);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->Name = L"FiveAxisCNCForm";
@@ -1944,34 +2048,37 @@ private: System::ComponentModel::IContainer^  components;
 #pragma region Windows Form function 
 private: System::Void buttonSimulationStart_Click(System::Object^  sender, System::EventArgs^  e) {
 
+			 RmLabFiveAxisCNC.m_strDebugString = "";
+			 UpdateSettingParameters(); // Update sample time, Controller type
 
-			 NewGUIProcessing.SAMPLING_TIME = System::Convert::ToDouble(textBoxSampleTime->Text)/1000.0;// 100ms;
 			 NewGUIProcessing.step = 0;
+	//		 RmLabFiveAxisCNC.m_iSelectedFrictionModel = 1;
 			 RmLabFiveAxisCNC.IOModule.SAMPLING_TIME = NewGUIProcessing.SAMPLING_TIME;
 			 RmLabFiveAxisCNC.m_fSampTimeRef =  NewGUIProcessing.SAMPLING_TIME;
+			 RmLabFiveAxisCNC.OpenGcodeFile(GcodeProgramFolder+textBoxGcodeFilename->Text); 
+
+			 RmLabFiveAxisCNC.OpenBinaryFile(textBoxDataFileName->Text);//textBoxDataFileName
+
 			 //		  RmLabFiveAxisCNC.IOModule.OutputOneMotor(RmLabFiveAxisCNC.LINEAR_MOTOR_X,3.0);
 //			 RmLabFiveAxisCNC.InitGlobalVariable("GlobalVariable.txt");
 			  
 			 
-
-			 textBoxControlParameters->Text = "MX"
-				 + System::Convert::ToString(RmLabFiveAxisCNC.GetStaticVariable("A2BWa2"));//RmLabCNC::mt_M(0,0));//
+			 // send Debug text 
+//			 textBoxControlParameters->Text = "MX"
+//				 + System::Convert::ToString(RmLabFiveAxisCNC.GetStaticVariable("A2BWa2"));//RmLabCNC::mt_M(0,0));//
 			
-			 RmLabFiveAxisCNC.InitGlobalVariable(InitialConfigFolder+textBoxConfigFilename->Text,InitialConfigFolder+"NonLinearFriction.rme",InitialConfigFolder+"GeneralMaxwellSlip.rme");
-			 RmLabFiveAxisCNC.InitKalmanFilterModelData(InitialConfigFolder+"KalmanFilterModel.rme");
-
-			 RmLabFiveAxisCNC.OpenGcodeFile(GcodeProgramFolder+textBoxGcodeFilename->Text); 
-			 RmLabFiveAxisCNC.OpenBinaryFile(textBoxDataFileName->Text);//textBoxDataFileName
-
-			 RmLabFiveAxisCNC.m_iFrictionType = comboBoxFrictionModel->SelectedIndex;
-			 RmLabFiveAxisCNC.m_iDOBModel = comboBoxDisturbanceObserver->SelectedIndex;
-
-			 RmLabFiveAxisCNC.SimulModule.LoadModelParameter(InitialConfigFolder+"SimulationModelParameter.txt");
-			 RmLabFiveAxisCNC.SimulModule.InitSimulNonlinearFrictionData(InitialConfigFolder+"NonLinearFriction.rme");
-			 RmLabFiveAxisCNC.SimulModule.m_fSamplingTime = NewGUIProcessing.SAMPLING_TIME;
-//			 RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.GetCurrentReference());
-			 RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.SimulModule.GetSimulationModelPosition());
+//			 RmLabFiveAxisCNC.InitGlobalVariable(InitialConfigFolder+textBoxConfigFilename->Text);
+			 RmLabFiveAxisCNC.InitControllerParameters(InitialConfigFolder+textBoxConfigFilename->Text);
+			 // Init Current Gcode cmd and next Gcode cmd
+			 RmLabFiveAxisCNC.GetNextGCodeLine(); 
+			 RmLabFiveAxisCNC.GetNextGCodeLine(); 
+			 // send Debug text 
 			 
+			 textBoxControlParameters->Text = "Read MX , gainlandaX, nomial coulombx"
+			       + RmLabFiveAxisCNC.DebugDataString();//RmLabCNC::mt_M(0,0));//
+
+
+//			 RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.GetCurrentReference());
 
 
 // 			 NewGUIProcessing.step = NewGUIProcessing.step +1;
@@ -1989,22 +2096,22 @@ private: System::Void buttonSimulationStart_Click(System::Object^  sender, Syste
 			 RealTimeWatch.Start();
 			 m_iTimeStartTick = RealTimeWatch.GetTimestamp();
 			  labelConnectStatus->Text = "Starting Simulation...\n";
-			 while (!RmLabFiveAxisCNC.Finish())
+		 while (!RmLabFiveAxisCNC.Finish())
 			 {
 //				 RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.GetCurrentReference());
-			     RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.SimulModule.GetSimulationModelPosition());
-
 				 NewGUIProcessing.step = NewGUIProcessing.step +1;
 				 // 		RmLabFiveAxisCNC.m_fexpTnowReal = NewGUIProcessing.step * NewGUIProcessing.SAMPLING_TIME;
 
 				 RmLabFiveAxisCNC.m_fexpTnowReal = NewGUIProcessing.step * NewGUIProcessing.SAMPLING_TIME;
 				 RmLabFiveAxisCNC.m_fexpTnowCounter = (double)(RealTimeWatch.GetTimestamp()-m_iTimeStartTick)/(double) m_iFrequency;
 				 RmLabFiveAxisCNC.GetNextPointRefInGCodePath();  //*********************************Real Time********************//
-				 RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
-				 RmLabFiveAxisCNC.SimulModule.SetControlInput(RmLabFiveAxisCNC.GetOutputControl());  // Test control with simulation model
+	//			 RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
+				 RmLabFiveAxisCNC.ThreeAxisMachineController();
+
 
 				 if (checkBoxSaveData->Checked){RmLabFiveAxisCNC.SaveDataToBinaryFile();};	
 				 //			 RmLabFiveAxisCNC.SendOutputControl();
+				 RmLabFiveAxisCNC.SendOutputToVirtualSystem();
 			 }
 			 RmLabFiveAxisCNC.CloseBinaryFile();
 			 RmLabFiveAxisCNC.CloseGcodeFile();
@@ -2076,14 +2183,17 @@ private: System::Void buttonExperimentStartPause_Click(System::Object^  sender, 
 //
 //			 }
 			 // Experiment from regulation status
+		//	 System::Object^  xsender;
+			// System::EventArgs^  xe;
+
 			 if ((NewGUIProcessing.bConnectStatus )&&(RmLabFiveAxisCNC.m_bOriginSetup))
 			 {
-				 // Reread Gcode file
+				// buttonSetOrigin_Click(xsender,xe);
 //				 RmLabFiveAxisCNC.IOModule.StopCounter(ErrorRp);
 				 RmLabFiveAxisCNC.OpenGcodeFile(GcodeProgramFolder+textBoxGcodeFilename->Text);  
 				 RmLabFiveAxisCNC.OpenBinaryFile(textBoxDataFileName->Text);
-				 RmLabFiveAxisCNC.m_iFrictionType = comboBoxFrictionModel->SelectedIndex;
-				 RmLabFiveAxisCNC.m_iDOBModel = comboBoxDisturbanceObserver->SelectedIndex;
+				 // Init Current Gcode cmd and next Gcode cmd
+				 
 
 
 				 m_bCloseDataFile = false;
@@ -2119,7 +2229,7 @@ private: System::Void buttonExperimentStartPause_Click(System::Object^  sender, 
 
 
 //				 RealTimeWatch.Start();
-				 m_iTimeStartTick = RealTimeWatch.GetTimestamp();// Restart time counter in Experiment to Zero
+				 m_iTimeStartTick = RealTimeWatch.GetTimestamp();
 
 //				 NewGUIProcessing.step = NewGUIProcessing.step +1;
 				 // 		RmLabFiveAxisCNC.m_fexpTnowReal = NewGUIProcessing.step * NewGUIProcessing.SAMPLING_TIME;
@@ -2128,18 +2238,26 @@ private: System::Void buttonExperimentStartPause_Click(System::Object^  sender, 
 				 
 
 				 RmLabFiveAxisCNC.m_fexpTnowReal = (double)(RealTimeWatch.GetTimestamp()-m_iTimeStartTick)/(double) m_iFrequency;
-				 RmLabFiveAxisCNC.m_fNextAccFirstTime = RmLabFiveAxisCNC.m_fexpTnowReal;
-				 RmLabFiveAxisCNC.m_fexpRunT = RmLabFiveAxisCNC.m_fexpTnowReal;
-				 RmLabFiveAxisCNC.m_fexpRunTPre = RmLabFiveAxisCNC.m_fexpTnowReal;
+	//			 RmLabFiveAxisCNC.m_fNextAccFirstTime = RmLabFiveAxisCNC.m_fexpTnowReal;
+	//			 RmLabFiveAxisCNC.m_fexpRunT = RmLabFiveAxisCNC.m_fexpTnowReal;
+	//			 RmLabFiveAxisCNC.m_fexpRunTPre = RmLabFiveAxisCNC.m_fexpTnowReal;
 				 RmLabFiveAxisCNC.m_fexpTnow = 0.0;
 //				 RmLabFiveAxisCNC.m_fexpTnowCounter = NewGUIProcessing.step * NewGUIProcessing.SAMPLING_TIME;
 				 
 
 				 
 
+
+				 RmLabFiveAxisCNC.SetMachineOrigin();
 				 RmLabFiveAxisCNC.IOModule.SetPartOrigin();
-				 RmLabFiveAxisCNC.ResetReferenceData();
-				 RmLabFiveAxisCNC.ResetRealData();
+				 RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.IOModule.GetMachiningPosition());
+				 RmLabFiveAxisCNC.SetRefPosition(RmLabFiveAxisCNC.IOModule.GetMachiningPosition());
+				 RmLabFiveAxisCNC.InitControllerParameters(InitialConfigFolder+textBoxConfigFilename->Text);
+				 RmLabFiveAxisCNC.GetNextGCodeLine(); 
+				 RmLabFiveAxisCNC.GetNextGCodeLine(); 
+
+			//	 RmLabFiveAxisCNC.ResetReferenceData();
+			//	 RmLabFiveAxisCNC.ResetRealData();
 
 //				 RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.IOModule.GetAbsolutePosition());// Set real position to (0,0,0)
 //				 RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.IOModule.GetAbsolutePosition());// Set real position to (0,0,0)
@@ -2234,7 +2352,7 @@ private: System::Void buttonLoadGcode_Click(System::Object^  sender, System::Eve
 			 {
 				 // 				 FileTextToWrite = "RmFiveAxisData.txt";
 				 // 				 FileBinaryData = openFileDialogResultFile->FileName;
-				 textBoxGcodeFilename->Text = openFileDialogResultFile->FileName;
+				 textBoxGcodeFilename->Text = openFileDialogResultFile->SafeFileName;
 			 }
 			 textBoxControlParameters->Text = Application::StartupPath;
 		 }
@@ -2256,7 +2374,7 @@ private: System::Void buttonLoadConfig_Click(System::Object^  sender, System::Ev
 			 {
 // 				 FileTextToWrite = "RmFiveAxisData.txt";
 // 				 FileBinaryData = openFileDialogResultFile->FileName;
-				 textBoxConfigFilename->Text = openFileDialogResultFile->FileName;
+				 textBoxConfigFilename->Text = openFileDialogResultFile->SafeFileName;
 				 // Open the selected file to read.
 // 				 System::IO::Stream fileStream = openFileDialogResultFile->re  .File.OpenRead();
 // 
@@ -2273,10 +2391,32 @@ private: System::Void buttonRecentConfig_Click(System::Object^  sender, System::
 		 }
 private: System::Void buttonSetOrigin_Click(System::Object^  sender, System::EventArgs^  e) {
  System::String^ ErrorRp;
+             UpdateSettingParameters(); // Update sample time, Controller type
 			 if (NewGUIProcessing.bConnectStatus )
 			 {
-				 RmLabFiveAxisCNC.SetMachineOrigin();
-				 RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.IOModule.GetAbsolutePosition());
+				 // Check when machine is regulating, need to stop counter
+// 				 if (checkBoxPositionRegulation->Checked)
+// 				 {
+// 					 RmLabFiveAxisCNC.CloseBinaryFile();
+// 					 RmLabFiveAxisCNC.CloseGcodeFile();
+// 					 RmLabFiveAxisCNC.StopFiveAxisCNC();
+// 					 RmLabFiveAxisCNC.IOModule.StopAllMotor();
+// 					 RmLabFiveAxisCNC.IOModule.StopCounter(ErrorRp);
+// 				 }
+
+
+				 RmLabFiveAxisCNC.IOModule.StopAllMotor();
+				 RmLabFiveAxisCNC.IOModule.StopCounter(ErrorRp);// Stop regulation 
+				 // Close data file if it is opening
+				 if (!m_bCloseDataFile)
+				 {
+					 m_bCloseDataFile = true;
+					 m_bExperimentFinish = true;
+					 RmLabFiveAxisCNC.CloseBinaryFile();
+					 RmLabFiveAxisCNC.CloseGcodeFile();
+				 };
+
+
 				 //				 buttonExperimentStartPause->Text = "Pause Experiment";
 				 m_fTimeRun = System::Convert::ToDouble(textBoxTimeRun->Text);
 
@@ -2290,14 +2430,20 @@ private: System::Void buttonSetOrigin_Click(System::Object^  sender, System::Eve
 				 RmLabFiveAxisCNC.IOModule.SAMPLING_TIME = NewGUIProcessing.SAMPLING_TIME;
 				 RmLabFiveAxisCNC.m_fSampTimeRef =  NewGUIProcessing.SAMPLING_TIME;
 
-				 RmLabFiveAxisCNC.InitGlobalVariable(InitialConfigFolder+textBoxConfigFilename->Text,InitialConfigFolder+"NonLinearFriction.rme",InitialConfigFolder+"GeneralMaxwellSlip.rme");
-				 RmLabFiveAxisCNC.InitKalmanFilterModelData(InitialConfigFolder+"KalmanFilterModel.rme");//KalmanFilterModelCoefX100.rme KalmanFilterModel.rme
+//				 RmLabFiveAxisCNC.InitGlobalVariable(InitialConfigFolder+textBoxConfigFilename->Text);
+				 
+
 
 //				 RmLabFiveAxisCNC.OpenGcodeFile(textBoxGcodeFilename->Text);  
 
-				 RmLabFiveAxisCNC.OpenBinaryFile(textBoxDataFileName->Text);
+//				 RmLabFiveAxisCNC.OpenBinaryFile(textBoxDataFileName->Text);
 
+				 RmLabFiveAxisCNC.SetMachineOrigin();
+				 RmLabFiveAxisCNC.IOModule.SetPartOrigin();
+				 RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.IOModule.GetMachiningPosition());
 				 RmLabFiveAxisCNC.SetRefPosition(RmLabFiveAxisCNC.IOModule.GetMachiningPosition());
+				 RmLabFiveAxisCNC.InitControllerParameters(InitialConfigFolder+textBoxConfigFilename->Text);
+
 
 				 RealTimeWatch.Start();
 				 m_iTimeStartTick = RealTimeWatch.GetTimestamp();
@@ -2311,7 +2457,9 @@ private: System::Void buttonSetOrigin_Click(System::Object^  sender, System::Eve
 //				 RmLabFiveAxisCNC.InitControlVariable();
 		//		 RmLabFiveAxisCNC.m_fNextAccFirstTime = RmLabFiveAxisCNC.m_fexpTnowReal;
 				 RmLabFiveAxisCNC.GetNextPointRefInRegulation(); 
-				 RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
+//				 RmLabFiveAxisCNC.ThreeAxisMachineController();
+				 RmLabFiveAxisCNC.ThreeAxisMachineControllerInRegulation();
+//				 RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
 				 labelConnectStatus->Text = "Position regulating...\n";
 				 checkBoxPositionRegulation->Checked = true; // Auto regulating
 				 RmLabFiveAxisCNC.m_bGcodeFINISH = true;
@@ -2329,7 +2477,7 @@ private: System::Void buttonSetOrigin_Click(System::Object^  sender, System::Eve
 		 }
 private: System::Void buttonTestCounter_Click(System::Object^  sender, System::EventArgs^  e) {
 		 System::String^ ErrorRp;
-			RmLabFiveAxisCNC.IOModule.SAMPLING_TIME = System::Convert::ToDouble(textBoxY1Encoder->Text);// 100ms;
+			RmLabFiveAxisCNC.IOModule.SAMPLING_TIME = System::Convert::ToDouble(textBoxSampleTime->Text);// 100ms;
 			 pTimer	= Marshal::GetFunctionPointerForDelegate(dele_Timer);
 
 			 RmLabFiveAxisCNC.IOModule.StartCounter(pTimer,ErrorRp,this->hMainWnd);
@@ -2350,7 +2498,7 @@ private: System::Void FiveAxisCNCForm_Load(System::Object^  sender, System::Even
 
 			 dele_Timer	= gcnew CCntCLI::PTIMERCALLBACK(this, &FiveAxisCNCForm::TimerCallBackProc);
 			 //-----------------------------------
-			 // Æ’KÆ’xÂ[Æ’WÆ’RÆ’Å’Æ’NÆ’VÆ’â€¡Æ’â€œâ€šÃ‰â€šÃ¦â€šÃ¨â€jÅ Ã¼â€šÂ³â€šÃªâ€šÃˆâ€šÂ¢â€šÃ¦â€šÂ¤â€šÃ‰Æ’fÆ’Å Æ’QÂ[Æ’gâ€šÃ–â€šÃŒÅ½QÂÃ†â€šÃ°â€™Ã‡â€°Ã
+			 // ƒKƒx[ƒWƒRƒŒƒNƒVƒ‡ƒ“‚É‚æ‚è”jŠü‚³‚ê‚È‚¢‚æ‚¤‚ÉƒfƒŠƒQ[ƒg‚Ö‚ÌŽQÆ‚ð’Ç‰Á
 			 //-----------------------------------
 			 hGC_Timer	= GCHandle::Alloc(dele_Timer);
 			 NewGUIProcessing.bConnectStatus = 0;
@@ -2373,10 +2521,6 @@ private: System::Void FiveAxisCNCForm_Load(System::Object^  sender, System::Even
 			 radioButtonManualSpeedX1->Checked = true;
 			 comboBoxProgramStartSetting->SelectedIndex = 0;
 			 comboBoxLoadSetting->SelectedIndex = 0;
-			 comboBoxControlMethod->SelectedIndex =1;
-			 comboBoxFrictionModel->SelectedIndex =0;
-			 comboBoxDisturbanceObserver->SelectedIndex =0;
-
 			 InitStaticVariable();
 			 UpdateRealPosition();
 			 FiveAxisCNCFormSettingInit();
@@ -2385,7 +2529,7 @@ private: System::Void FiveAxisCNCForm_FormClosed(System::Object^  sender, System
 			 System::String^ ErrorRp;
 			 RmLabFiveAxisCNC.IOModule.DisconnectToCNC(ErrorRp);
 			 //-----------------------------------
-			 // Æ’KÆ’xÂ[Æ’WÆ’RÆ’Å’Æ’NÆ’VÆ’â€¡Æ’â€œâ€šÃ‰â€šÃ¦â€šÃ¨â€jÅ Ã¼â€šÂ³â€šÃªâ€šÃˆâ€šÂ¢â€šÃ¦â€šÂ¤â€šÃ‰Æ’fÆ’Å Æ’QÂ[Æ’gâ€šÃ–â€šÃŒÅ½QÂÃ†â€šÃ°â€™Ã‡â€°Ã
+			 // ƒKƒx[ƒWƒRƒŒƒNƒVƒ‡ƒ“‚É‚æ‚è”jŠü‚³‚ê‚È‚¢‚æ‚¤‚ÉƒfƒŠƒQ[ƒg‚Ö‚ÌŽQÆ‚ð’Ç‰Á
 			 //-----------------------------------
 
 			 hGC_Timer	= GCHandle::Alloc(dele_Timer);
@@ -2405,6 +2549,7 @@ public:
 	Int64 m_iTimeStartTick, m_iTimeNowTick;
 	Int64 m_iFrequency; 
 	System::String^ FileBinaryData;
+	System::String^ FileBinaryDataMoveToMatlabDir;
 	System::String^ FileTextToWrite;
 	System::String^ InitialConfigFolder;
 	System::String^ GcodeProgramFolder;
@@ -2432,6 +2577,7 @@ void InitStaticVariable();
 void UpdateRealPosition(); 
 void FiveAxisCNCFormSettingSave();
 void FiveAxisCNCFormSettingInit();
+void UpdateSettingParameters(); 
 void FiveAxisCNCFormSettingLoad(short m_iIndex); 
 void InitSettingStringScan(System::String^ scanString,System::String^ &strName,System::String^ &strValue);
 void SettingFormVariable(System::String^ strName,System::String^ strValue);
@@ -2478,8 +2624,10 @@ void TimerCallBackProc(short m_Id, int wParam, int lParam, void * Param){
 //		RmLabFiveAxisCNC.m_fexpTnowCounter = (double)(RealTimeWatch.GetTimestamp()-m_iTimeStartTick)/(double) m_iFrequency;
 		 RmLabFiveAxisCNC.GetNextPointRefInGCodePath(); 
 		//m_cTrajectoryControl.GetNextRealRef(); 
-		RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
+//		RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
+		RmLabFiveAxisCNC.ThreeAxisMachineController();
 		RmLabFiveAxisCNC.SendOutputControl();
+	//	RmLabFiveAxisCNC.SendOutputToVirtualSystem();
 		if (checkBoxSaveData->Checked){RmLabFiveAxisCNC.SaveDataToBinaryFile();};	
 
 	} 
@@ -2509,7 +2657,9 @@ void TimerCallBackProc(short m_Id, int wParam, int lParam, void * Param){
 		RmLabFiveAxisCNC.m_CNCRefPos.A = RmLabFiveAxisCNC.m_CNCRefPos.A+RmLabFiveAxisCNC.m_CNCPosManualStep.A;
 
 		RmLabFiveAxisCNC.GetNextPointRefInRegulation(); 
-		RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
+//		RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
+//		RmLabFiveAxisCNC.ThreeAxisMachineController();
+		RmLabFiveAxisCNC.ThreeAxisMachineControllerInRegulation();
 //		vec_OutputControl(0) = vec_OutputControl(0);
 //		textBoxXPosition->Text = System::Convert::ToString(vec_OutputControl(0));
 //		textBoxY1Position->Text = System::Convert::ToString(vec_OutputControl(1));
@@ -2571,8 +2721,10 @@ private: System::Void buttonShowGraph_Click(System::Object^  sender, System::Eve
 //			 System::String^ FileBinaryData;
 //			 System::String^ FileTextToWrite;
 
-			 FileTextToWrite = "RmFiveAxisData.txt";
+			 FileTextToWrite = "RmThreeAxisData.txt";
 			 FileBinaryData = textBoxDataFileName->Text;
+			 FileBinaryDataMoveToMatlabDir ="E:\\BUIDINHBA\\Google Drive\\ToyohashiStudy\\MATLAB\\MachineTool\\3AxisIndividualTuningD2_305\\ParametersTuning\\"+FileBinaryData;
+          //   FileBinaryDataMoveToMatlabDir ="SLMC_3D_R20F20T1.rme";
 			 ClearGraph() ;
 			 ShowGraph();
 
@@ -2682,35 +2834,32 @@ private: System::Void timerFiveAxisForm_Tick(System::Object^  sender, System::Ev
 			 if (bbuttonXPlusMouseDown)
 			 {
 				 RmLabFiveAxisCNC.m_CNCPosManualStep.X = m_fManualSpeed*NewGUIProcessing.SAMPLING_TIME;
-				 textBoxXPosition->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.X);
-			 }else
-			 {
-				 RmLabFiveAxisCNC.m_CNCPosManualStep.X = 0.0;
+//				 bbuttonXPlusMouseDown = false;
 			 }
 			 if (bbuttonXMinusMouseDown)
 			 {
 				 RmLabFiveAxisCNC.m_CNCPosManualStep.X = -m_fManualSpeed*NewGUIProcessing.SAMPLING_TIME;
-				 textBoxXPosition->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.X);
+//				 bbuttonXMinusMouseDown = false;
 			 }
 			 if (bbuttonY1PlusMouseDown)
 			 {
 				 RmLabFiveAxisCNC.m_CNCPosManualStep.Y = m_fManualSpeed*NewGUIProcessing.SAMPLING_TIME;
-				 textBoxY1Position->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.Y);
+				 
 			 }
 			 if (bbuttonY1MinusMouseDown)
 			 {
 				 RmLabFiveAxisCNC.m_CNCPosManualStep.Y = -m_fManualSpeed*NewGUIProcessing.SAMPLING_TIME;
-				 textBoxY1Position->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.Y);
+//				 textBoxY1Position->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.Y);
 			 }
 			 if (bbuttonZPlusMouseDown)
 			 {
 				 RmLabFiveAxisCNC.m_CNCPosManualStep.Z = m_fManualSpeed*NewGUIProcessing.SAMPLING_TIME;
-				 textBoxZPosition->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.Z);
+//				 textBoxZPosition->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.Z);
 			 }
 			 if (bbuttonZMinusMouseDown)
 			 {
 				 RmLabFiveAxisCNC.m_CNCPosManualStep.Z = -m_fManualSpeed*NewGUIProcessing.SAMPLING_TIME;
-				 textBoxZPosition->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.Z);
+//				 textBoxZPosition->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.Z);
 			 }
 			 if (bbuttonCPlusMouseDown)
 			 {
@@ -2749,8 +2898,15 @@ private: System::Void timerFiveAxisForm_Tick(System::Object^  sender, System::Ev
 			 }
 			 if (radioButtonManualSpeedX1000->Checked)
 			 {
-				 labelManualSpeed->Text = "Manual Speed: 10 mm/s, deg/s";
-				 m_fManualSpeed = 10.0;
+				 labelManualSpeed->Text = "Manual Speed: 5 mm/s, deg/s";
+				 m_fManualSpeed = 3.0;
+			 }
+			 if (checkBoxPositionUpdate->Checked)
+			 {
+	//			 RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.IOModule.GetMachiningPosition());
+				 textBoxXPosition->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.X);
+				 textBoxY1Position->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.Y);
+				 textBoxZPosition->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.Z);
 			 }
 		 }
 private: System::Void buttonXPlus_MouseEnter(System::Object^  sender, System::EventArgs^  e) {
@@ -2761,7 +2917,7 @@ private: System::Void buttonXPlus_MouseDown(System::Object^  sender, System::Win
 		 }
 private: System::Void buttonXPlus_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 
-			 bbuttonXPlusMouseDown = false;
+			// bbuttonXPlusMouseDown = false;
 			 //RmLabFiveAxisCNC.m_CNCPosManualStep.X = 0.0;
 		 }
 private: System::Void buttonXMinus_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
@@ -2769,7 +2925,7 @@ private: System::Void buttonXMinus_MouseDown(System::Object^  sender, System::Wi
 			 //RmLabFiveAxisCNC.m_CNCPosManualStep.X = -m_fManualSpeed*NewGUIProcessing.SAMPLING_TIME;
 		 }
 private: System::Void buttonXMinus_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
-			 bbuttonXMinusMouseDown = false;
+//			 bbuttonXMinusMouseDown = false;
 			 //RmLabFiveAxisCNC.m_CNCPosManualStep.X = 0.0;
 		 }
 private: System::Void buttonY1Plus_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
@@ -2839,6 +2995,27 @@ private: System::Void comboBoxProgramStartSetting_SelectedIndexChanged(System::O
 private: System::Void buttonLoadSelectedSetting_Click(System::Object^  sender, System::EventArgs^  e) {
 
 			 FiveAxisCNCFormSettingLoad(comboBoxLoadSetting->SelectedIndex); 
+		 }
+private: System::Void checkBoxSpinSetting_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+			 if (NewGUIProcessing.bConnectStatus)
+			 {
+				 if (checkBoxSpinSetting->Checked)
+				 {
+					 RmLabFiveAxisCNC.SpinStart(System::Convert::ToDouble(textBoxSpinSpeed->Text));
+				 } 
+				 else
+				 {
+					 RmLabFiveAxisCNC.SpinStop();
+				 }
+			 }
+		 }
+private: System::Void checkBoxPositionUpdate_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+		 }
+private: System::Void buttonXPlus_MouseLeave(System::Object^  sender, System::EventArgs^  e) {
+			 bbuttonXPlusMouseDown = false;
+		 }
+private: System::Void buttonXMinus_MouseLeave(System::Object^  sender, System::EventArgs^  e) {
+			 bbuttonXMinusMouseDown = false;
 		 }
 };
 }

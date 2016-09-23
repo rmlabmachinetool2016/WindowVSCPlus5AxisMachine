@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
+    <IncludePath>G:\TUT RESEARCH\Library\boost\boost_1_53_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
     <OutDir>$(SolutionDir)$(Configuration)\RmFiveAxisCNC\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -138,7 +138,7 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>D:\M2_BUI DINH BA\boost_1_53_0;;G:\TUT RESEARCH\Library\boost\boost_1_53_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\BUIDINHBA\Library\boost\boost_1_53_0;D:\M2_BUI DINH BA\boost_1_53_0;C:\Program Files\boost\boost_1_53_0;G:\TUT RESEARCH\Library\boost\boost_1_53_0</AdditionalIncludeDirectories>
       <CompileAsManaged>true</CompileAsManaged>
     </ClCompile>
     <Link>
@@ -173,7 +173,6 @@
     <ClCompile Include="FiveAxisIOModule.cpp" />
     <ClCompile Include="GUIProcessing.cpp" />
     <ClCompile Include="RmFiveAxisCNC.cpp" />
-    <ClCompile Include="SimulationModel.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -193,7 +192,6 @@
     <ClInclude Include="FiveAxisIOModule.h" />
     <ClInclude Include="GUIProcessing.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="SimulationModel.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
