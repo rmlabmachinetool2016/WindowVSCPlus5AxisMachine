@@ -197,11 +197,11 @@ void FiveAxisCNCForm::ShowGraph()
 
 	//Range of Chart
 //	this->chartRealReferenceContour->ChartAreas["ChartArea2"]->AxisX->Maximum = 36;
-	this->chartRealReferenceContour->ChartAreas["ChartArea2"]->AxisY->Maximum = 500;//36;
+	this->chartRealReferenceContour->ChartAreas["ChartArea2"]->AxisY->Maximum = 36;//500;//36;
 //	this->chartRealReferenceContour->ChartAreas["ChartArea2"]->AxisX->Minimum = -36;
-	this->chartRealReferenceContour->ChartAreas["ChartArea2"]->AxisY->Minimum = -500;//-36;
-	this->chartRealReferenceContour->ChartAreas["ChartArea4"]->AxisY->Maximum = 500;//36;
-	this->chartRealReferenceContour->ChartAreas["ChartArea4"]->AxisY->Minimum = -500;//-36;
+	this->chartRealReferenceContour->ChartAreas["ChartArea2"]->AxisY->Minimum = -36;//-36;
+	this->chartRealReferenceContour->ChartAreas["ChartArea4"]->AxisY->Maximum =  36;//500;//36;
+	this->chartRealReferenceContour->ChartAreas["ChartArea4"]->AxisY->Minimum =  -36;-500;//-36;
 	
 }
 void FiveAxisCNCForm::ClearGraph() 

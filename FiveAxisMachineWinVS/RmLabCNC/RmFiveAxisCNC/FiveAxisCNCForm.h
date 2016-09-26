@@ -2074,7 +2074,7 @@ private: System::Void buttonSimulationStart_Click(System::Object^  sender, Syste
 			 RmLabFiveAxisCNC.GetNextGCodeLine(); 
 			 // send Debug text 
 			 
-			 textBoxControlParameters->Text = "Read MX , gainlandaX, nomial coulombx"
+			 textBoxControlParameters->Text = "Real M X , Real Coulomb X, Real viscous X"
 			       + RmLabFiveAxisCNC.DebugDataString();//RmLabCNC::mt_M(0,0));//
 
 

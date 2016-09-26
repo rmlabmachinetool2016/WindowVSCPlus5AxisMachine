@@ -1,3 +1,8 @@
+Five Axis CNC Data
+
+Max FeedRate ~ Fmax 328 mm/s  Max accelerator Pmax 400 - 3600 mm/s^2
+
+
 Double.ToString Method  MSDN TestNotest
 http://msdn.microsoft.com/en-us/library/kfsatb94.aspx
 

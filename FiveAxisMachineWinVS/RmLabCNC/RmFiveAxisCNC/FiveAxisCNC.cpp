@@ -481,11 +481,11 @@ void FiveAxisCNC::ThreeAxisMachinePDTrackingController(void)
 	vector_control_force_fu = vector_estimated_control_force_fu+
 					prod(matrix_estimated_weight_M,-prod(matrix_TC_gain_Kp,vector_tracking_error_ew)-prod(matrix_TC_gain_Kd,vector_tracking_error_dotew));
 	// Out put control voltage to X,Y,Z only
-	for (int i=0;i<3;i++)
-	{
-		if (fabs(vector_control_force_fu(i))>MAXCONTROLFORCE)
-			vector_control_force_fu(i) = Rmsign(vector_control_force_fu(i))*MAXCONTROLFORCE;
-	}
+// 	for (int i=0;i<3;i++)
+// 	{
+// 		if (fabs(vector_control_force_fu(i))>MAXCONTROLFORCE)
+// 			vector_control_force_fu(i) = Rmsign(vector_control_force_fu(i))*MAXCONTROLFORCE;
+// 	}
 	// 	vector_control_force_fu(0) = 0.0;
 	// 	vector_control_force_fu(1) = 0.0;
 	// 	vector_control_force_fu(2) = 0.0;
@@ -2795,7 +2795,7 @@ String^ FiveAxisCNC::DebugDataString()
 
 //   m_strDebugString = "matrix_weight_M(2,2)--"+ m_strDebugString+ System::Convert::ToString(matrix_weight_M(2,2))+" "+ System::Convert::ToString(matrix_viscous_friction_c(0,0))+" "+ System::Convert::ToString(vector_nominal_coulomb_friction_fncl(0));
 
-	m_strDebugString = m_strDebugString+"gama0--"+ System::Convert::ToString(matrix_TC_gain_Kp(1,1))+" "+"gama1--"+ System::Convert::ToString(matrix_stribeck_friction(1,1))+" "+"gama2--"+ System::Convert::ToString(matrix_sinusoidal_friction(1,2))+" ";
+	m_strDebugString = m_strDebugString+"Real Mx"+ System::Convert::ToString(matrix_weight_M(0,0))+" "+"Real Fc X"+ System::Convert::ToString(vector_coulomb_friction_fcl(0))+" "+"gama2--"+ System::Convert::ToString(matrix_viscous_friction_c(0,0))+" ";
 	
 	
 	

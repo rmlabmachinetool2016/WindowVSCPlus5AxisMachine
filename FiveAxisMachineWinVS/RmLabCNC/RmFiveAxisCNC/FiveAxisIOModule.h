@@ -43,9 +43,12 @@ public:
 	static const double RESONATE_ROTATION_ENC_C		= (360/1562500.0);	//(2.0*PI/1562500.0);	// rad/pulse
 	static const double RESONATE_ROTATION_ENC_A1	= (360/3125000.0);//(2.0*PI/3125000.0);	// rad/pulse
 	static const double RESONATE_ROTATION_ENC_A2	= (360/3125000.0);//(2.0*PI/3125000.0);	// rad/pulse
-	static const double MAX_FORCE_X					= 500.0;					// N  3 Axis Machine tool X axis
-	static const double MAX_FORCE_Y1				= 500.0;					// N  3 Axis Machine tool Y axis
-	static const double MAX_FORCE_Y2				= 500.0;					// N  3 Axis Machine tool Z axis
+// 	static const double MAX_FORCE_X					= 500.0;					// N  3 Axis Machine tool X axis
+// 	static const double MAX_FORCE_Y1				= 500.0;					// N  3 Axis Machine tool Y axis
+// 	static const double MAX_FORCE_Y2				= 500.0;					// N  3 Axis Machine tool Z axis
+	static const double MAX_FORCE_X					= 36.0;					// N
+	static const double MAX_FORCE_Y1				= 36.0;					// N
+	static const double MAX_FORCE_Y2				= 36.0;					// N
 	static const double MAX_FORCE_Z					= 36.0;					// N
 	static const double MAX_TORQUE_C				= 2.0;					// N*m
 	static const double MAX_TORQUE_A1				= 5.0;					// N*m
@@ -53,11 +56,11 @@ public:
 	
 	static const short NUM_LINEAR_ACTUATOR	= 4;					// number of linear motor
 	static const short NUM_ROTATION_ACTUATOR	= 3;					// number of motor
-	static const short NUM_ACTUATOR			= 7;//NUM_ROTATION_ACTUATOR + NUM_LINEAR_ACTUATOR;
+	static const short NUM_ACTUATOR			= 7;//NUM_ROTATION_ACTUATOR + NUM_LINEAR_ACTUATOR;   3 Rotation and 4 Linear motor
 	// number of actuator
 	static const short NUM_COUNTER			= 7;//=NUM_ACTUATOR;			// number of counter ch.
 	
-	static const int DA_MAX_VOLT			= 10;  // Max voltage out put for 3 Axis machine tool is +-10 V
+	static const int DA_MAX_VOLT			= 10;  // Max voltage out put for 3,5 Axis machine tool is +-10 V
 	static const int DA_MIN_VOLT			= -10;//-DA_MAX_VOLT;
 
 // 	double MAX_FORCE_X, MAX_FORCE_Y1, MAX_FORCE_Y2, MAX_FORCE_Z, MAX_TORQUE_C, MAX_TORQUE_A1, MAX_TORQUE_A2;	
