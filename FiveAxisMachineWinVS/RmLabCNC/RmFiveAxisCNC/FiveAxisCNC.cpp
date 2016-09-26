@@ -407,8 +407,8 @@ void FiveAxisCNC::ThreeAxisMachineControllerInRegulation(void)
 
 	vector_control_force_fu = prod(matrix_estimated_weight_M,vector_desired_acceleration_ddotqd)+
 		prod(matrix_estimated_weight_M,-prod(matrix_TC_gain_Kp,vector_tracking_error_ew)-prod(matrix_TC_gain_Kd,vector_tracking_error_dotew));
-	// Out put control voltage to X,Y,Z only
-	for (int i=0;i<3;i++)
+	// Out put control voltage to X,Y,Z only NUMBERAXIS =3
+	for (int i=0;i<NUMBERAXIS;i++)
 	{
 		if (fabs(vector_control_force_fu(i))>MAXCONTROLFORCE)
 			vector_control_force_fu(i) = Rmsign(vector_control_force_fu(i))*MAXCONTROLFORCE;
