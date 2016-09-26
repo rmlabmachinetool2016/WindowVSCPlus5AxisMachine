@@ -441,7 +441,7 @@ grid on;
 % FileInput1 = ['D:\5AxisCNCExperiment\Rmlab5AxisCNCSoft\WindowVer5Axis\WindowVSCPlus5AxisMachine\'...
 %     'FiveAxisMachineWinVS\RmLabCNC\Release\RmFiveAxisCNC\InitialConfig\FiveAxisMachineParameters.rme'];%
 
-% Real Five axis machine
+% Real Five axis machine Update 
 FileInput1 = ['E:\DINHBA\WindowVSCPlus5AxisMachine\FiveAxisMachineWinVS\RmLabCNC\Release\RmFiveAxisCNC\InitialConfig\'...
     'FiveAxisMachineParameters.rme'];%
 
