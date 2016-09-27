@@ -5,39 +5,39 @@ using namespace RmLabCNC;
 FiveAxisCNC::FiveAxisCNC(void)
 { 
 	// Sliding mode contouring controller variable
-	    matrix_temporary.resize(SLMCCSIZE,SLMCCSIZE);
-		matrix_weight_M.resize(SLMCCSIZE,SLMCCSIZE);matrix_inverse_weight_M.resize(SLMCCSIZE,SLMCCSIZE);matrix_estimated_weight_M.resize(SLMCCSIZE,SLMCCSIZE); matrix_inverse_estimated_weight_M.resize(SLMCCSIZE,SLMCCSIZE); 
-		matrix_previous_rotation_RT.resize(SLMCCSIZE,SLMCCSIZE);matrix_rotation_R.resize(SLMCCSIZE,SLMCCSIZE);matrix_rotation_RT.resize(SLMCCSIZE,SLMCCSIZE);
-		matrix_previous_rotation_dotRT.resize(SLMCCSIZE,SLMCCSIZE);matrix_rotation_dotRT.resize(SLMCCSIZE,SLMCCSIZE);
-		matrix_rotation_ddotRT.resize(SLMCCSIZE,SLMCCSIZE);
-		matrix_TC_gain_Kp.resize(SLMCCSIZE,SLMCCSIZE);matrix_TC_gain_Kd.resize(SLMCCSIZE,SLMCCSIZE);
-		matrix_SLMCC_gain_lambda.resize(SLMCCSIZE,SLMCCSIZE);matrix_SLMCC_gain_A.resize(SLMCCSIZE,SLMCCSIZE);
-		matrix_SLMCC_sign_L.resize(SLMCCSIZE,SLMCCSIZE);matrix_disturbance_gain_Kd.resize(SLMCCSIZE,SLMCCSIZE);
-		matrix_sign_real_velocity_dotq.resize(SLMCCSIZE,SLMCCSIZE); 
-		matrix_estimated_viscous_friction_c.resize(SLMCCSIZE,SLMCCSIZE);matrix_viscous_friction_c.resize(SLMCCSIZE,SLMCCSIZE);
-		matrix_nominal_viscous_friction_cn.resize(SLMCCSIZE,SLMCCSIZE);
-		matrix_number_peak.resize(NUM_DIRECT,SLMCCSIZE);matrix_peak_height.resize(NUM_DIRECT*SLMCCSIZE,NUM_PEAK);
-		matrix_peak_position.resize(NUM_DIRECT*SLMCCSIZE,NUM_PEAK);matrix_peak_width.resize(NUM_DIRECT*SLMCCSIZE,NUM_PEAK);
-		matrix_sinusoidal_friction.resize(SLMCCSIZE,NUM_SINFRIC_DATA); matrix_stribeck_friction.resize(SLMCCSIZE,NUM_SINFRIC_DATA); 
+	    matrix_temporary.resize(NUMBERAXIS,NUMBERAXIS);
+		matrix_weight_M.resize(NUMBERAXIS,NUMBERAXIS);matrix_inverse_weight_M.resize(NUMBERAXIS,NUMBERAXIS);matrix_estimated_weight_M.resize(NUMBERAXIS,NUMBERAXIS); matrix_inverse_estimated_weight_M.resize(NUMBERAXIS,NUMBERAXIS); 
+		matrix_previous_rotation_RT.resize(NUMBERAXIS,NUMBERAXIS);matrix_rotation_R.resize(NUMBERAXIS,NUMBERAXIS);matrix_rotation_RT.resize(NUMBERAXIS,NUMBERAXIS);
+		matrix_previous_rotation_dotRT.resize(NUMBERAXIS,NUMBERAXIS);matrix_rotation_dotRT.resize(NUMBERAXIS,NUMBERAXIS);
+		matrix_rotation_ddotRT.resize(NUMBERAXIS,NUMBERAXIS);
+		matrix_TC_gain_Kp.resize(NUMBERAXIS,NUMBERAXIS);matrix_TC_gain_Kd.resize(NUMBERAXIS,NUMBERAXIS);
+		matrix_SLMCC_gain_lambda.resize(NUMBERAXIS,NUMBERAXIS);matrix_SLMCC_gain_A.resize(NUMBERAXIS,NUMBERAXIS);
+		matrix_SLMCC_sign_L.resize(NUMBERAXIS,NUMBERAXIS);matrix_disturbance_gain_Kd.resize(NUMBERAXIS,NUMBERAXIS);
+		matrix_sign_real_velocity_dotq.resize(NUMBERAXIS,NUMBERAXIS); 
+		matrix_estimated_viscous_friction_c.resize(NUMBERAXIS,NUMBERAXIS);matrix_viscous_friction_c.resize(NUMBERAXIS,NUMBERAXIS);
+		matrix_nominal_viscous_friction_cn.resize(NUMBERAXIS,NUMBERAXIS);
+		matrix_number_peak.resize(NUM_DIRECT,NUMBERAXIS);matrix_peak_height.resize(NUM_DIRECT*NUMBERAXIS,NUM_PEAK);
+		matrix_peak_position.resize(NUM_DIRECT*NUMBERAXIS,NUM_PEAK);matrix_peak_width.resize(NUM_DIRECT*NUMBERAXIS,NUM_PEAK);
+		matrix_sinusoidal_friction.resize(NUMBERAXIS,NUM_SINFRIC_DATA); matrix_stribeck_friction.resize(NUMBERAXIS,NUM_SINFRIC_DATA); 
 
 
-		vector_temporary.resize(SLMCCSIZE);vector_switching_force.resize(SLMCCSIZE);
-		vector_control_force_fu.resize(SLMCCSIZE);vector_estimated_control_force_fu.resize(SLMCCSIZE);
-		vector_real_position_q.resize(SLMCCSIZE);vector_previous_real_position_q.resize(SLMCCSIZE);
-		vector_real_velocity_dotq.resize(SLMCCSIZE);
-		vector_desired_position_qd.resize(SLMCCSIZE);vector_previous_desired_position_qd.resize(SLMCCSIZE);
-		vector_desired_velocity_dotqd.resize(SLMCCSIZE);vector_previous_desired_velocity_dotqd.resize(SLMCCSIZE);
-		vector_desired_acceleration_ddotqd.resize(SLMCCSIZE);
-		vector_SLMCC_gain_k.resize(SLMCCSIZE);
-		vector_tracking_error_ew.resize(SLMCCSIZE);vector_tracking_error_dotew.resize(SLMCCSIZE);
-		vector_contour_error_el.resize(SLMCCSIZE);vector_contour_error_dotel.resize(SLMCCSIZE);
-		vector_estimated_friction_ff.resize(SLMCCSIZE); 
-		vector_coulomb_friction_fcl.resize(SLMCCSIZE); vector_estimated_coulomb_friction_fcl.resize(SLMCCSIZE); 
-		vector_nominal_coulomb_friction_fncl.resize(SLMCCSIZE); 
+		vector_temporary.resize(NUMBERAXIS);vector_switching_force.resize(NUMBERAXIS);
+		vector_control_force_fu.resize(NUMBERAXIS);vector_estimated_control_force_fu.resize(NUMBERAXIS);
+		vector_real_position_q.resize(NUMBERAXIS);vector_previous_real_position_q.resize(NUMBERAXIS);
+		vector_real_velocity_dotq.resize(NUMBERAXIS);
+		vector_desired_position_qd.resize(NUMBERAXIS);vector_previous_desired_position_qd.resize(NUMBERAXIS);
+		vector_desired_velocity_dotqd.resize(NUMBERAXIS);vector_previous_desired_velocity_dotqd.resize(NUMBERAXIS);
+		vector_desired_acceleration_ddotqd.resize(NUMBERAXIS);
+		vector_SLMCC_gain_k.resize(NUMBERAXIS);
+		vector_tracking_error_ew.resize(NUMBERAXIS);vector_tracking_error_dotew.resize(NUMBERAXIS);
+		vector_contour_error_el.resize(NUMBERAXIS);vector_contour_error_dotel.resize(NUMBERAXIS);
+		vector_estimated_friction_ff.resize(NUMBERAXIS); 
+		vector_coulomb_friction_fcl.resize(NUMBERAXIS); vector_estimated_coulomb_friction_fcl.resize(NUMBERAXIS); 
+		vector_nominal_coulomb_friction_fncl.resize(NUMBERAXIS); 
 
-		vector_gravitational_force_g.resize(SLMCCSIZE); vector_estimated_gravitational_force_g.resize(SLMCCSIZE);
-		vector_disturbance_estimator_de.resize(SLMCCSIZE);vector_estimated_disturbance_d.resize(SLMCCSIZE);
-		vector_sliding_surface_s.resize(SLMCCSIZE);
+		vector_gravitational_force_g.resize(NUMBERAXIS); vector_estimated_gravitational_force_g.resize(NUMBERAXIS);
+		vector_disturbance_estimator_de.resize(NUMBERAXIS);vector_estimated_disturbance_d.resize(NUMBERAXIS);
+		vector_sliding_surface_s.resize(NUMBERAXIS);
 
 
 		matrix_temporary.clear();
@@ -122,6 +122,8 @@ FiveAxisCNC::FiveAxisCNC(void)
 
 	vec_AbsolutePosition.resize(NUM_COUNTER);
 	vec_AbsolutePosition.clear();
+	outputVolt.resize(NUM_ACTUATOR);
+	outputVolt.clear();
 
 	vec_el.clear();vec_el_1.clear();vec_el_2.clear();vec_ew.clear();vec_ew_1.clear();vec_ew_2.clear();
 	vec_Pre_refr.clear();vec_Pre_refr_1.clear();vec_refr.clear();vec_refr_1.clear();vec_refr_2.clear();
@@ -173,19 +175,19 @@ vector<double> FiveAxisCNC::GetCurrentReference()
 {
 	return vec_refr;
 }
-vector<double> FiveAxisCNC::GetRealPosition()
+vector<double> FiveAxisCNC::GetRealPosition() // Not used
 {
-   return vec_realx;
+   return vector_real_position_q;
 }
-void FiveAxisCNC::UpdateRealPosition()
+void FiveAxisCNC::UpdateRealPosition()// Not used
 {
 	vec_realx = IOModule.GetAbsPosition();
 	m_strDebugString = m_strDebugString+ "vec_realx(0)"+ System::Convert::ToString(vec_realx(0));
 }
-void FiveAxisCNC::SetRealPosition(vector<double> Vec_realPosition)
+void FiveAxisCNC::SetRealPosition(vector<double> CounterValue)
 {
 	vec_Pre_realx = vec_realx;
-	vec_realx = Vec_realPosition;
+	vec_realx = CounterValue;
 	m_CNCRealPos.X = vec_realx(0);
 	m_CNCRealPos.Y1 = vec_realx(1);
 	m_CNCRealPos.Y2 = vec_realx(2);
@@ -194,13 +196,15 @@ void FiveAxisCNC::SetRealPosition(vector<double> Vec_realPosition)
 	m_CNCRealPos.C = vec_realx(4);
 	m_CNCRealPos.A1 = vec_realx(5);
 	m_CNCRealPos.A2 = vec_realx(6);
-	m_CNCRealPos.A1 = m_CNCRealPos.A1 ;
+	m_CNCRealPos.A = m_CNCRealPos.A1 ;
 
 
 	vector_previous_real_position_q = vector_real_position_q;
-	vector_real_position_q(0) =  Vec_realPosition(0);
-	vector_real_position_q(1) =  Vec_realPosition(1);
-	vector_real_position_q(2) =  Vec_realPosition(3);
+	vector_real_position_q(0) =  CounterValue(0); // X axis position
+	vector_real_position_q(1) =  CounterValue(1); // Y axis position
+	vector_real_position_q(2) =  CounterValue(3);// Z axis position
+	vector_real_position_q(3) =  CounterValue(4);// C axis position
+	vector_real_position_q(4) =  CounterValue(5);// A axis position
 
 	vector_real_velocity_dotq = (vector_real_position_q - vector_previous_real_position_q)/(float)m_fSampTime;//  mm/s
 
@@ -224,6 +228,8 @@ void FiveAxisCNC::SetRefPosition(vector<double> Vec_refPosition)
 	vector_desired_position_qd(0) =  Vec_refPosition(0);
 	vector_desired_position_qd(1) =  Vec_refPosition(1);
 	vector_desired_position_qd(2) =  Vec_refPosition(3);
+	vector_desired_position_qd(3) =  Vec_refPosition(4);
+	vector_desired_position_qd(4) =  Vec_refPosition(5);
 
 	vector_previous_desired_velocity_dotqd = vector_desired_velocity_dotqd;
 	vector_desired_velocity_dotqd = (vector_desired_position_qd-vector_previous_desired_position_qd)/(float)m_fSampTime;//  mm/s
@@ -400,7 +406,7 @@ void FiveAxisCNC::ThreeAxisMachineController(void)
 //	ThreeAxisMachineSlidingModeContouringController();
 //	ThreeAxisMachinePDTrackingController();
 }
-void FiveAxisCNC::ThreeAxisMachineControllerInRegulation(void)
+void FiveAxisCNC::ThreeAxisMachineControllerInRegulation(void) // Simple PD controller without friction compensation
 {
 	vector_tracking_error_ew = vector_real_position_q-vector_desired_position_qd;
 	vector_tracking_error_dotew = vector_real_velocity_dotq - vector_desired_velocity_dotqd;
@@ -408,7 +414,7 @@ void FiveAxisCNC::ThreeAxisMachineControllerInRegulation(void)
 	vector_control_force_fu = prod(matrix_estimated_weight_M,vector_desired_acceleration_ddotqd)+
 		prod(matrix_estimated_weight_M,-prod(matrix_TC_gain_Kp,vector_tracking_error_ew)-prod(matrix_TC_gain_Kd,vector_tracking_error_dotew));
 	// Out put control voltage to X,Y,Z only NUMBERAXIS =3
-	for (int i=0;i<NUMBERAXIS;i++)
+	for (int i=0;i<NUMBERAXIS;i++)  // 5 for Five axis controller
 	{
 		if (fabs(vector_control_force_fu(i))>MAXCONTROLFORCE)
 			vector_control_force_fu(i) = Rmsign(vector_control_force_fu(i))*MAXCONTROLFORCE;
@@ -489,10 +495,12 @@ void FiveAxisCNC::ThreeAxisMachinePDTrackingController(void)
 	// 	vector_control_force_fu(0) = 0.0;
 	// 	vector_control_force_fu(1) = 0.0;
 	// 	vector_control_force_fu(2) = 0.0;
-
 	vec_OutputControl(0) = vector_control_force_fu(0);
 	vec_OutputControl(1) = vector_control_force_fu(1);
 	vec_OutputControl(3) = vector_control_force_fu(2);
+	vec_OutputControl(4) = vector_control_force_fu(3);
+	vec_OutputControl(5) = vector_control_force_fu(4);
+
 }
 void FiveAxisCNC::ThreeAxisMachinePDContouringController(void)
 {
@@ -607,11 +615,11 @@ void FiveAxisCNC::ThreeAxisMachinePDContouringController(void)
 // 		prod(matrix_estimated_weight_M,prod(matrix_rotation_R,prod(matrix_TC_gain_Kp,vector_contour_error_el)+prod(matrix_TC_gain_Kd,vector_contour_error_dotel)
 // 								+prod(matrix_rotation_ddotRT,vector_tracking_error_ew)+2.0*prod(matrix_rotation_dotRT,vector_tracking_error_dotew)));
 	// Out put control voltage to X,Y,Z only
-	for (int i=0;i<3;i++)
-	{
-		if (fabs(vector_control_force_fu(i))>MAXCONTROLFORCE)
-			vector_control_force_fu(i) = Rmsign(vector_control_force_fu(i))*MAXCONTROLFORCE;
-	}
+// 	for (int i=0;i<3;i++)
+// 	{
+// 		if (fabs(vector_control_force_fu(0))>MAX_FORCE_X)
+// 			vector_control_force_fu(i) = Rmsign(vector_control_force_fu(i))*MAXCONTROLFORCE;
+// 	}
 	// 	vector_control_force_fu(0) = 0.0;
 	// 	vector_control_force_fu(1) = 0.0;
 	// 	vector_control_force_fu(2) = 0.0;
@@ -619,6 +627,9 @@ void FiveAxisCNC::ThreeAxisMachinePDContouringController(void)
 	vec_OutputControl(0) = vector_control_force_fu(0);
 	vec_OutputControl(1) = vector_control_force_fu(1);
 	vec_OutputControl(3) = vector_control_force_fu(2);
+	vec_OutputControl(4) = vector_control_force_fu(3);
+	vec_OutputControl(5) = vector_control_force_fu(4);
+
 }
 void FiveAxisCNC::ThreeAxisMachineSlidingModeContouringController(void)
 {
@@ -901,8 +912,8 @@ void FiveAxisCNC::InitControllerParameters(System::String^ FileControllerParamet
 	//	while (ControllerParametersBinaryReader->BaseStream->Position < ControllerParametersBinaryReader->BaseStream->Length)
 		{
 			// Read conventional system dynamic parameters and friction
-			ControllerParametersBinaryReader->ReadByte();  //  fwrite(FID_in,NumberAxis,'uint8');
-			for (i=0;i<SLMCCSIZE;i++)// Read conventional friction model
+			ControllerParametersBinaryReader->ReadByte();  //  fwrite(FID_in,NumberAxis,'uint8'); // NumberAxis name
+			for (i=0;i<NUMBERAXIS;i++)// Read conventional nominal weight and nominal friction parameter
 			{
 				matrix_weight_M(i,i)=  ControllerParametersBinaryReader->ReadDouble();
 				matrix_inverse_weight_M(i,i) = 1.0/matrix_weight_M(i,i);
@@ -917,7 +928,7 @@ void FiveAxisCNC::InitControllerParameters(System::String^ FileControllerParamet
 				vector_estimated_gravitational_force_g(i) = ControllerParametersBinaryReader->ReadDouble();
 			}
 			//    Tracking controller gain 
-			for (i=0;i<SLMCCSIZE;i++)
+			for (i=0;i<NUMBERAXIS;i++)
 			{
 				matrix_TC_gain_Kp(i,i)= ControllerParametersBinaryReader->ReadDouble();
 				matrix_TC_gain_Kd(i,i)= ControllerParametersBinaryReader->ReadDouble();
@@ -1338,7 +1349,7 @@ void FiveAxisCNC::GetNextPointRefInRegulation() {
 		vector_next_desired_position_data(5) =  m_CNCRefPos.A;
 		SetRefPosition(vector_next_desired_position_data);
 }
-void FiveAxisCNC::GetNextPointRefInGCodePath() {
+void FiveAxisCNC::GetNextPointRefInGCodePath() {  // Using function
 	double referenceTime;
 	double referenceAngle;
 	m_fSampTime = m_fexpTnowReal- m_fexpTnow-m_fexpRunTPre;
@@ -1406,7 +1417,7 @@ void FiveAxisCNC::GetNextPointRefInGCodePath() {
 // 		m_CNCRefPos.X =  m_fCNCI+ m_fCNCRadius*cos(m_fCNCStartAngle+m_fOmg*m_fexpTnow);
 // 		m_CNCRefPos.Y =  m_fCNCJ+ m_fCNCRadius*sin(m_fCNCStartAngle+m_fOmg*m_fexpTnow);
 		break;
-	case 4:
+	case 4: // Mathematric curve
 		switch (m_iMathCurveNumber) 
 		{
 		case EIGHTCURVE: //r^2 = a^2cos(2*theta)sec^4(theta) 
@@ -1435,7 +1446,7 @@ void FiveAxisCNC::GetNextPointRefInGCodePath() {
 			if (m_iTuningMotor == LINEAR_MOTOR_C){  m_CNCRefPos.C =  m_fMath_r*cosf(m_fMath_w*m_fexpTnow)-m_fMath_r;};
 			if (m_iTuningMotor == LINEAR_MOTOR_A1){  m_CNCRefPos.A =  m_fMath_r*cosf(m_fMath_w*m_fexpTnow)-m_fMath_r;};
 			break;
-		case CURVE3D:
+		case CURVE3D:  // =5
 			m_fMath_Theta = m_fMath_b*2*PI*m_fexpTnow/m_fMath_Time;
 			m_CNCRefPos.X =  m_fMath_a*cosf(m_fMath_Theta)-m_fMath_a;
 			m_CNCRefPos.Y =  m_fMath_a*sinf(m_fMath_Theta);
@@ -1605,28 +1616,15 @@ bool FiveAxisCNC::AnalyseNextGcodeLine(System::String^ strGcodeLine)
 				}
 				break;
 			case 'C':
-				if (!m_bMathematicalCurve)
-				{
-					//			m_fCNCEndZ =(int)GetGcodeVariableValue(strRead, index);
-					m_fNextCNCEndC =GetGcodeVariableValue(strGcodeLine, index);
-					IsNextGcodeMovement = TRUE;
 
-					if (m_iMathCurveNumber == TUNINGPROCESS)
-					{
-						m_fMath_r = m_fNextCNCEndC;
-						m_iTuningMotor = LINEAR_MOTOR_C;
-					}
-				}else
+				//			m_fCNCEndZ =(int)GetGcodeVariableValue(strRead, index);
+				m_fNextCNCEndC =GetGcodeVariableValue(strGcodeLine, index);
+				IsNextGcodeMovement = TRUE;
+
+				if (m_iMathCurveNumber == TUNINGPROCESS)
 				{
-					if (strGcodeLine[index+1]=='U') //Figure 3D Curve CUR
-					{
-						index = index +3;
-						m_iMathCurveNumber = CURVE3D;
-					}
-					else
-					{
-						index = index +1;
-					}
+					m_fMath_r = m_fNextCNCEndC;
+					m_iTuningMotor = LINEAR_MOTOR_C;
 				}
 				break;
 			case 'A':
@@ -1652,9 +1650,16 @@ bool FiveAxisCNC::AnalyseNextGcodeLine(System::String^ strGcodeLine)
 				IsNextGcodeMovement = TRUE;
 				break;
 			case 'R':
-
-				m_fNextCNCRadius = GetGcodeVariableValue(strGcodeLine, index);
-				IsNextGcodeMovement = TRUE;
+				if (strGcodeLine[index+1]=='E')
+				{
+					index = index +1;
+					m_fMath_Repeat =GetGcodeVariableValue(strGcodeLine, index); // Number repeat in tuning process
+				} else
+				{
+					m_fNextCNCRadius = GetGcodeVariableValue(strGcodeLine, index);
+					IsNextGcodeMovement = TRUE;	
+				}
+				
 				break;
 			case 'M':
 
@@ -1703,7 +1708,7 @@ bool FiveAxisCNC::AnalyseNextGcodeLine(System::String^ strGcodeLine)
 				if (m_iMathCurveNumber == TUNINGPROCESS)
 				{
 					m_fMath_w = GetGcodeVariableValue(strGcodeLine, index);
-					m_fMath_Time = 2.0*PI/m_fMath_w;
+					m_fMath_Time = m_fMath_Repeat*2.0*PI/m_fMath_w;// Repeat turning process in to m_fMath_Repeat time
 				}
 				//			m_fGcodeS = GetGcodeVariableValue(strRead, index);
 
@@ -2774,11 +2779,18 @@ double FiveAxisCNC::CalculateNextAccFirstTime()
 // }
 void FiveAxisCNC::SendOutputControl()
 {
-	IOModule.OutputAllMotor(vec_OutputControl);
+	IOModule.BoundingOutput(vec_OutputControl);
+	IOModule.OutputAllMotor();
 }
 void FiveAxisCNC::SendOutputToVirtualSystem()
 {
-	
+	IOModule.BoundingOutput(vec_OutputControl);
+	vector_control_force_fu(0)= vec_OutputControl(0) ;
+	vector_control_force_fu(1)= vec_OutputControl(1) ;
+	vector_control_force_fu(2)= vec_OutputControl(3) ;
+	vector_control_force_fu(3)= vec_OutputControl(4) ;
+	vector_control_force_fu(4)= vec_OutputControl(5) ;
+
 	vector_real_velocity_dotq = vector_real_velocity_dotq+ (float)m_fSampTime*prod(matrix_inverse_weight_M,(vector_control_force_fu-
 						prod(matrix_sign_real_velocity_dotq,vector_coulomb_friction_fcl)-prod(matrix_viscous_friction_c,vector_real_velocity_dotq)-vector_gravitational_force_g));
 	vector_previous_real_position_q = vector_real_position_q;
@@ -2787,6 +2799,8 @@ void FiveAxisCNC::SendOutputToVirtualSystem()
 	m_CNCRealPos.X = vector_real_position_q(0);
 	m_CNCRealPos.Y = vector_real_position_q(1);
 	m_CNCRealPos.Z = vector_real_position_q(2);
+	m_CNCRealPos.C = vector_real_position_q(3);
+	m_CNCRealPos.A = vector_real_position_q(4);
 
 }
 String^ FiveAxisCNC::DebugDataString()

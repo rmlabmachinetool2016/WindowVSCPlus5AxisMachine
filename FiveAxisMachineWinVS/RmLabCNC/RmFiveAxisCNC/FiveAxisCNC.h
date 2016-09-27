@@ -50,7 +50,7 @@ namespace RmLabCNC{
 	static const short LISSAJOUS = 3;
 	static const short TUNINGPROCESS = 4;
 	static const short CURVE3D = 5;
-	static const short MAXCONTROLFORCE = 500;// N
+	static const short MAXCONTROLFORCE = 36;// For Five Axis Case 500; For 3 axis case// N
 
 	static identity_matrix<double> mt_Identity;
 	matrix<double> mt_Test(5,5);
@@ -236,7 +236,7 @@ public:
 
 	// Mathematical curve data
 	unsigned int m_iMathCurveNumber, m_iTuningMotor;
-	double m_fMath_a,m_fMath_n,m_fMath_c,m_fMath_b,m_fMath_Time,m_fMath_Theta,
+	double m_fMath_a,m_fMath_n,m_fMath_c,m_fMath_b,m_fMath_Time,m_fMath_Repeat,m_fMath_Theta,
 		m_fMath_Thetadot,m_fMath_r,m_fMath_w;
 	double m_frotR_Pre_theta,m_frotR_theta,m_frotR_theta_1;
 

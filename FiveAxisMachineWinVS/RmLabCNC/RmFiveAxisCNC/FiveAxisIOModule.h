@@ -7,7 +7,10 @@ using namespace boost::numeric::ublas;
 // #include <string>
 // using std::string;
 namespace RmLabCNC{
+#define NUM_ACTUATOR  7
+
 static vector<double>  vec_AbsolutePosition,vec_PartOrigin;
+static vector<float>  outputVolt;
 //public ref class FiveAxisIOModule
 ref class FiveAxisIOModule
 {
@@ -56,7 +59,7 @@ public:
 	
 	static const short NUM_LINEAR_ACTUATOR	= 4;					// number of linear motor
 	static const short NUM_ROTATION_ACTUATOR	= 3;					// number of motor
-	static const short NUM_ACTUATOR			= 7;//NUM_ROTATION_ACTUATOR + NUM_LINEAR_ACTUATOR;   3 Rotation and 4 Linear motor
+//	static const short NUM_ACTUATOR			= 7;//NUM_ROTATION_ACTUATOR + NUM_LINEAR_ACTUATOR;   3 Rotation and 4 Linear motor
 	// number of actuator
 	static const short NUM_COUNTER			= 7;//=NUM_ACTUATOR;			// number of counter ch.
 	
@@ -67,8 +70,10 @@ public:
 // 	short NUM_LINEAR_ACTUATOR, NUM_ROTATION_ACTUATOR, NUM_ACTUATOR;
 // 	int DA_MAX_VOLT,DA_MIN_VOLT;
 	double SAMPLING_TIME;				// sec
-
+// 	vector<double>  vec_AbsolutePosition,vec_PartOrigin;
+// 	vector<float>  outputVolt;
 	short  CntId,AioId;
+	//float outputVolt[NUM_ACTUATOR] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	System::String^	AioDeviceName,^ CntDeviceName;
 	long AioRet,AioRet2,CntRet,CntRet2;	
 	FiveAxisIOModule(void);
@@ -76,7 +81,9 @@ public:
 	void ConnectToCNC(System::String^ &errorX);
 	void DisconnectToCNC(System::String^ &Disconnecterror);
 	void EmergencyStopCNC(System::String^ &EmergencyStopError);
-	void OutputAllMotor(vector<double>& OutputForce);
+	void BoundingOutput(vector<double>& OutputForce);
+
+	void OutputAllMotor();
 	void StopAllMotor();
 	void OutputOneMotor(short m_iMotorNumber, double OutputForce);
 	void StartCounter(System::IntPtr pTimer, System::String^ &StartCounterError, int m_hwnd);

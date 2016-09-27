@@ -27,8 +27,11 @@ FiveAxisIOModule::FiveAxisIOModule(void)
 	CntDeviceName = THIS_CNT_NAME; 
 	vec_AbsolutePosition.resize(NUM_COUNTER);
 	vec_PartOrigin.resize(NUM_COUNTER);
+	outputVolt.resize(NUM_ACTUATOR);
 	vec_AbsolutePosition.clear();
 	vec_PartOrigin.clear();
+	outputVolt.clear();
+
 }
 
 
@@ -213,40 +216,41 @@ void FiveAxisIOModule::EmergencyStopCNC(System::String^ &EmergencyStopError)
 		return;
 	}
 }
-void FiveAxisIOModule::OutputAllMotor(vector<double>& OutputForce)
+void FiveAxisIOModule::BoundingOutput(vector<double>& OutputForce)
 {
 	int i;
-	vector<double> force(OutputForce);
-	float outputVolt[NUM_ACTUATOR];
 	double max_force[NUM_LINEAR_ACTUATOR] = {MAX_FORCE_X,MAX_FORCE_Y1,MAX_FORCE_Y2,MAX_FORCE_Z};
 	double max_torque[NUM_ROTATION_ACTUATOR] = {MAX_TORQUE_C,MAX_TORQUE_A1,MAX_TORQUE_A2};
 
-// IN case 3 axis CNC D3-402
-// 	force(2) =  force(3);// Change value of Z axis to Y2 axis
-// 	force(0) = -force(0);
+	// IN case 3 axis CNC D3-402
+	// 	force(2) =  force(3);// Change value of Z axis to Y2 axis
+	// 	force(0) = -force(0);
 
-//	force(1) = -force(1);
+	//	force(1) = -force(1);
 	for(i=0;i<NUM_LINEAR_ACTUATOR;i++)
 	{
-		if(force(i) > max_force[i])
-			force(i) = max_force[i];
-		else if(force(i) < -max_force[i])
-			force(i) = -max_force[i];
-		outputVolt[i] = static_cast<float>(force(i)/max_force[i]*DA_MAX_VOLT);
+		if(OutputForce(i) > max_force[i])
+			OutputForce(i) = max_force[i];
+		else if(OutputForce(i) < -max_force[i])
+			OutputForce(i) = -max_force[i];
+		outputVolt[i] = static_cast<float>(OutputForce(i)/max_force[i]*DA_MAX_VOLT);
 	}
 	for(i=0;i<NUM_ROTATION_ACTUATOR;i++)
 	{
-		if(force(i+NUM_LINEAR_ACTUATOR) > max_torque[i])
-			force(i+NUM_LINEAR_ACTUATOR) = max_torque[i];
-		else if(force(i+NUM_LINEAR_ACTUATOR) < -max_torque[i])
-			force(i+NUM_LINEAR_ACTUATOR) = -max_torque[i];
-		outputVolt[i+NUM_LINEAR_ACTUATOR] = static_cast<float>(force(i+NUM_LINEAR_ACTUATOR)/max_torque[i]*DA_MAX_VOLT);
+		if(OutputForce(i+NUM_LINEAR_ACTUATOR) > max_torque[i])
+			OutputForce(i+NUM_LINEAR_ACTUATOR) = max_torque[i];
+		else if(OutputForce(i+NUM_LINEAR_ACTUATOR) < -max_torque[i])
+			OutputForce(i+NUM_LINEAR_ACTUATOR) = -max_torque[i];
+		outputVolt[i] = static_cast<float>(OutputForce(i)/max_torque[i]*DA_MAX_VOLT);
 	}
-
-	OutputForce = force;
-
+}
+void FiveAxisIOModule::OutputAllMotor()
+{
+	int i;
 	for(i=0;i<NUM_ACTUATOR;i++) //NUM_ACTUATOR-3 Just control X, Y, Z motor
+	{
 		long AioRet = CAioCLI::AioSingleAoEx ( AioId , i , outputVolt[i] );
+	}
 }
 void FiveAxisIOModule::StopAllMotor()
 {

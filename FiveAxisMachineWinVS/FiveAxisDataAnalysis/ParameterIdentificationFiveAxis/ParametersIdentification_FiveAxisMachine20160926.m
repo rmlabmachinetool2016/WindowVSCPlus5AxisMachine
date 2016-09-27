@@ -442,42 +442,62 @@ grid on;
 %     'FiveAxisMachineWinVS\RmLabCNC\Release\RmFiveAxisCNC\InitialConfig\FiveAxisMachineParameters.rme'];%
 
 % Real Five axis machine Update 
-FileInput1 = ['E:\DINHBA\WindowVSCPlus5AxisMachine\FiveAxisMachineWinVS\RmLabCNC\Release\RmFiveAxisCNC\InitialConfig\'...
+% getenv('username')
+% getenv('computername')
+if strcmp(getenv('computername'),'D3-402-01')
+FileInput1 = ['D:\5AxisCNCExperiment\Rmlab5AxisCNCSoft\WindowVer5Axis\WindowVSCPlus5AxisMachine\'...
+    'FiveAxisMachineWinVS\RmLabCNC\Release\RmFiveAxisCNC\InitialConfig\FiveAxisMachineParameters.rme'];%
+else
+    FileInput1 = ['E:\DINHBA\WindowVSCPlus5AxisMachine\FiveAxisMachineWinVS\RmLabCNC\Release\RmFiveAxisCNC\InitialConfig\'...
     'FiveAxisMachineParameters.rme'];%
+end;
 
 FID_in = fopen(FileInput1,'w'); 
 %     m_TimeTotal = fread(FID_in,1,'double');
   %Start read data to variable 
 %    num_variable = 14;
 % NumberPeakXFwd  vec_PeakHeightXFwd vec_PeakPosXFwd  vec_PeakWidXFwd
-NumberAxis = 3;
-matrix_weight_M = [[0.004,0,0];
-                   [0,0.005,0];
-                   [0,0,0.006]];
-matrix_viscous_friction_c =     [[0.014,0,0];
-                                [0,0.015,0];
-                                [0,0,0.016]];
-vector_coulomb_friction_fcl =   [0.17,0.15,0.15];
-vector_gravitational_force_g =   [1.0,1.0,2.0]; 
+NumberAxis = 5;
+NumberActuator = 7;
+matrix_weight_M = [[0.0044,0,0,0,0];
+                   [0,0.0045,0,0,0];
+                   [0,0.0,  0.0017,0,0];
+                   [0,0.0,0,       0.00025,0];
+                   [0,0,0.0,0,             0.005]];
+matrix_viscous_friction_c =     [[0.055,0,0,0,0];
+                                [ 0,   0.055,0,0,0];
+                                [0.0,0,    0.025,0,0];
+                                [0.0,0,0,     0.025,0];
+                                [0.0,0,0,0,         0.025]];
+vector_coulomb_friction_fcl =   [0.4,0.5,0.6,0.7,0.8];
+vector_gravitational_force_g =   [1.0,1.0,2.0,0.0,0.0]; 
 
                             
-matrix_estimated_weight_M = [[0.008,0,0];
-                   [0,0.006,0];
-                   [0,0,0.007]];
-matrix_estimated_viscous_friction_c=        [[0.025,0,0];
-                                            [0,0.05,0];
-                                            [0,0,0.035]];                                         
-vector_estimated_coulomb_friction_fcl =   [0.15,0.15,0.15];
+matrix_estimated_weight_M = [[0.0054,0,0,0,0];
+                   [0,0.0055,0,0,0];
+                   [0,0.0,  0.0037,0,0];
+                   [0,0.0,0,       0.00045,0];
+                   [0,0,0.0,0,             0.007]];
+matrix_estimated_viscous_friction_c= [[0.045,0,0,0,0];
+                                [ 0,   0.075,0,0,0];
+                                [0.0,0,    0.035,0,0];
+                                [0.0,0,0,     0.045,0];
+                                [0.0,0,0,0,         0.055]];                                         
+vector_estimated_coulomb_friction_fcl =    [0.6,0.3,0.8,0.5,0.6];
 
-vector_estimated_gravitational_force_g =   [0,0,1.5];      
+vector_estimated_gravitational_force_g =   [0.0,0.0,1.5,0.0,0.0];      
 
 % PD tracking controller gain   400 300 400   20 20
-matrix_TC_Gain_Kp =      [[400,0,0];
-                           [0,400,0];
-                           [0,0,400]]; 
-matrix_TC_gain_Kd= [[30,0,0];
-                            [0,30,0];
-                            [0,0,30]];
+matrix_TC_Gain_Kp =      [[400,0,0,0,0];
+                          [0,400,0,0,0];
+                          [0,0,4000,0,0];
+                          [0,0,0,4000,0];
+                          [0,0,0,0,4000]]; 
+matrix_TC_gain_Kd= [[30,0,0,0,0];
+                            [0,30,0,0,0];
+                            [0,0,300,0,0];
+                            [0,0,0,300,0];
+                            [0,0,0,0,300]];
 % % PD contouring controller gain   elt, eln, elb    100 400 400   10  30
 % 30
 % matrix_TC_Gain_Kp =      [[400,0,0];
@@ -520,7 +540,7 @@ vector_SLMCC_gain_k =       [0.5,0.5,0.5];
          fwrite(FID_in,matrix_TC_gain_Kd(i,i),'double');               
     end;
  %    Sliding model contouring controller gain
-    for i=1:NumberAxis
+    for i=1:NumberAxis-2
          fwrite(FID_in,matrix_SLMCC_gain_lambda(i,i),'double');
          fwrite(FID_in,matrix_SLMCC_gain_A(i,i),'double');
          fwrite(FID_in,matrix_disturbance_gain_Kd(i,i),'double');
@@ -547,13 +567,13 @@ vector_SLMCC_gain_k =       [0.5,0.5,0.5];
  ConvStribeckFricModelInit = [20 35 5 0.6 2;15 30 3 0.9 2;25 40 5 0.4 2];
 ProposedFricModelInit =[20 5 0 0;15 3 11.2 -0.27;25 5 0 0];
 
-     for i=1:NumberAxis
+     for i=1:NumberAxis-2
                 for j=1:5
                     fwrite(FID_in,ConvStribeckFricModelInit(i,j),'double');
                  end;    
     end; 
     
-    for i=1:NumberAxis
+    for i=1:NumberAxis-2
                 for j=1:4
                     fwrite(FID_in,ProposedFricModelInit(i,j),'double');
                  end;    

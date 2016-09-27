@@ -2440,7 +2440,7 @@ private: System::Void buttonSetOrigin_Click(System::Object^  sender, System::Eve
 
 				 RmLabFiveAxisCNC.SetMachineOrigin();
 				 RmLabFiveAxisCNC.IOModule.SetPartOrigin();
-				 RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.IOModule.GetMachiningPosition());
+				 RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.IOModule.GetMachiningPosition());  // Set real and reference position to (0,0,0,0,0)
 				 RmLabFiveAxisCNC.SetRefPosition(RmLabFiveAxisCNC.IOModule.GetMachiningPosition());
 				 RmLabFiveAxisCNC.InitControllerParameters(InitialConfigFolder+textBoxConfigFilename->Text);
 
@@ -2640,7 +2640,7 @@ void TimerCallBackProc(short m_Id, int wParam, int lParam, void * Param){
 			RmLabFiveAxisCNC.CloseBinaryFile();
 			RmLabFiveAxisCNC.CloseGcodeFile();
 		};
-		if (checkBoxPositionRegulation->Checked)
+		if (checkBoxPositionRegulation->Checked)  // Position Regulation controller
 		{
 		
 		RmLabFiveAxisCNC.SetRealPosition(RmLabFiveAxisCNC.IOModule.GetMachiningPosition());
