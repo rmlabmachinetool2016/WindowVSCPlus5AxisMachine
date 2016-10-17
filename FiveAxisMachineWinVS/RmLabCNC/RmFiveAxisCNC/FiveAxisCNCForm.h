@@ -2458,7 +2458,7 @@ private: System::Void buttonSetOrigin_Click(System::Object^  sender, System::Eve
 		//		 RmLabFiveAxisCNC.m_fNextAccFirstTime = RmLabFiveAxisCNC.m_fexpTnowReal;
 				 RmLabFiveAxisCNC.GetNextPointRefInRegulation(); 
 //				 RmLabFiveAxisCNC.ThreeAxisMachineController();
-				 RmLabFiveAxisCNC.ThreeAxisMachineControllerInRegulation();
+				 RmLabFiveAxisCNC.FiveAxisMachineControllerInRegulation();
 //				 RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
 				 labelConnectStatus->Text = "Position regulating...\n";
 				 checkBoxPositionRegulation->Checked = true; // Auto regulating
@@ -2659,7 +2659,7 @@ void TimerCallBackProc(short m_Id, int wParam, int lParam, void * Param){
 		RmLabFiveAxisCNC.GetNextPointRefInRegulation(); 
 //		RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
 //		RmLabFiveAxisCNC.ThreeAxisMachineController();
-		RmLabFiveAxisCNC.ThreeAxisMachineControllerInRegulation();
+		RmLabFiveAxisCNC.FiveAxisMachineControllerInRegulation();
 //		vec_OutputControl(0) = vec_OutputControl(0);
 //		textBoxXPosition->Text = System::Convert::ToString(vec_OutputControl(0));
 //		textBoxY1Position->Text = System::Convert::ToString(vec_OutputControl(1));

@@ -261,7 +261,7 @@ public:
 	void IndependentControl2D(void);
 	void ContouringControl3DFiveAxis(void);
 	void ThreeAxisMachineController(void);
-	void ThreeAxisMachineControllerInRegulation(void);
+	void FiveAxisMachineControllerInRegulation(void);
 	void IndependentControl3DFiveAxis(void);
 	void ThreeAxisMachineSlidingModeContouringController(void);
 	void ThreeAxisMachinePDTrackingController(void);

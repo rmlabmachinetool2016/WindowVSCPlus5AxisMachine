@@ -245,6 +245,8 @@ void FiveAxisCNC::SetTableOrigin(vector<double> Vec_realPosition)
 	m_CNCTableOrigin.C = vec_realx(4);
 	m_CNCTableOrigin.A1 = vec_realx(5);
 	m_CNCTableOrigin.A2 = vec_realx(6);
+	m_CNCTableOrigin.Y = m_CNCTableOrigin.Y1;
+	m_CNCTableOrigin.A = m_CNCTableOrigin.A1;
 
 }
 // Get next reference point at counter timer call for feedback control
@@ -406,13 +408,15 @@ void FiveAxisCNC::ThreeAxisMachineController(void)
 //	ThreeAxisMachineSlidingModeContouringController();
 //	ThreeAxisMachinePDTrackingController();
 }
-void FiveAxisCNC::ThreeAxisMachineControllerInRegulation(void) // Simple PD controller without friction compensation
+void FiveAxisCNC::FiveAxisMachineControllerInRegulation(void) // Simple PD controller without friction compensation
 {
 	vector_tracking_error_ew = vector_real_position_q-vector_desired_position_qd;
 	vector_tracking_error_dotew = vector_real_velocity_dotq - vector_desired_velocity_dotqd;
 
 	vector_control_force_fu = prod(matrix_estimated_weight_M,vector_desired_acceleration_ddotqd)+
 		prod(matrix_estimated_weight_M,-prod(matrix_TC_gain_Kp,vector_tracking_error_ew)-prod(matrix_TC_gain_Kd,vector_tracking_error_dotew));
+
+
 	// Out put control voltage to X,Y,Z only NUMBERAXIS =3
 	for (int i=0;i<NUMBERAXIS;i++)  // 5 for Five axis controller
 	{
@@ -426,6 +430,8 @@ void FiveAxisCNC::ThreeAxisMachineControllerInRegulation(void) // Simple PD cont
 	vec_OutputControl(0) = vector_control_force_fu(0);
 	vec_OutputControl(1) = vector_control_force_fu(1);
 	vec_OutputControl(3) = vector_control_force_fu(2);
+	vec_OutputControl(4) = vector_control_force_fu(3);
+	vec_OutputControl(5) = vector_control_force_fu(4);
 }
 void FiveAxisCNC::ThreeAxisMachinePDTrackingController(void)
 {

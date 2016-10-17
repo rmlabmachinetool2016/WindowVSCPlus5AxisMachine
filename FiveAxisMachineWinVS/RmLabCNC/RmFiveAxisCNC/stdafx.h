@@ -7,7 +7,7 @@
 // Define address for counter board and DA boar
 // Change from Dinhba
 #define THIS_AIO_NAME  "AIO000"
-#define THIS_CNT_NAME  "CNT000"   // Current 5 Axis CNC "CNT001" , 3 Axis CNC "CNT000"
+#define THIS_CNT_NAME  "CNT000"   // Current 5 Axis;  5 Axis CNC "CNT000" , 3 Axis CNC "CNT001"
 
 
 #define TRUE  1
