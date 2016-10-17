@@ -241,7 +241,35 @@ void FiveAxisIOModule::BoundingOutput(vector<double>& OutputForce)
 			OutputForce(i+NUM_LINEAR_ACTUATOR) = max_torque[i];
 		else if(OutputForce(i+NUM_LINEAR_ACTUATOR) < -max_torque[i])
 			OutputForce(i+NUM_LINEAR_ACTUATOR) = -max_torque[i];
-		outputVolt[i] = static_cast<float>(OutputForce(i)/max_torque[i]*DA_MAX_VOLT);
+		outputVolt[i+NUM_LINEAR_ACTUATOR] = static_cast<float>(OutputForce(i)/max_torque[i]*DA_MAX_VOLT);
+	}
+}
+void FiveAxisIOModule::BoundingOutputFiveAxis(vector<double>& OutputForce)
+{
+	int i;
+	double max_force[NUM_LINEAR_ACTUATOR] = {MAX_FORCE_X,MAX_FORCE_Y1,MAX_FORCE_Y2,MAX_FORCE_Z};
+	double max_torque[NUM_ROTATION_ACTUATOR] = {MAX_TORQUE_C,MAX_TORQUE_A1,MAX_TORQUE_A2};
+
+	// IN case 3 axis CNC D3-402
+	// 	force(2) =  force(3);// Change value of Z axis to Y2 axis
+	// 	force(0) = -force(0);
+
+	//	force(1) = -force(1);
+	for(i=0;i<NUM_LINEAR_ACTUATOR-1;i++)
+	{
+		if(OutputForce(i) > max_force[i])
+			OutputForce(i) = max_force[i];
+		else if(OutputForce(i) < -max_force[i])
+			OutputForce(i) = -max_force[i];
+		outputVolt[i] = static_cast<float>(OutputForce(i)/max_force[i]*DA_MAX_VOLT);
+	}
+	for(i=0;i<NUM_ROTATION_ACTUATOR-1;i++)
+	{
+		if(OutputForce(i+NUM_LINEAR_ACTUATOR-1) > max_torque[i])
+			OutputForce(i+NUM_LINEAR_ACTUATOR-1) = max_torque[i];
+		else if(OutputForce(i+NUM_LINEAR_ACTUATOR-1) < -max_torque[i])
+			OutputForce(i+NUM_LINEAR_ACTUATOR-1) = -max_torque[i];
+		outputVolt[i+NUM_LINEAR_ACTUATOR] = static_cast<float>(OutputForce(i+NUM_LINEAR_ACTUATOR-1)/max_torque[i]*DA_MAX_VOLT);
 	}
 }
 void FiveAxisIOModule::OutputAllMotor()
@@ -342,7 +370,9 @@ void FiveAxisIOModule::StartCounter(System::IntPtr pTimer, System::String^ &Star
 		unsigned long PresetData[NUM_COUNTER];
 		double pos_pre[NUM_COUNTER] = {INIT_POS_X,INIT_POS_Y1,INIT_POS_Y2,INIT_POS_Z,INIT_ANGLE_C,INIT_ANGLE_A1,INIT_ANGLE_A2};
 		double resonate[NUM_COUNTER] = {RESONATE_LINER_ENC_X,RESONATE_LINER_ENC_Y1,RESONATE_LINER_ENC_Y2,RESONATE_LINER_ENC_Z,RESONATE_ROTATION_ENC_C,RESONATE_ROTATION_ENC_A1,RESONATE_ROTATION_ENC_A2};
-		long dir[NUM_COUNTER]={-1,1,-1,-1,1,1,-1};//5 Axis CNC,  long dir[NUM_COUNTER]={1,1,1,1,1,1,1}; \\ 3axis CNC
+		long dir[NUM_COUNTER]={-1,1,-1,-1,-1,1,-1};//5 Axis CNC,  long dir[NUM_COUNTER]={1,1,1,1,1,1,1}; \\ 3axis CNC
+
+
 		for(unsigned int i=0;i<NUM_COUNTER;i++){
 			pos_pre[i] = pos_pre[i]*dir[i]/resonate[i];
 			PresetData[i] = static_cast<unsigned long>(pos_pre[i]);
@@ -413,7 +443,7 @@ vector<double> FiveAxisIOModule::GetAbsolutePosition()
 	CNCPOSITION  vec_CNCPosition;
 
 	static vector<double> oldpos,oldvel;
-	long CntRet,dir[NUM_COUNTER]={-1,1,-1,-1,1,1,-1};// 5 axis and long CntRet,dir[NUM_COUNTER]={1,1,1,-1,-1,1,1};// 3 axis
+	long CntRet,dir[NUM_COUNTER]={-1,1,-1,-1,-1,1,-1};// 5 axis and long CntRet,dir[NUM_COUNTER]={1,1,1,-1,-1,1,1};// 3 axis
 	
 	short ChNo[NUM_COUNTER] = {0,1,2,3,4,5,6};
 //	double cut[NUM_COUNTER] = {CUTOFF_FREC_X,CUTOFF_FREC_Y1,CUTOFF_FREC_Y2,CUTOFF_FREC_Z,CUTOFF_FREC_C,CUTOFF_FREC_A1,CUTOFF_FREC_A2};
@@ -430,15 +460,15 @@ vector<double> FiveAxisIOModule::GetAbsolutePosition()
 // 	vec_AbsolutePosition(1) = cnt(4) * RESONATE_LINER_ENC_Y1;// 3 Axis Y
 	// 5 Axis 
 	vec_AbsolutePosition(0) = cnt(0) * RESONATE_LINER_ENC_X;
-	vec_AbsolutePosition(1) = -cnt(1) * RESONATE_LINER_ENC_Y1;
+	vec_AbsolutePosition(1) = cnt(1) * RESONATE_LINER_ENC_Y1;
 
 	vec_AbsolutePosition(2) = cnt(2) * RESONATE_LINER_ENC_Y2;
-	vec_AbsolutePosition(3) = -cnt(3) * RESONATE_LINER_ENC_Z;
+	vec_AbsolutePosition(3) = cnt(3) * RESONATE_LINER_ENC_Z;
 	//3 axis
 //	vec_AbsolutePosition(3) = cnt(5) * RESONATE_LINER_ENC_Z;//  3 Axis Z
 	// convert position(rad
 //	vec_AbsolutePosition(4) = cnt(4) * RESONATE_ROTATION_ENC_C;// 3 axis Wrong in the direct of motor C
-	vec_AbsolutePosition(4) = -cnt(4) * RESONATE_ROTATION_ENC_C;// 5 axis Wrong in the direct of motor C
+	vec_AbsolutePosition(4) = cnt(4) * RESONATE_ROTATION_ENC_C;// 5 axis Wrong in the direct of motor C
 	vec_AbsolutePosition(5) = cnt(5) * RESONATE_ROTATION_ENC_A1;
 	vec_AbsolutePosition(6) = cnt(6) * RESONATE_ROTATION_ENC_A2;
 

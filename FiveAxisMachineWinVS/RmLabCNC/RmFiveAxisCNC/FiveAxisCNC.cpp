@@ -208,6 +208,8 @@ void FiveAxisCNC::SetRealPosition(vector<double> CounterValue)
 
 	vector_real_velocity_dotq = (vector_real_position_q - vector_previous_real_position_q)/(float)m_fSampTime;//  mm/s
 
+	m_CNCRealPos.A2 = vec_OutputControl(4);// Debug control out put in C drive
+
 }
 void FiveAxisCNC::SetRefPosition(vector<double> Vec_refPosition)
 {
@@ -417,12 +419,15 @@ void FiveAxisCNC::FiveAxisMachineControllerInRegulation(void) // Simple PD contr
 		prod(matrix_estimated_weight_M,-prod(matrix_TC_gain_Kp,vector_tracking_error_ew)-prod(matrix_TC_gain_Kd,vector_tracking_error_dotew));
 
 
+
+	IOModule.BoundingOutputFiveAxis(vector_control_force_fu);
+
 	// Out put control voltage to X,Y,Z only NUMBERAXIS =3
-	for (int i=0;i<NUMBERAXIS;i++)  // 5 for Five axis controller
-	{
-		if (fabs(vector_control_force_fu(i))>MAXCONTROLFORCE)
-			vector_control_force_fu(i) = Rmsign(vector_control_force_fu(i))*MAXCONTROLFORCE;
-	}
+//	for (int i=0;i<NUMBERAXIS;i++)  // 5 for Five axis controller
+//	{
+//		if (fabs(vector_control_force_fu(i))>MAXCONTROLFORCE)
+//			vector_control_force_fu(i) = Rmsign(vector_control_force_fu(i))*MAXCONTROLFORCE;
+//	}
 	// 	vector_control_force_fu(0) = 0.0;
 	// 	vector_control_force_fu(1) = 0.0;
 	// 	vector_control_force_fu(2) = 0.0;
@@ -907,7 +912,7 @@ double FiveAxisCNC::gaussian(double x, double pos, double wid)
 	//% Example: gaussian([1 2 3],1,2) gives result [0.5000    1.0000    0.5000]
 	return exp(-((x-pos)/(0.6005612*wid))*((x-pos)/(0.6005612*wid)));
 }
-void FiveAxisCNC::InitControllerParameters(System::String^ FileControllerParameters)
+void FiveAxisCNC::InitControllerParameters(System::String^ FileControllerParameters) // Current 2016 10 15
 {
 	int i=0,j=0;
 	try
@@ -936,7 +941,7 @@ void FiveAxisCNC::InitControllerParameters(System::String^ FileControllerParamet
 			//    Tracking controller gain 
 			for (i=0;i<NUMBERAXIS;i++)
 			{
-				matrix_TC_gain_Kp(i,i)= ControllerParametersBinaryReader->ReadDouble();
+				matrix_TC_gain_Kp(i,i)= ControllerParametersBinaryReader->ReadDouble(); 
 				matrix_TC_gain_Kd(i,i)= ControllerParametersBinaryReader->ReadDouble();
 			}
 			//    Sliding model contouring controller gain
@@ -2785,8 +2790,11 @@ double FiveAxisCNC::CalculateNextAccFirstTime()
 // }
 void FiveAxisCNC::SendOutputControl()
 {
-	IOModule.BoundingOutput(vec_OutputControl);
+	//IOModule.BoundingOutput(vec_OutputControl);
+
 	IOModule.OutputAllMotor();
+
+
 }
 void FiveAxisCNC::SendOutputToVirtualSystem()
 {
@@ -2815,7 +2823,7 @@ String^ FiveAxisCNC::DebugDataString()
 
 //   m_strDebugString = "matrix_weight_M(2,2)--"+ m_strDebugString+ System::Convert::ToString(matrix_weight_M(2,2))+" "+ System::Convert::ToString(matrix_viscous_friction_c(0,0))+" "+ System::Convert::ToString(vector_nominal_coulomb_friction_fncl(0));
 
-	m_strDebugString = m_strDebugString+"Real Mx"+ System::Convert::ToString(matrix_weight_M(0,0))+" "+"Real Fc X"+ System::Convert::ToString(vector_coulomb_friction_fcl(0))+" "+"gama2--"+ System::Convert::ToString(matrix_viscous_friction_c(0,0))+" ";
+	m_strDebugString = m_strDebugString+"Real MC"+ System::Convert::ToString(matrix_weight_M(3,3))+" "+"_Kp C"+ System::Convert::ToString(matrix_TC_gain_Kp(3,3))+" "+"MA--"+ System::Convert::ToString(matrix_weight_M(4,4))+" ";
 	
 	
 	

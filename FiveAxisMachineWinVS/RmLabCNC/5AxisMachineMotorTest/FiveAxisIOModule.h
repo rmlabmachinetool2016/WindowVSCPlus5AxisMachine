@@ -64,6 +64,7 @@ public:
 	void DisconnectToCNC(System::String^ &Disconnecterror);
 	void EmergencyStopCNC(System::String^ &EmergencyStopError);
 	void OutputAllMotor(vector<double>& OutputForce);
+
 	void StopAllMotor();
 	void OutputOneMotor(short m_iMotorNumber, double OutputForce);
 	void StartCounter(System::IntPtr pTimer, System::String^ &StartCounterError, int m_hwnd);

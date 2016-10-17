@@ -2907,6 +2907,9 @@ private: System::Void timerFiveAxisForm_Tick(System::Object^  sender, System::Ev
 				 textBoxXPosition->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.X);
 				 textBoxY1Position->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.Y);
 				 textBoxZPosition->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.Z);
+				 textBoxCPosition->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.C);
+				 textBoxA1Position->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.A);
+				 textBoxA2Position->Text = System::Convert::ToString(RmLabFiveAxisCNC.m_CNCRealPos.A2 );
 			 }
 		 }
 private: System::Void buttonXPlus_MouseEnter(System::Object^  sender, System::EventArgs^  e) {
