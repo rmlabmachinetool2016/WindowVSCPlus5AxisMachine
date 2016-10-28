@@ -2047,6 +2047,9 @@ private: System::ComponentModel::IContainer^  components;
 #pragma endregion
 #pragma region Windows Form function 
 private: System::Void buttonSimulationStart_Click(System::Object^  sender, System::EventArgs^  e) {
+			 // Five axis orientation
+			 RmLabFiveAxisCNC.m_fDz = 20; //mm
+			 RmLabFiveAxisCNC.m_fDy = 4; //mm
 
 			 RmLabFiveAxisCNC.m_strDebugString = "";
 			 UpdateSettingParameters(); // Update sample time, Controller type
@@ -2090,7 +2093,7 @@ private: System::Void buttonSimulationStart_Click(System::Object^  sender, Syste
 // 			 RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
 // 			 textBoxControlParameters->Text = RmLabFiveAxisCNC.m_strDebugString;
 // //			 RmLabFiveAxisCNC.SendOutputControl();
-			 if (checkBoxSaveData->Checked){RmLabFiveAxisCNC.SaveDataToBinaryFile();};	 
+			 if (checkBoxSaveData->Checked){RmLabFiveAxisCNC.SaveDataToBinaryFile();};	 // Save start data 0  00  00 all
 
 			 //		m_cTrajectoryControl.GetNextRef();
 			 RealTimeWatch.Start();
@@ -2106,7 +2109,7 @@ private: System::Void buttonSimulationStart_Click(System::Object^  sender, Syste
 				 RmLabFiveAxisCNC.m_fexpTnowCounter = (double)(RealTimeWatch.GetTimestamp()-m_iTimeStartTick)/(double) m_iFrequency;
 				 RmLabFiveAxisCNC.GetNextPointRefInGCodePath();  //*********************************Real Time********************//
 	//			 RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
-				 RmLabFiveAxisCNC.ThreeAxisMachineController();
+				 RmLabFiveAxisCNC.FiveAxisMachineController();
 
 
 				 if (checkBoxSaveData->Checked){RmLabFiveAxisCNC.SaveDataToBinaryFile();};	
@@ -2625,7 +2628,7 @@ void TimerCallBackProc(short m_Id, int wParam, int lParam, void * Param){
 		 RmLabFiveAxisCNC.GetNextPointRefInGCodePath(); 
 		//m_cTrajectoryControl.GetNextRealRef(); 
 //		RmLabFiveAxisCNC.IndependentControl3DFiveAxis();
-		RmLabFiveAxisCNC.ThreeAxisMachineController();
+		RmLabFiveAxisCNC.FiveAxisMachineController();
 		RmLabFiveAxisCNC.SendOutputControl();
 	//	RmLabFiveAxisCNC.SendOutputToVirtualSystem();
 		if (checkBoxSaveData->Checked){RmLabFiveAxisCNC.SaveDataToBinaryFile();};	

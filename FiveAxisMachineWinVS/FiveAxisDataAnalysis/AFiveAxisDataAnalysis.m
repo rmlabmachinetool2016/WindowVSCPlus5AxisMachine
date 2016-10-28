@@ -329,7 +329,7 @@ YMax = 36;
 % Draw vec_uX, vec_uY independent Error ////////////////////////////////////
 plot(m_TimeNowF2(1,1:num_samp-NotGood),vec_uF2(1,1:num_samp-NotGood),'-','Color','b');
 set(gca,'XTick',0:1:GraTime,'FontSize',TickFontSize)
-set(gca,'YTick',-YMax:0.5:YMax,'FontSize',TickFontSize)
+set(gca,'YTick',-YMax:2:YMax,'FontSize',TickFontSize)
 % set(gca, 'ColorOrder', jet(3));
 hold all;
 plot(m_TimeNowF2(1,1:num_samp-NotGood),vec_uF2(1,1:num_samp-NotGood)- vec_eVoltSupF2(1,1:num_samp-NotGood),'-','Color','g','LineWidth',2);

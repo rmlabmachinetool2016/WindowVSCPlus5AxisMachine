@@ -148,6 +148,37 @@ FiveAxisCNC::FiveAxisCNC(void)
 	m_bGcodeFINISH = FALSE;
 	m_bNextGcodeFINISH = FALSE;
 	m_bOriginSetup = FALSE;
+
+	// Variable for proposed tool orientation contour estimation
+	temple_vector.resize(THREEDIMENSION);temple_vector.clear();
+	matrix_rotation_RC1.resize(THREEDIMENSION,THREEDIMENSION);matrix_rotation_RC1.clear();
+// Curve C1
+	vector_desired_position_at_qd_c1.resize(THREEDIMENSION);vector_desired_velocity_at_qd_c1.resize(THREEDIMENSION);vector_desired_acceleration_at_qd_c1.resize(THREEDIMENSION);
+		vector_desired_position_at_shifted_qd_c1.resize(THREEDIMENSION);vector_desired_velocity_at_shifted_qd_c1.resize(THREEDIMENSION);vector_desired_acceleration_at_shifted_qd_c1.resize(THREEDIMENSION);
+		vector_tracking_error_velocity_dot_e1_at_qd_c1.resize(THREEDIMENSION); vector_tracking_error_e1_at_qd_c1.resize(THREEDIMENSION);
+		vector_actual_position_at_q_c1.resize(THREEDIMENSION);
+
+		vector_desired_position_at_qd_c1.clear();vector_desired_velocity_at_qd_c1.clear();vector_desired_acceleration_at_qd_c1.clear();
+			vector_desired_position_at_shifted_qd_c1.clear();vector_desired_velocity_at_shifted_qd_c1.clear();vector_desired_acceleration_at_shifted_qd_c1.clear();
+			vector_tracking_error_velocity_dot_e1_at_qd_c1.clear(); vector_tracking_error_e1_at_qd_c1.clear();
+			vector_actual_position_at_q_c1.clear();
+
+// Curve C2
+			vector_desired_position_at_qd_c2.resize(THREEDIMENSION);vector_desired_velocity_at_qd_c2.resize(THREEDIMENSION);vector_desired_acceleration_at_qd_c2.resize(THREEDIMENSION);
+			vector_desired_position_at_shifted_qd_c2.resize(THREEDIMENSION);vector_desired_velocity_at_shifted_qd_c2.resize(THREEDIMENSION);vector_desired_acceleration_at_shifted_qd_c2.resize(THREEDIMENSION);
+			vector_tracking_error_velocity_dot_e1_at_qd_c2.resize(THREEDIMENSION); vector_tracking_error_e1_at_qd_c2.resize(THREEDIMENSION);
+			vector_actual_position_at_q_c2.resize(THREEDIMENSION);
+
+			vector_desired_position_at_qd_c2.clear();vector_desired_velocity_at_qd_c2.clear();vector_desired_acceleration_at_qd_c2.clear();
+			vector_desired_position_at_shifted_qd_c2.clear();vector_desired_velocity_at_shifted_qd_c2.clear();vector_desired_acceleration_at_shifted_qd_c2.clear();
+			vector_tracking_error_velocity_dot_e1_at_qd_c2.clear(); vector_tracking_error_e1_at_qd_c2.clear();
+			vector_actual_position_at_q_c2.clear();
+
+      vector_actual_orientation_at_q_c1.resize(THREEDIMENSION);vector_desired_orientation_at_qd_c1.resize(THREEDIMENSION); vector_actual_position_at_q_c2.resize(THREEDIMENSION);
+
+      vector_actual_orientation_at_q_c1.clear();vector_desired_orientation_at_qd_c1.clear(); vector_actual_position_at_q_c2.clear();
+
+
 //	 mt_M->resize( 1, 5) ;
 //	  mt_Kc->resize( 1, 5) ;
 // 	  matrix<double> mt_M;//(3, 3),mt_Kc(3, 3);//m (3, 3),m1 (3, 3),m2 (3, 3);
@@ -388,12 +419,12 @@ void FiveAxisCNC::EstimateFrictionValue(void)
 		break;
 	}
 }
-void FiveAxisCNC::ThreeAxisMachineController(void)
+void FiveAxisCNC::FiveAxisMachineController(void)
 {
 	switch (m_iSelectedControllerType)
 	{
 	case 0:
-		ThreeAxisMachinePDTrackingController();
+		FiveAxisMachinePDTrackingController();
 		break;
 	case 1:
 		ThreeAxisMachinePDContouringController();
@@ -438,57 +469,245 @@ void FiveAxisCNC::FiveAxisMachineControllerInRegulation(void) // Simple PD contr
 	vec_OutputControl(4) = vector_control_force_fu(3);
 	vec_OutputControl(5) = vector_control_force_fu(4);
 }
-void FiveAxisCNC::ThreeAxisMachinePDTrackingController(void)
+
+vector<double> FiveAxisCNC::NormalizedVector(vector<double> temple_original_vector)
+{
+	double tempNormal;
+	tempNormal = sqrtf(temple_original_vector(0)*temple_original_vector(0)+temple_original_vector(1)*temple_original_vector(1)+temple_original_vector(2)*temple_original_vector(2));
+
+	if (tempNormal<=0.0)
+	{
+		tempNormal = 1.0;
+	}
+	temple_vector = temple_original_vector/tempNormal;
+	return temple_vector;
+}
+void FiveAxisCNC::FiveAxisMachineErrorEstimation(void)
+{
+
+	//real: norm_2 v = sqrt (sum (v [i] * v [i]))      // inner_prod (v1, v2) = sum (v1 [i] * v2 [i])
+	//vector_real_position_q(0)
+	m_fcos_theta_C = cosf(vector_real_position_q(3));
+	m_fsin_theta_C = sinf(vector_real_position_q(3));
+	m_fcos_theta_A = cosf(vector_real_position_q(4));
+	m_fsin_theta_A = sinf(vector_real_position_q(4));
+
+	vector_actual_position_at_q_c1(0) = vector_real_position_q(0)*m_fcos_theta_C-(vector_real_position_q(1)+m_fDy)*m_fcos_theta_A*m_fsin_theta_C+
+										(vector_real_position_q(2)-m_fDz)*m_fsin_theta_A*m_fsin_theta_C+ m_fDy*m_fsin_theta_C;
+	vector_actual_position_at_q_c1(1) = vector_real_position_q(0)*m_fsin_theta_C+(vector_real_position_q(1)+m_fDy)*m_fcos_theta_A*m_fcos_theta_C-										
+										(vector_real_position_q(2)-m_fDz)*m_fsin_theta_A*m_fcos_theta_C-m_fDy*m_fcos_theta_C;
+	vector_actual_position_at_q_c1(2) = (vector_real_position_q(1)+m_fDy)*m_fsin_theta_A+(vector_real_position_q(2)-m_fDz)*m_fcos_theta_A+m_fDz;
+
+	vector_actual_orientation_at_q_c1(0) = m_fsin_theta_A*m_fsin_theta_C;
+	vector_actual_orientation_at_q_c1(1) = -m_fsin_theta_A*m_fcos_theta_C;
+	vector_actual_orientation_at_q_c1(2) = m_fcos_theta_A;
+
+	vector_actual_position_at_q_c2 = vector_actual_position_at_q_c1+(float)m_fcutting_length*vector_actual_orientation_at_q_c1;
+
+
+	// Calculate desired position
+	m_fMath_theta_c1 = 2*PI*(m_fexpTnow)/m_fMath_Time;
+	
+    vector_desired_acceleration_at_qd_c1 = vector_desired_velocity_at_qd_c1;// Save previous velocity
+	vector_desired_velocity_at_qd_c1 = vector_desired_position_at_qd_c1;// Save previous position
+
+	vector_desired_position_at_qd_c1(0) = m_fMath_rc1*cosf(m_fMath_theta_c1)-m_fMath_rc1;
+	vector_desired_position_at_qd_c1(1) = m_fMath_rc1*sinf(m_fMath_theta_c1);
+	vector_desired_position_at_qd_c1(2) = m_fMath_a;
+
+
+	vector_desired_velocity_at_qd_c1 = (vector_desired_position_at_qd_c1-vector_desired_velocity_at_qd_c1) / (float)m_fSampTime;
+	vector_desired_acceleration_at_qd_c1 = (vector_desired_velocity_at_qd_c1 - vector_desired_acceleration_at_qd_c1) / (float)m_fSampTime;
+
+//	m_fMath_rc2 = m_fMath_rc1+1; // test
+	m_fMath_theta_c2 = 2*PI*(m_fexpTnow)/m_fMath_Time;
+
+	vector_desired_acceleration_at_qd_c2 = vector_desired_velocity_at_qd_c2;// Save previous velocity
+	vector_desired_velocity_at_qd_c2 = vector_desired_position_at_qd_c2;// Save previous position
+
+	vector_desired_position_at_qd_c2(0) = m_fMath_rc2*cosf(m_fMath_theta_c2)-m_fMath_rc2+(m_fMath_rc2-m_fMath_rc1)/2.0;
+	vector_desired_position_at_qd_c2(1) = m_fMath_rc2*sinf(m_fMath_theta_c2);
+	vector_desired_position_at_qd_c2(2) = m_fMath_a+5;
+
+
+	vector_desired_velocity_at_qd_c2 = (vector_desired_position_at_qd_c2-vector_desired_velocity_at_qd_c2) / (float)m_fSampTime;
+	vector_desired_acceleration_at_qd_c2 = (vector_desired_velocity_at_qd_c2 - vector_desired_acceleration_at_qd_c2) / (float)m_fSampTime;
+
+	vector_desired_orientation_at_qd_c1 = (vector_desired_position_at_qd_c2-vector_desired_position_at_qd_c1);
+	tempNormal = norm_2(vector_desired_orientation_at_qd_c1);
+	if (tempNormal<DOUBLE_TOLERANCE)
+	{
+		tempNormal = 1;
+	}
+	
+	vector_desired_orientation_at_qd_c1 = vector_desired_orientation_at_qd_c1/(float)tempNormal;
+
+
+	// no needd to put here vector_desired_position_qd
+	m_CNCRefPos.A = acosf(vector_desired_orientation_at_qd_c1(2));
+	tempNormal = sinf(m_CNCRefPos.A);
+	if ((vector_desired_orientation_at_qd_c1(1)!=0)&&(tempNormal!=0)) {
+						m_CNCRefPos.C = atan2(-vector_desired_orientation_at_qd_c1(1)/tempNormal, vector_desired_orientation_at_qd_c1(0)/tempNormal);
+						if (m_CNCRefPos.C>0.0) {m_CNCRefPos.C =m_CNCRefPos.C-2.0*PI; };
+					//	m_CNCRefPos.C = PI/2+atanf(-vector_desired_orientation_at_qd_c1(0)/vector_desired_orientation_at_qd_c1(1));
+					
+					//	if (vector_desired_orientation_at_qd_c1(1)<0.0) {m_CNCRefPos.C =m_CNCRefPos.C+ PI/2; };
+					//	m_CNCRefPos.C = asinf(vector_desired_orientation_at_qd_c1(0)/tempNormal);
+					//	if (m_CNCRefPos.C<0){}
+						
+					   };
+
+// 	m_CNCRefPos.A = acosf(0.5);
+// 	m_CNCRefPos.C = acosf(1);
+
+	m_fcos_theta_C = cosf(m_CNCRefPos.C);
+	m_fsin_theta_C = sinf(m_CNCRefPos.C);
+	m_fcos_theta_A = vector_desired_orientation_at_qd_c1(2);
+	m_fsin_theta_A = sinf(m_CNCRefPos.A);
+
+	// My matlab calculation
+	m_CNCRefPos.X = vector_desired_position_at_qd_c1(0)*m_fcos_theta_C+vector_desired_position_at_qd_c1(1)*m_fsin_theta_C;
+	m_CNCRefPos.Y = m_fcos_theta_A*(vector_desired_position_at_qd_c1(1)*m_fcos_theta_C-vector_desired_position_at_qd_c1(0)*m_fsin_theta_C) - m_fDy+
+		            m_fDy*m_fcos_theta_A- m_fDz*m_fsin_theta_A+ vector_desired_position_at_qd_c1(2)*m_fsin_theta_A;
+    m_CNCRefPos.Z = m_fDz-m_fDz*m_fcos_theta_A-m_fsin_theta_A*(vector_desired_position_at_qd_c1(1)*m_fcos_theta_C-vector_desired_position_at_qd_c1(0)*m_fsin_theta_C)+
+					vector_desired_position_at_qd_c1(2)*m_fcos_theta_A-m_fDy*m_fsin_theta_A;
+
+
+	// Revert calculation
+// 	vector_actual_position_at_q_c2(0) = m_CNCRefPos.X;
+// 	vector_actual_position_at_q_c2(1) = m_CNCRefPos.Y;
+// 	vector_actual_position_at_q_c2(2) = m_CNCRefPos.Z;
+// 
+// 	vector_actual_position_at_q_c1(0) = vector_actual_position_at_q_c2(0)*m_fcos_theta_C-(vector_actual_position_at_q_c2(1)+m_fDy)*m_fcos_theta_A*m_fsin_theta_C+
+// 		(vector_actual_position_at_q_c2(2)-m_fDz)*m_fsin_theta_A*m_fsin_theta_C+ m_fDy*m_fsin_theta_C;
+// 	vector_actual_position_at_q_c1(1) = vector_actual_position_at_q_c2(0)*m_fsin_theta_C+(vector_actual_position_at_q_c2(1)+m_fDy)*m_fcos_theta_A*m_fcos_theta_C-										
+// 		(vector_actual_position_at_q_c2(2)-m_fDz)*m_fsin_theta_A*m_fcos_theta_C-m_fDy*m_fcos_theta_C;
+// 	vector_actual_position_at_q_c1(2) = (vector_actual_position_at_q_c2(1)+m_fDy)*m_fsin_theta_A+(vector_actual_position_at_q_c2(2)-m_fDz)*m_fcos_theta_A+m_fDz;
+
+
+	// Convert to degree
+	m_CNCRefPos.C= m_CNCRefPos.C* PITODEGREE;
+	m_CNCRefPos.A= m_CNCRefPos.A* PITODEGREE;
+//     m_CNCRefPos.A = 0.0;
+// 	m_CNCRefPos.C =  0.0;
+// 	m_CNCRefPos.X = vector_desired_position_at_qd_c1(0);
+// 	m_CNCRefPos.Y = vector_desired_position_at_qd_c1(1);
+// 	m_CNCRefPos.Z = vector_desired_position_at_qd_c1(2);
+// 	if (m_fexpTnow>4.998)
+// 	{
+// 		m_CNCRefPos.A = 0.0;
+// 		m_CNCRefPos.C =  0.0;
+// 	
+// 	m_CNCRefPos.X = vector_actual_position_at_q_c1(0);
+// 	m_CNCRefPos.Y = vector_actual_position_at_q_c1(1);
+// 	m_CNCRefPos.Z = vector_actual_position_at_q_c1(2);
+// 	vector_real_position_q(0) = vector_desired_position_at_qd_c1(0);
+// 	vector_real_position_q(1) = vector_desired_position_at_qd_c1(1);
+// 	vector_real_position_q(2) = vector_desired_position_at_qd_c1(2);
+//  	m_CNCRefPos.X = vector_desired_orientation_at_qd_c1(0);
+//  	m_CNCRefPos.Y = vector_desired_orientation_at_qd_c1(1);
+//  	m_CNCRefPos.Z = vector_desired_orientation_at_qd_c1(2);
+//	}
+
+
+	vector_tracking_error_velocity_dot_e1_at_qd_c1 = vector_tracking_error_e1_at_qd_c1;
+	vector_tracking_error_e1_at_qd_c1 = vector_actual_position_at_q_c1 -vector_desired_position_at_qd_c1;
+	vector_tracking_error_velocity_dot_e1_at_qd_c1 = (vector_tracking_error_e1_at_qd_c1- vector_tracking_error_velocity_dot_e1_at_qd_c1) / (float)m_fSampTime;
+	
+
+ 	tempNormal = norm_2(vector_desired_velocity_at_qd_c1);
+ 	m_fdelay_time = inner_prod(vector_desired_velocity_at_qd_c1,vector_tracking_error_e1_at_qd_c1)/(float)(tempNormal*tempNormal);
+
+	m_fMath_shifted_Theta_c1 = 2*PI*(m_fexpTnow-m_fdelay_time)/m_fMath_Time;
+	if (m_fMath_shifted_Theta_c1<0) {m_fMath_shifted_Theta_c1 = 0;}
+
+	vector_desired_position_at_shifted_qd_c1(0) = m_fMath_rc1*cosf(m_fMath_shifted_Theta_c1)-m_fMath_rc1;
+	vector_desired_position_at_shifted_qd_c1(1) = m_fMath_rc1*sinf(m_fMath_shifted_Theta_c1);
+	vector_desired_position_at_shifted_qd_c1(2) = m_fMath_a;
+
+	m_fMath_shifted_Theta_c1 = 2*PI*(m_fexpTnow-m_fdelay_time-m_fSampTime)/m_fMath_Time;
+	if (m_fMath_shifted_Theta_c1<0) {m_fMath_shifted_Theta_c1 = 0;}
+
+	vector_desired_velocity_at_shifted_qd_c1(0) =  m_fMath_rc1*cosf(m_fMath_shifted_Theta_c1)-m_fMath_rc1;
+    vector_desired_velocity_at_shifted_qd_c1(1) = m_fMath_rc1*sinf(m_fMath_shifted_Theta_c1);
+	vector_desired_velocity_at_shifted_qd_c1(2) = m_fMath_a; 
+
+	m_fMath_shifted_Theta_c1 = 2*PI*(m_fexpTnow-m_fdelay_time-2*m_fSampTime)/m_fMath_Time;
+	if (m_fMath_shifted_Theta_c1<0) {m_fMath_shifted_Theta_c1 = 0;}
+
+	vector_desired_acceleration_at_shifted_qd_c1(0) =  m_fMath_rc1*cosf(m_fMath_shifted_Theta_c1)-m_fMath_rc1;
+	vector_desired_acceleration_at_shifted_qd_c1(1) = m_fMath_rc1*sinf(m_fMath_shifted_Theta_c1);
+	vector_desired_acceleration_at_shifted_qd_c1(2) = m_fMath_a; 
+
+	vector_desired_acceleration_at_shifted_qd_c1 = (vector_desired_position_at_shifted_qd_c1+vector_desired_acceleration_at_shifted_qd_c1-2*vector_desired_velocity_at_shifted_qd_c1) / (float)(m_fSampTime*m_fSampTime);
+	vector_desired_velocity_at_shifted_qd_c1 = (vector_desired_position_at_shifted_qd_c1-vector_desired_velocity_at_shifted_qd_c1)/(float)m_fSampTime;
+
+
+
+}
+void FiveAxisCNC::FiveAxisMachinePDTrackingController(void)
 {
 	double tempNormal;
 	vector_tracking_error_ew = vector_real_position_q-vector_desired_position_qd;
 	vector_tracking_error_dotew = vector_real_velocity_dotq - vector_desired_velocity_dotqd;
 
-	tempNormal = sqrtf(vector_desired_velocity_dotqd(0)*vector_desired_velocity_dotqd(0)+vector_desired_velocity_dotqd(1)*vector_desired_velocity_dotqd(1)+vector_desired_velocity_dotqd(2)*vector_desired_velocity_dotqd(2));
 
-	if (tempNormal<=0.0)
-	{
-		tempNormal = 1.0;
-	}
+// 	tempNormal = sqrtf(vector_desired_velocity_dotqd(0)*vector_desired_velocity_dotqd(0)+vector_desired_velocity_dotqd(1)*vector_desired_velocity_dotqd(1)+vector_desired_velocity_dotqd(2)*vector_desired_velocity_dotqd(2));
+// 
+// 	if (tempNormal<=0.0)
+// 	{
+// 		tempNormal = 1.0;
+// 	}
+// 
+// 	matrix_rotation_R(0,0)= vector_desired_velocity_dotqd(0)/tempNormal;
+// 	matrix_rotation_R(1,0)= vector_desired_velocity_dotqd(1)/tempNormal;
+// 	matrix_rotation_R(2,0)= vector_desired_velocity_dotqd(2)/tempNormal;
+// 	tempNormal = sqrtf(vector_desired_acceleration_ddotqd(0)*vector_desired_acceleration_ddotqd(0)+vector_desired_acceleration_ddotqd(1)*vector_desired_acceleration_ddotqd(1)+vector_desired_acceleration_ddotqd(2)*vector_desired_acceleration_ddotqd(2));
+// 	if (tempNormal<=0.0)
+// 	{
+// 		tempNormal = 1.0;
+// 	}
+// 	// 	matrix_rotation_R(0,1)= vector_desired_acceleration_ddotqd(0)/tempNormal;
+// 	// 	matrix_rotation_R(1,1)= vector_desired_acceleration_ddotqd(1)/tempNormal;
+// 	// 	matrix_rotation_R(2,1)= vector_desired_acceleration_ddotqd(2)/tempNormal;
+// 
+// 	matrix_rotation_R(0,1)= vector_desired_acceleration_ddotqd(0);
+// 	matrix_rotation_R(1,1)= vector_desired_acceleration_ddotqd(1);
+// 	matrix_rotation_R(2,1)= vector_desired_acceleration_ddotqd(2);
+// 
+// 	matrix_rotation_R(0,2)= matrix_rotation_R(1,0)*matrix_rotation_R(2,1)-matrix_rotation_R(2,0)*matrix_rotation_R(1,1);
+// 	matrix_rotation_R(1,2)= matrix_rotation_R(2,0)*matrix_rotation_R(0,1)-matrix_rotation_R(0,0)*matrix_rotation_R(2,1);
+// 	matrix_rotation_R(2,2)= matrix_rotation_R(0,0)*matrix_rotation_R(1,1)-matrix_rotation_R(1,0)*matrix_rotation_R(0,1);
+// 
+// 	tempNormal = sqrtf(matrix_rotation_R(0,2)*matrix_rotation_R(0,2)+matrix_rotation_R(1,2)*matrix_rotation_R(1,2)+matrix_rotation_R(2,2)*matrix_rotation_R(2,2));
+// 	if (tempNormal<=0.0)
+// 	{
+// 		tempNormal = 1.0;
+// 	}
+// 	matrix_rotation_R(0,2)= matrix_rotation_R(0,2)/tempNormal;
+// 	matrix_rotation_R(1,2)= matrix_rotation_R(1,2)/tempNormal;
+// 	matrix_rotation_R(2,2)= matrix_rotation_R(2,2)/tempNormal;
+// 
+// 
+// 	matrix_rotation_R(0,1)= matrix_rotation_R(1,2)*matrix_rotation_R(2,0)-matrix_rotation_R(2,2)*matrix_rotation_R(1,0);
+// 	matrix_rotation_R(1,1)= matrix_rotation_R(2,2)*matrix_rotation_R(0,0)-matrix_rotation_R(0,2)*matrix_rotation_R(2,0);
+// 	matrix_rotation_R(2,1)= matrix_rotation_R(0,2)*matrix_rotation_R(1,0)-matrix_rotation_R(1,2)*matrix_rotation_R(0,0);
+// 
+// 	matrix_previous_rotation_RT = matrix_rotation_RT;
+// 	matrix_rotation_RT = trans(matrix_rotation_R);
+// 
+// 	matrix_previous_rotation_dotRT = matrix_rotation_dotRT;
+// 	matrix_rotation_dotRT = (matrix_rotation_RT-matrix_previous_rotation_RT)/(float)m_fSampTime;
+// 
+// 	matrix_rotation_ddotRT = (matrix_rotation_dotRT-matrix_previous_rotation_dotRT)/(float)m_fSampTime;
+// 
+// 
+// 	vector_contour_error_el = prod(matrix_rotation_RT,vector_tracking_error_ew);
+// 	vector_contour_error_dotel =  prod(matrix_rotation_dotRT,vector_tracking_error_ew)+ prod(matrix_rotation_RT,vector_tracking_error_dotew);
 
-	matrix_rotation_R(0,0)= vector_desired_velocity_dotqd(0)/tempNormal;
-	matrix_rotation_R(1,0)= vector_desired_velocity_dotqd(1)/tempNormal;
-	matrix_rotation_R(2,0)= vector_desired_velocity_dotqd(2)/tempNormal;
-	tempNormal = sqrtf(vector_desired_acceleration_ddotqd(0)*vector_desired_acceleration_ddotqd(0)+vector_desired_acceleration_ddotqd(1)*vector_desired_acceleration_ddotqd(1)+vector_desired_acceleration_ddotqd(2)*vector_desired_acceleration_ddotqd(2));
-	if (tempNormal<=0.0)
-	{
-		tempNormal = 1.0;
-	}
-	// 	matrix_rotation_R(0,1)= vector_desired_acceleration_ddotqd(0)/tempNormal;
-	// 	matrix_rotation_R(1,1)= vector_desired_acceleration_ddotqd(1)/tempNormal;
-	// 	matrix_rotation_R(2,1)= vector_desired_acceleration_ddotqd(2)/tempNormal;
-
-	matrix_rotation_R(0,1)= vector_desired_acceleration_ddotqd(0);
-	matrix_rotation_R(1,1)= vector_desired_acceleration_ddotqd(1);
-	matrix_rotation_R(2,1)= vector_desired_acceleration_ddotqd(2);
-
-	matrix_rotation_R(0,2)= matrix_rotation_R(1,0)*matrix_rotation_R(2,1)-matrix_rotation_R(2,0)*matrix_rotation_R(1,1);
-	matrix_rotation_R(1,2)= matrix_rotation_R(2,0)*matrix_rotation_R(0,1)-matrix_rotation_R(0,0)*matrix_rotation_R(2,1);
-	matrix_rotation_R(2,2)= matrix_rotation_R(0,0)*matrix_rotation_R(1,1)-matrix_rotation_R(1,0)*matrix_rotation_R(0,1);
-
-	tempNormal = sqrtf(matrix_rotation_R(0,2)*matrix_rotation_R(0,2)+matrix_rotation_R(1,2)*matrix_rotation_R(1,2)+matrix_rotation_R(2,2)*matrix_rotation_R(2,2));
-	if (tempNormal<=0.0)
-	{
-		tempNormal = 1.0;
-	}
-	matrix_rotation_R(0,2)= matrix_rotation_R(0,2)/tempNormal;
-	matrix_rotation_R(1,2)= matrix_rotation_R(1,2)/tempNormal;
-	matrix_rotation_R(2,2)= matrix_rotation_R(2,2)/tempNormal;
 
 
-	matrix_rotation_R(0,1)= matrix_rotation_R(1,2)*matrix_rotation_R(2,0)-matrix_rotation_R(2,2)*matrix_rotation_R(1,0);
-	matrix_rotation_R(1,1)= matrix_rotation_R(2,2)*matrix_rotation_R(0,0)-matrix_rotation_R(0,2)*matrix_rotation_R(2,0);
-	matrix_rotation_R(2,1)= matrix_rotation_R(0,2)*matrix_rotation_R(1,0)-matrix_rotation_R(1,2)*matrix_rotation_R(0,0);
 
-
-	matrix_rotation_RT = trans(matrix_rotation_R);
-
-	vector_contour_error_el = prod(matrix_rotation_RT,vector_tracking_error_ew);
 
 
 	EstimateFrictionValue();
@@ -497,6 +716,7 @@ void FiveAxisCNC::ThreeAxisMachinePDTrackingController(void)
 		vector_estimated_friction_ff+vector_estimated_gravitational_force_g;
 	vector_control_force_fu = vector_estimated_control_force_fu+
 					prod(matrix_estimated_weight_M,-prod(matrix_TC_gain_Kp,vector_tracking_error_ew)-prod(matrix_TC_gain_Kd,vector_tracking_error_dotew));
+
 	// Out put control voltage to X,Y,Z only
 // 	for (int i=0;i<3;i++)
 // 	{
@@ -506,6 +726,7 @@ void FiveAxisCNC::ThreeAxisMachinePDTrackingController(void)
 	// 	vector_control_force_fu(0) = 0.0;
 	// 	vector_control_force_fu(1) = 0.0;
 	// 	vector_control_force_fu(2) = 0.0;
+	IOModule.BoundingOutputFiveAxis(vector_control_force_fu);
 	vec_OutputControl(0) = vector_control_force_fu(0);
 	vec_OutputControl(1) = vector_control_force_fu(1);
 	vec_OutputControl(3) = vector_control_force_fu(2);
@@ -571,6 +792,7 @@ void FiveAxisCNC::ThreeAxisMachinePDContouringController(void)
 
 	vector_contour_error_el = prod(matrix_rotation_RT,vector_tracking_error_ew);
 	vector_contour_error_dotel =  prod(matrix_rotation_dotRT,vector_tracking_error_ew)+ prod(matrix_rotation_RT,vector_tracking_error_dotew);
+
 
 
 	EstimateFrictionValue();
@@ -1207,7 +1429,11 @@ void FiveAxisCNC::InitControlVariable()
 // 		m_fNextCNCI = 0.0;
 //		m_fCNCFeedRate = 0.0; // Give not zero value for avoid divide zero
 		m_fNextCNCFeedRate = 0.0;
-
+		vector_desired_position_qd.clear();
+		vector_real_position_q.clear();
+		vector_control_force_fu.clear();
+		vector_contour_error_el.clear();
+		vector_estimated_control_force_fu.clear();
 
 }
 void FiveAxisCNC::OpenGcodeFile(System::String^ FileGcodeProgram)
@@ -1284,20 +1510,19 @@ void FiveAxisCNC::SaveDataToBinaryFile()
 // 			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(3));
 // 			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(4));
 // 			DataAnalysisBinaryWriter->Write(vec_PredictedOutput(5));
-
 			//			new program
 			DataAnalysisBinaryWriter->Write(m_fexpTnowReal);
 			DataAnalysisBinaryWriter->Write(m_fexpTnowCounter);
 			DataAnalysisBinaryWriter->Write(vector_desired_position_qd(0));
 			DataAnalysisBinaryWriter->Write(vector_desired_position_qd(1));
 			DataAnalysisBinaryWriter->Write(vector_desired_position_qd(2));
-			DataAnalysisBinaryWriter->Write(vector_desired_position_qd(2));
-			DataAnalysisBinaryWriter->Write(vector_desired_position_qd(2));
+			DataAnalysisBinaryWriter->Write(vector_desired_position_qd(3));
+			DataAnalysisBinaryWriter->Write(vector_desired_position_qd(4));
 			DataAnalysisBinaryWriter->Write(vector_real_position_q(0));
 			DataAnalysisBinaryWriter->Write(vector_real_position_q(1));
 			DataAnalysisBinaryWriter->Write(vector_real_position_q(2));
-			DataAnalysisBinaryWriter->Write(vector_real_position_q(0));
-			DataAnalysisBinaryWriter->Write(vector_real_position_q(0));
+			DataAnalysisBinaryWriter->Write(vector_real_position_q(3));
+			DataAnalysisBinaryWriter->Write(vector_real_position_q(4));
 
 // 			DataAnalysisBinaryWriter->Write(vector_tracking_error_ew(0));//vec_ew(0)   vec_refr_1(0)    //vector_contour_error_el
 // 			DataAnalysisBinaryWriter->Write(vector_tracking_error_ew(1));//vec_ew(1)
@@ -1308,8 +1533,8 @@ void FiveAxisCNC::SaveDataToBinaryFile()
 			DataAnalysisBinaryWriter->Write(vector_contour_error_el(0));//vec_ew(0)   vec_refr_1(0)    //vector_contour_error_el
 			DataAnalysisBinaryWriter->Write(vector_contour_error_el(1));//vec_ew(1)
 			DataAnalysisBinaryWriter->Write(vector_contour_error_el(2));//vec_ew(3)
-			DataAnalysisBinaryWriter->Write(vector_contour_error_el(2));//vec_ew(3)
-			DataAnalysisBinaryWriter->Write(vector_contour_error_el(2));//vec_ew(3)
+			DataAnalysisBinaryWriter->Write(vector_contour_error_el(3));//vec_ew(3)
+			DataAnalysisBinaryWriter->Write(vector_contour_error_el(4));//vec_ew(3)
 
 			DataAnalysisBinaryWriter->Write(vector_control_force_fu(0));
 			DataAnalysisBinaryWriter->Write(vector_control_force_fu(1));
@@ -1387,6 +1612,8 @@ void FiveAxisCNC::GetNextPointRefInGCodePath() {  // Using function
 			m_CNCRefPos.X =   m_fCNCPosOneX+ m_fCNCStartVelX *m_fexpTnow + m_fCNCStartAccX*m_fexpTnow*m_fexpTnow/2.0;
 			m_CNCRefPos.Y =   m_fCNCPosOneY+ m_fCNCStartVelY *m_fexpTnow + m_fCNCStartAccY*m_fexpTnow*m_fexpTnow/2.0;
 			m_CNCRefPos.Z =   m_fCNCPosOneZ+ m_fCNCStartVelZ *m_fexpTnow + m_fCNCStartAccZ*m_fexpTnow*m_fexpTnow/2.0;
+			m_CNCRefPos.C =   m_fCNCPosOneZ+ m_fCNCStartVelZ *m_fexpTnow + m_fCNCStartAccZ*m_fexpTnow*m_fexpTnow/2.0;
+			m_CNCRefPos.A =   m_fCNCPosOneZ+ m_fCNCStartVelZ *m_fexpTnow + m_fCNCStartAccZ*m_fexpTnow*m_fexpTnow/2.0;
 // 			m_CNCRefPos.X =   vec_CNCPosOne(0)+ m_CNCStartRefVel.X *m_fexpTnow + vec_StartAcc(0)*m_fexpTnow*m_fexpTnow/2.0;
 // 			m_CNCRefPos.Y =   m_fCNCStartY+ m_CNCStartRefVel.Y *m_fexpTnow + vec_StartAcc(1)*m_fexpTnow*m_fexpTnow/2.0;
 		}else
@@ -1404,6 +1631,8 @@ void FiveAxisCNC::GetNextPointRefInGCodePath() {  // Using function
 			m_CNCRefPos.X =   m_fCNCPosTwoX+ m_fCNCMidVelX *referenceTime ; // Bug m_fCNCPosTwoX == 0 
 			m_CNCRefPos.Y =   m_fCNCPosTwoY+ m_fCNCMidVelY *referenceTime ;
 			m_CNCRefPos.Z =   m_fCNCPosTwoZ+ m_fCNCMidVelZ *referenceTime ;
+			m_CNCRefPos.C =   m_fCNCEndC+(m_fNextCNCEndC-m_fCNCEndC)*m_fexpTnow/(m_fexpRunT-m_fexpRunTPre);
+			m_CNCRefPos.A =   m_fCNCEndA+(m_fNextCNCEndA-m_fCNCEndA)*m_fexpTnow/(m_fexpRunT-m_fexpRunTPre);
 // 			m_CNCRefPos.X =   m_fCNCStartX+ (m_fexpTnow/(m_fexpRunT- m_fexpRunTPre))* m_fLengthX;
 // 			m_CNCRefPos.Y =   m_fCNCStartY+ (m_fexpTnow/(m_fexpRunT- m_fexpRunTPre))* m_fLengthY;
 		}
@@ -1463,7 +1692,14 @@ void FiveAxisCNC::GetNextPointRefInGCodePath() {  // Using function
 			m_CNCRefPos.Y =  m_fMath_a*sinf(m_fMath_Theta);
 			m_CNCRefPos.Z =  m_fMath_a*sinf(m_fMath_Theta);
 			//m_CNCRefPos.Z =  0.0;//m_fMath_a*sinf(m_fMath_Theta);
+
 			break;
+		case FIVEAXISMOTION:  // =6
+			FiveAxisMachineErrorEstimation();
+			//m_CNCRefPos.Z =  0.0;//m_fMath_a*sinf(m_fMath_Theta);
+
+			break;
+			
 		default:
 			break;
 		}
@@ -1479,7 +1715,7 @@ void FiveAxisCNC::GetNextPointRefInGCodePath() {  // Using function
 	vector_next_desired_position_data(5) =  m_CNCRefPos.A;
 	SetRefPosition(vector_next_desired_position_data);
 
-		if ((m_fexpTnow+m_fexpRunTPre)>(m_fexpRunT+DOUBLE_TOLERANCE))
+		if ((m_fexpTnow+m_fexpRunTPre)>(m_fexpRunT-m_fSampTime+DOUBLE_TOLERANCE))
 		{
 			if (!m_bNextGcodeFINISH)
 			{
@@ -1550,7 +1786,7 @@ double FiveAxisCNC::GetGcodeVariableValue(System::String^  gcodeString,unsigned 
 	return temp;
 
 }
-bool FiveAxisCNC::AnalyseNextGcodeLine(System::String^ strGcodeLine) 
+bool FiveAxisCNC::AnalyseNextGcodeLine(System::String^ strGcodeLine) // Current using
 {
 	bool EndofString= FALSE, IsNextGcodeMovement = FALSE;
 	unsigned int index = 0;
@@ -1692,6 +1928,12 @@ bool FiveAxisCNC::AnalyseNextGcodeLine(System::String^ strGcodeLine)
 					}
 					else
 					{
+						if (strGcodeLine[index+1]=='I') //Five axis orientation motion  FIV
+						{
+							index = index +3;
+							m_iMathCurveNumber = FIVEAXISMOTION;
+						}
+						else
 						index = index +1;
 					}
 				}
@@ -1749,9 +1991,11 @@ bool FiveAxisCNC::AnalyseNextGcodeLine(System::String^ strGcodeLine)
 				break;
 			case 'c':
 				m_fMath_c =GetGcodeVariableValue(strGcodeLine, index);	
+				m_fMath_rc2 = m_fMath_c;
 				break;
 			case 'b':
 				m_fMath_b =GetGcodeVariableValue(strGcodeLine, index);	
+				m_fMath_rc1 = m_fMath_b;
 				break;
 			case 'T':
 				if (strGcodeLine[index+1]=='R')
@@ -2064,9 +2308,9 @@ void FiveAxisCNC::GetNextGCodeLine()
 			case 4:
 				m_fAccEndTime = m_fAccFirstTime + m_fMath_Time;
 				m_fexpRunT = m_fAccEndTime;
-				m_fCNCEndX = 0.0;
-				m_fCNCEndY = 0.0;
-				m_fCNCEndZ = 0.0;
+// 				m_fCNCEndX = 0.0;
+// 				m_fCNCEndY = 0.0;
+// 				m_fCNCEndZ = 0.0;
 				break;
 			default:
 				;
@@ -2221,9 +2465,9 @@ void FiveAxisCNC::GetNextGCodeLine()
 // 			m_NextCNCEndRefVel.Y1 = (m_fOmg)*(m_fNextCNCEndX-m_fCNCI);//m_fexpR*m_fOmg*Cos(theta);		mm/s
 			break;
 		case 4:	
-			m_fNextCNCEndX = 0.0;
-			m_fNextCNCEndY = 0.0;
-			m_fNextCNCEndZ = 0.0;
+// 			m_fNextCNCEndX = 0.0;
+// 			m_fNextCNCEndY = 0.0;
+// 			m_fNextCNCEndZ = 0.0;
 			break;
 		default:
 			;
@@ -2270,15 +2514,15 @@ void FiveAxisCNC::GetNextGCodeLine()
 			// 			// Auto turing Acceleration at corner 
 			break;
 		case 4:
-			m_fNextCNCStartVelX = 0.0;
-			m_fNextCNCStartVelY = 0.0;
-			m_fNextCNCMidVelX = m_fNextCNCStartVelX;
-			m_fNextCNCMidVelY = m_fNextCNCStartVelY;
-			m_fNextCNCEndVelX = m_fNextCNCStartVelX;
-			m_fNextCNCEndVelY = m_fNextCNCStartVelY;
-			m_fNextCNCEndX = 0.0;
-			m_fNextCNCEndY = 0.0;
-			m_fNextCNCEndZ = 0.0;
+// 			m_fNextCNCStartVelX = 0.0;
+// 			m_fNextCNCStartVelY = 0.0;
+// 			m_fNextCNCMidVelX = m_fNextCNCStartVelX;
+// 			m_fNextCNCMidVelY = m_fNextCNCStartVelY;
+// 			m_fNextCNCEndVelX = m_fNextCNCStartVelX;
+// 			m_fNextCNCEndVelY = m_fNextCNCStartVelY;
+// 			m_fNextCNCEndX = 0.0;
+// 			m_fNextCNCEndY = 0.0;
+// 			m_fNextCNCEndZ = 0.0;
 			break;
 		default:
 			;
@@ -2287,7 +2531,7 @@ void FiveAxisCNC::GetNextGCodeLine()
 		vec_VelChange(0) = (fabs(m_fNextCNCStartVelX- m_fCNCEndVelX) - vec_CNCVMAX(0))/ m_fSampTimeRef;
 		vec_VelChange(1) =  (fabs(m_fNextCNCStartVelY- m_fCNCEndVelY) - vec_CNCVMAX(1))/ m_fSampTimeRef;
 		vec_VelChange(3) =  (fabs(m_fNextCNCStartVelZ- m_fCNCEndVelZ) - vec_CNCVMAX(3))/ m_fSampTimeRef;
-		if (OutOfLimitedAcceleration())
+		if (OutOfLimitedAcceleration()&&m_bAutoCornerSmooth)
 		{
 // 
 // 			//				m_fCNCPEX = m_fCNCPE* cosf(m_fNextCNCStartAngle);
@@ -2507,9 +2751,9 @@ void FiveAxisCNC::GetNextGCodeLine()
 				m_fAccEndTime = m_fAccFirstTime;
 				m_fexpRunT = m_fAccEndTime;
 				m_fNextAccFirstTime = m_fexpRunT;
-				m_fNextCNCEndX = 0.0;
-				m_fNextCNCEndY = 0.0;
-				m_fNextCNCEndZ = 0.0;
+// 				m_fNextCNCEndX = 0.0;
+// 				m_fNextCNCEndY = 0.0;
+// 				m_fNextCNCEndZ = 0.0;
 				break;
 			default:
 				;

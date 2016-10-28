@@ -34,9 +34,12 @@ namespace RmLabCNC{
 	static const short LINEAR_MOTOR_A2					= 6;					// Control by AIO port 6
 	static const double DOUBLE_TOLERANCE                = 0.000001;
 	static const double PI = 3.1415926535897932384626433832795;
+	static const double PITODEGREE = 180.0/3.1415926535897932384626433832795;
 
+	static const short THREEDIMENSION			= 3;
 	static const short NUMBERAXIS					= 5;
 	static const short MTSIZE					= 4;
+	
 	static const short SLMCCSIZE				= 3;
 	static const short NUM_COUNTER			= 7;
 	static const short NUM_DIRECT			= 2;
@@ -50,6 +53,7 @@ namespace RmLabCNC{
 	static const short LISSAJOUS = 3;
 	static const short TUNINGPROCESS = 4;
 	static const short CURVE3D = 5;
+	static const short FIVEAXISMOTION = 6;
 	static const short MAXCONTROLFORCE = 36;// For Five Axis Case 500; For 3 axis case// N
 
 	static identity_matrix<double> mt_Identity;
@@ -106,6 +110,25 @@ namespace RmLabCNC{
 		 vec_CNCVMAX, vec_CNCPMAX,
 		 vec_Nextrefr_1,vec_Nextrefr_2,
 		 vec_VelChange,vec_StartAcc,vec_EndAcc,vec_NextStartAcc,vec_NextEndAcc;
+
+
+
+	// Variable for proposed tool orientation contour estimation
+	   static vector<double> 
+		   temple_vector,vector_desired_position_at_qd_c1,vector_desired_velocity_at_qd_c1,vector_desired_acceleration_at_qd_c1,
+		    vector_desired_position_at_shifted_qd_c1,vector_desired_velocity_at_shifted_qd_c1,vector_desired_acceleration_at_shifted_qd_c1,
+			vector_tracking_error_velocity_dot_e1_at_qd_c1, vector_tracking_error_e1_at_qd_c1,
+			vector_actual_position_at_q_c1;
+
+	    static vector<double>  vector_actual_orientation_at_q_c1,vector_desired_orientation_at_qd_c1;
+
+		static vector<double> 
+			vector_desired_position_at_qd_c2,vector_desired_velocity_at_qd_c2,vector_desired_acceleration_at_qd_c2,
+			vector_desired_position_at_shifted_qd_c2,vector_desired_velocity_at_shifted_qd_c2,vector_desired_acceleration_at_shifted_qd_c2,
+			vector_tracking_error_velocity_dot_e1_at_qd_c2, vector_tracking_error_e1_at_qd_c2,
+			vector_actual_position_at_q_c2;
+	   static matrix<double> matrix_rotation_RC1;
+
 // void InitStaticVariable()
 // 	{
 // 		mt_Identity.resize(MTSIZE);
@@ -242,6 +265,15 @@ public:
 
 	//end  Mathematical curve data
 
+	// Variable for proposed tool orientation contour estimation
+	double     m_fcutting_length,m_fDz,m_fDy, m_fcos_theta_C,m_fcos_theta_A, m_fsin_theta_C,m_fsin_theta_A;
+
+	double m_fdelay_time,m_fMath_rc1,m_fMath_theta_c1,m_fMath_shifted_Theta_c1,
+		tempNormal;
+
+	 double     m_fMath_theta_c2,m_fMath_shifted_Theta_c2,m_fMath_rc2;
+	// double test0,test1,test2,test3,test4,test5;
+	 
 	System::String^ m_strDebugString;
 //
 	// Check about finish machining contour in Gcode file 
@@ -251,6 +283,7 @@ public:
 	void CounterTimerCallback(void);
 	vector<double>  GetCurrentReference(void);
 	vector<double>  GetRealPosition(void);
+	vector<double>  NormalizedVector(vector<double> temple_vector);
 	void UpdateRealPosition(void);
 	void SetTableOrigin(vector<double> Vec_realPosition);
 	void SetRealPosition(vector<double> Vec_realPosition);
@@ -260,11 +293,13 @@ public:
 	// Continue to read next ref contour in Gcode file 
 	void IndependentControl2D(void);
 	void ContouringControl3DFiveAxis(void);
-	void ThreeAxisMachineController(void);
+	void FiveAxisMachineController(void);
+
+	void FiveAxisMachineErrorEstimation(void);
 	void FiveAxisMachineControllerInRegulation(void);
 	void IndependentControl3DFiveAxis(void);
 	void ThreeAxisMachineSlidingModeContouringController(void);
-	void ThreeAxisMachinePDTrackingController(void);
+	void FiveAxisMachinePDTrackingController(void);
 	void ThreeAxisMachinePDContouringController(void);
 	
 	void EstimateFrictionValue(void);

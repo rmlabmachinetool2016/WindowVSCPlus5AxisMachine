@@ -336,7 +336,7 @@ void FiveAxisIOModule::ResetCounterToOrigin()
 	unsigned long PresetData[NUM_COUNTER];
 	double pos_pre[NUM_COUNTER] = {INIT_POS_X,INIT_POS_Y1,INIT_POS_Y2,INIT_POS_Z,INIT_ANGLE_C,INIT_ANGLE_A1,INIT_ANGLE_A2};
 	double resonate[NUM_COUNTER] = {RESONATE_LINER_ENC_X,RESONATE_LINER_ENC_Y1,RESONATE_LINER_ENC_Y2,RESONATE_LINER_ENC_Z,RESONATE_ROTATION_ENC_C,RESONATE_ROTATION_ENC_A1,RESONATE_ROTATION_ENC_A2};
-	long dir[NUM_COUNTER]={-1,1,-1,-1,1,1,-1};//5 Axis CNC,  long dir[NUM_COUNTER]={1,1,1,1,1,1,1}; \\ 3axis CNC
+	long dir[NUM_COUNTER]={-1,1,-1,-1,-1,1,-1};//5 Axis CNC,  long dir[NUM_COUNTER]={1,1,1,1,1,1,1}; \\ 3axis CNC
 	for(unsigned int i=0;i<NUM_COUNTER;i++){
 		pos_pre[i] = pos_pre[i]*dir[i]/resonate[i];
 		PresetData[i] = static_cast<unsigned long>(pos_pre[i]);
