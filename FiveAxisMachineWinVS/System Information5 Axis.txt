@@ -1,0 +1,52 @@
+
+	static const double RESONATE_LINER_ENC_X		= 0.0001;//2/(500.0*4.8*4.0);	// mm/pulse
+	static const double RESONATE_LINER_ENC_Y1		= 0.0001;//2/(500.0*4.8*4.0);		// mm/pulse
+	static const double RESONATE_LINER_ENC_Y2		= 0.0001;//(1.0/10000.0);		// mm/pulse
+	static const double RESONATE_LINER_ENC_Z		= 0.0001;//2/(500.0*4.8*4.0);		// mm/pulse
+	static const double RESONATE_ROTATION_ENC_C		= (360/1562500.0);	// Deg/pulse //(2.0*PI/1562500.0);	// rad/pulse
+	static const double RESONATE_ROTATION_ENC_A1	= (360/3125000.0);// Deg/pulse   //(2.0*PI/3125000.0);	// rad/pulse
+	static const double RESONATE_ROTATION_ENC_A2	= (360/3125000.0);// Deg/pulse   //(2.0*PI/3125000.0);	// rad/pulse
+	static const double MAX_FORCE_X					= 36.0;					// N
+	static const double MAX_FORCE_Y1				= 36.0;					// N
+	static const double MAX_FORCE_Y2				= 36.0;					// N
+	static const double MAX_FORCE_Z					= 36.0;					// N
+	static const double MAX_TORQUE_C				= 2.0;					// N*m
+	static const double MAX_TORQUE_A1				= 5.0;					// N*m
+	static const double MAX_TORQUE_A2				= 5.0;					// N*m
+
+
+mx = Kg ( Ns^2/mm)     Fc=20N; kv = 5.0 Ns/mm
+my1 = Kg ( Ns^2/mm)     Fc=15N; kv = 3.0 Ns/mm
+* my2 = Kg ( Ns^2/mm)     Fc=15N; kv = 3.0 Ns/mm
+mz = Kg ( Ns^2/mm)     Fc=24N; kv = 5.0 Ns/mm ; Fg  = 12N
+mC = Kg ( Ns^2/mm)     Fc=24N; kv = 5.0 Ns/mm ; Fg  = 12N
+mA1= Kg ( Ns^2/mm)     Fc=24N; kv = 5.0 Ns/mm ; Fg  = 12N
+* mA2= Kg ( Ns^2/mm)     Fc=24N; kv = 5.0 Ns/mm ; Fg  = 12N
+
+
+Ball screw pitch = lead = 2 mm
+Max Torque 3.67 Ncm
+Max output Force= 3.67*0.01*4.8*2*3.14/0.002 = 553.14 N
+
+F max = U max * ka*kt*  2*pi/ L = 500
+20 *           0.21*     38.2 (Nm/A)     * 3.14 
+
+
+http://uk.rs-online.com/web/p/dc-motors/4205158/
+http://sg.rs-online.com/web/p/dc-motors/4205158/?origin=PSF_421231|acc
+5860 rpm
+
+m = N.s^2/mm
+
+Max speed 20 mm/s
+
+mx = 1 Ns^2/mm= 1000Kg    Fc=20N; kv = 5.0 Ns/mm
+my = 0.8  Ns^2/mm= 800Kg    Fc=15N; kv = 3.0 Ns/mm
+mz = 0.8  Ns^2/mm= 800Kg    Fc=24N; kv = 5.0 Ns/mm ; Fg  = 12N
+
+
+Matrixrotation R[t,n,b]
+
+AO1604 llpe
+CNT-3208M-PE 
+

@@ -1,0 +1,92 @@
+﻿%
+O0001
+G69 // Mean no automatic deceleration in corner moving  G96 // Automatic deceleration in corner moving //G62 Mathematic Curve
+G67 VMIN0.0   // Set VMIN At End,Start of corner
+G60 VMAX0.0 PMAX1000   // AxisX Set min distance Velocity V and max Accelerator P 
+G61 VMAX0.0 PMAX1000   // AxisY1 Set min distance Velocity V and max Accelerator P
+;G3 X-40 Y0.0 R20.0 F30.0
+;G1 X10.0 Y-4.4669 Z4.4796 F5.0 
+;G1 X0.0 Y-4.4669 Z4.4796 F5.0 
+G1 X0.0 Y-4.4743 Z4.4818 C-0.1113 A16.6993 F5.0  //0.0000     -4.4743     4.4818     -0.1113     16.6993
+G62 FIV b5.0 c8.0 a5.0 T5.0   // Mean move in five axis motion from mathematic two circular ra =b and rb =c for X,Y, z = a = 5mm; time 5s ( angle velocity 2pi/5 rad/s)
+;G62 TUN Z10.0 W1.0   // Mean auto Tuning in X Axis use referen X = R Cos(wt)
+;G62 TUN RE2 X20 W10   // Mean auto Tuning in C Axis use referen C = Theta Cos(wt) ( degree) Repeat (RE) 4 time
+;Radius  R20
+;G3 X-40 Y0.0 R20.0 F30.0
+;G3 X0 Y0.0 R-20.0
+;G3 X-20 Y0.0 R10.0
+;G3 X0 Y0.0 R-10.0  
+;Different contour
+; Figure Eight Curve FEC
+; Cartesian equation:
+; x4 = a2(x2-y2)
+; Polar equation: sec = (1 / cos) (secant)
+; r2 = a2cos(2θ)sec4(θ) 
+;% Cartesian equation:
+;% x = a*sin(t/b)
+;% y = a*sin(t/c)
+;G62 FEC a2.0 b6.0 c3.0 T10.0   // Mean move in mathematic Figure Eight Curve a = 10mm;time 20s ( angle velocity 2pi/20 rad/s)
+;% Trifolium
+;% Cartesian equation:
+;% (x2 + y2)(y2 + x(x + a)) = 4axy2
+;% Polar equation:
+;% r = a cosθ (4sin2θ - 1) 
+;G62 TRI a10.0 T20.0   // Mean move in mathematic Trifolium Curve a = 10mm; time 20s ( angle velocity 2pi/20 rad/s)
+;% Lissajous Curves
+;% Parametric Cartesian equation:
+;% x = a sin(nt + c), y = b sin(t) 
+;G62 LIS a5.0 n3.0 c1.256 b10.0 T20.0   // Mean move in mathematic  Lissajous Curves a = 5; b= 10; n= 3; c = pi/2.5; time 20s ( angle velocity 2pi/20 rad/s)
+; 3D Hinh thoi Speed 6.28 mm/s
+;G1 X5.0 Y0.0 Z0.0 F9.28 PH50.0 PE50.0 
+;G1 X0.0 Y0.0 Z5.0 
+;G1 X0.0 Y5.0 Z0.0 
+;G1 X5.0 Y0.0 Z0.0 
+;Test Stribek truc X  Fbreak friction
+;G1 X10.0 F3.0 PH0.5 PE0.5
+;Test Stribek truc X   stribek curve Cv
+;G1 X12.0 F3.0 PH0.5 PE0.5
+;G1 X80.0 F3.0 PH0.05 PE0.05
+;G1 X85.0 F1.6 PH0.05 PE0.05
+;Apply Stribek curve on X axis
+;G3 X-9 Y3.0 R5.0 F3.14 PH100 PE100
+;G3 X0 Y0.0 R-5.0 F3.14
+;Apply Stribek curve on X axis  R10 P 9.42
+;G3 X-20 Y0.0 R10.0 F9.42 PH500 PE500
+;G3 X0 Y0.0 R-10.0
+;G1 X3.0 Y0.0 F3.14
+;G1 X0.0 Y4.0 F3.14
+;G1 X-3.0 Y0.0 F3.14
+;G1 X0.0 Y-4.0 F3.14
+;G1 X3.0 Y0.0 F3.14
+;G3 X0 Y-4.0 R5.0 F3.14
+;Radius  R15
+;G3 X-30 Y0.0 R15.0 F9.42
+;G3 X0 Y0.0 R-15.0
+;G3 X-30 Y0.0 R15.0 F9.42
+;G3 X0 Y0.0 R-15.0
+; Radius R=5
+;G3 X-9 Y3.0 R5.0 F9.42
+;G3 X0 Y0.0 R-5.0
+;G3 X-9 Y3.0 R5.0
+;G3 X0 Y0.0 R-5.0 
+;Radius  R=25
+;G3 X-50 Y0.0 R25.0 F9.42
+;G3 X0 Y0.0 R-25.0
+;G3 X-50 Y0.0 R25.0
+;G3 X0 Y0.0 R-25.0
+;Radius  R=50
+;G3 X-100 Y0.0 R50.0 F9.42
+;G3 X0 Y0.0 R-50.0
+;G3 X-100 Y0.0 R50.0 F9.42
+;G3 X0 Y0.0 R-50.0
+;G1 X5.0 Y0.0 F3.14
+;G3 X0 Y5.0 R5.0 F3.14
+;G3 X-5 Y0.0 R5.0 F3.14
+;G3 X0.0 Y-5.0 R5.0 F3.14
+;G3 X5.0 Y0.0 R5.0 F3.14
+;G2 X-3 Y4.0 R5.0 F3.14
+;G2 X3.0 Y4.0 R5.0 F3.14
+;G3 X-3 Y-4.0 R5.0 F3.14
+;G3 X4 Y3 R5.0 F3.14
+M30
+%
