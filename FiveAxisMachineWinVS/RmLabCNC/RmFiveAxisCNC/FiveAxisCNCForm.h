@@ -2048,9 +2048,8 @@ private: System::ComponentModel::IContainer^  components;
 #pragma region Windows Form function 
 private: System::Void buttonSimulationStart_Click(System::Object^  sender, System::EventArgs^  e) {
 			 // Five axis orientation
-			 RmLabFiveAxisCNC.m_fDz = 20; //mm
-			 RmLabFiveAxisCNC.m_fDy = 4; //mm
-
+			 RmLabFiveAxisCNC.m_fDz = 0.0;//20; //mm
+			 RmLabFiveAxisCNC.m_fDy = 0.0;//4; //mm
 			 RmLabFiveAxisCNC.m_strDebugString = "";
 			 UpdateSettingParameters(); // Update sample time, Controller type
 

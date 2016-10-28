@@ -263,6 +263,9 @@ void FiveAxisIOModule::BoundingOutputFiveAxis(vector<double>& OutputForce)
 			OutputForce(i) = -max_force[i];
 		outputVolt[i] = static_cast<float>(OutputForce(i)/max_force[i]*DA_MAX_VOLT);
 	}
+	outputVolt[3] = outputVolt[2] ;// Temporary change output to Z drive
+	outputVolt[2]  = 0.0;
+
 	for(i=0;i<NUM_ROTATION_ACTUATOR-1;i++)
 	{
 		if(OutputForce(i+NUM_LINEAR_ACTUATOR-1) > max_torque[i])

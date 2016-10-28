@@ -488,16 +488,16 @@ vector_estimated_coulomb_friction_fcl =    [0.6,0.3,0.8,0.5,0.6];
 vector_estimated_gravitational_force_g =   [0.0,0.0,1.5,0.0,0.0];      
 
 % PD tracking controller gain   400 300 400   20 20
-matrix_TC_Gain_Kp =      [[800,0,0,0,0];
-                          [0,800,0,0,0];
+matrix_TC_Gain_Kp =      [[4000,0,0,0,0];
+                          [0,4000,0,0,0];
                           [0,0,4000,0,0];
-                          [0,0,0,4000,0];
-                          [0,0,0,0,4000]]; 
+                          [0,0,0,400,0];
+                          [0,0,0,0,400]]; 
 matrix_TC_gain_Kd= [[30,0,0,0,0];
                             [0,30,0,0,0];
-                            [0,0,300,0,0];
-                            [0,0,0,300,0];
-                            [0,0,0,0,300]];
+                            [0,0,30,0,0];
+                            [0,0,0,30,0];
+                            [0,0,0,0,30]];
 % % PD contouring controller gain   elt, eln, elb    100 400 400   10  30
 % 30
 % matrix_TC_Gain_Kp =      [[400,0,0];
