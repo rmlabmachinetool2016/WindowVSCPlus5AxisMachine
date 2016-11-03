@@ -2377,6 +2377,7 @@ private: System::Void buttonSimulationStart_Click(System::Object^  sender, Syste
 			 if (NewGUIProcessing.bConnectStatus )
 			 {
 				 labelConnectStatus->Text = "Experimental mode running\n Cant run simulation \n Stop Connecting to CNC  \n and Try a again";
+				 //TestUpdate
 			 } 
 			 else
 			 {
