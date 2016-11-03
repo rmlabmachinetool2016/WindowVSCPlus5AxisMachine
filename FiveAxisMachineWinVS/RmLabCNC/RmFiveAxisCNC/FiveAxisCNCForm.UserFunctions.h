@@ -265,6 +265,20 @@ void FiveAxisCNCForm::InitStaticVariable()
 	RmLabFiveAxisCNC.m_CNCPosManualStep.X = 0.0;
 	RmLabFiveAxisCNC.m_CNCPosManualStep.Y = 0.0;
 	RmLabFiveAxisCNC.m_CNCPosManualStep.Z = 0.0;
+	RmLabFiveAxisCNC.m_CNCPosManualStep.C = 0.0;
+	RmLabFiveAxisCNC.m_CNCPosManualStep.A = 0.0;
+
+	bbuttonWorkpieceXMinusMouseDown = false;bbuttonWorkpieceXPlusMouseDown = false;
+	bbuttonWorkpieceYMinusMouseDown = false;bbuttonWorkpieceYPlusMouseDown = false;
+	bbuttonWorkpieceZMinusMouseDown = false;bbuttonWorkpieceZPlusMouseDown = false;
+	bbuttonWorkpieceCMinusMouseDown = false;bbuttonWorkpieceCPlusMouseDown = false;
+	bbuttonWorkpieceAMinusMouseDown = false;bbuttonWorkpieceAPlusMouseDown = false;
+
+	RmLabFiveAxisCNC.m_CNCWorkpiecePosStep.X = 0.0;
+	RmLabFiveAxisCNC.m_CNCWorkpiecePosStep.Y = 0.0;
+	RmLabFiveAxisCNC.m_CNCWorkpiecePosStep.Z = 0.0;
+	RmLabFiveAxisCNC.m_CNCWorkpiecePosStep.C = 0.0;
+	RmLabFiveAxisCNC.m_CNCWorkpiecePosStep.A = 0.0;
 
 	m_fManualSpeed = 0.01; // mm/s
 // 		mt_Identity.resize(MTSIZE);

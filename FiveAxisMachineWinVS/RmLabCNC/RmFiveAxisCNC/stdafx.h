@@ -12,6 +12,9 @@
 
 #define TRUE  1
 #define FALSE 0
+#define MACHINECOORDINATE 1
+#define WORKPIECECOORDINATE 2
+
 #include "GUIProcessing.h"
 #include "FiveAxisCNC.h"
 #include "CAioCLI.h"

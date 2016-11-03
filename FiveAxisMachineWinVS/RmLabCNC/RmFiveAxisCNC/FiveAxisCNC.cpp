@@ -173,6 +173,10 @@ FiveAxisCNC::FiveAxisCNC(void)
 			vector_desired_position_at_shifted_qd_c2.clear();vector_desired_velocity_at_shifted_qd_c2.clear();vector_desired_acceleration_at_shifted_qd_c2.clear();
 			vector_tracking_error_velocity_dot_e1_at_qd_c2.clear(); vector_tracking_error_e1_at_qd_c2.clear();
 			vector_actual_position_at_q_c2.clear();
+// Real and desired at workpiece coordinate
+			vector_real_position_workpiece_q.resize(NUMBERAXIS);vector_desired_position_workpiece_qd.resize(NUMBERAXIS);
+			vector_real_position_workpiece_q.clear();vector_desired_position_workpiece_qd.clear();
+			vector_machine_pos_init.resize(NUM_COUNTER);vector_machine_pos_init.clear();
 
       vector_actual_orientation_at_q_c1.resize(THREEDIMENSION);vector_desired_orientation_at_qd_c1.resize(THREEDIMENSION); vector_actual_position_at_q_c2.resize(THREEDIMENSION);
 
@@ -234,12 +238,19 @@ void FiveAxisCNC::SetRealPosition(vector<double> CounterValue)
 	vector_real_position_q(0) =  CounterValue(0); // X axis position
 	vector_real_position_q(1) =  CounterValue(1); // Y axis position
 	vector_real_position_q(2) =  CounterValue(3);// Z axis position
+	// Convert to rad for matrix calculation
 	vector_real_position_q(3) =  CounterValue(4);// C axis position
 	vector_real_position_q(4) =  CounterValue(5);// A axis position
+	ConvertFromMachineToWorkpieceCoordinate(vector_real_position_q,vector_real_position_workpiece_q);
+	m_CNCWorkpieceRealPos.X = vector_real_position_workpiece_q(0);
+	m_CNCWorkpieceRealPos.Y = vector_real_position_workpiece_q(1);
+	m_CNCWorkpieceRealPos.Z = vector_real_position_workpiece_q(2);
+	m_CNCWorkpieceRealPos.C = vector_real_position_workpiece_q(3);
+	m_CNCWorkpieceRealPos.A = vector_real_position_workpiece_q(4);
 
 	vector_real_velocity_dotq = (vector_real_position_q - vector_previous_real_position_q)/(float)m_fSampTime;//  mm/s
 
-	m_CNCRealPos.A2 = vec_OutputControl(4);// Debug control out put in C drive
+//	m_CNCRealPos.A2 = vec_OutputControl(4);// Debug control out put in C drive
 
 }
 void FiveAxisCNC::SetRefPosition(vector<double> Vec_refPosition)
@@ -271,15 +282,15 @@ void FiveAxisCNC::SetRefPosition(vector<double> Vec_refPosition)
 }
 void FiveAxisCNC::SetTableOrigin(vector<double> Vec_realPosition)
 {
-	m_CNCTableOrigin.X = vec_realx(0);
-	m_CNCTableOrigin.Y1 = vec_realx(1);
-	m_CNCTableOrigin.Y2 = vec_realx(2);
-	m_CNCTableOrigin.Z = vec_realx(3);
-	m_CNCTableOrigin.C = vec_realx(4);
-	m_CNCTableOrigin.A1 = vec_realx(5);
-	m_CNCTableOrigin.A2 = vec_realx(6);
-	m_CNCTableOrigin.Y = m_CNCTableOrigin.Y1;
-	m_CNCTableOrigin.A = m_CNCTableOrigin.A1;
+	m_CNCWorkpieceRealPos.X = vec_realx(0);
+	m_CNCWorkpieceRealPos.Y1 = vec_realx(1);
+	m_CNCWorkpieceRealPos.Y2 = vec_realx(2);
+	m_CNCWorkpieceRealPos.Z = vec_realx(3);
+	m_CNCWorkpieceRealPos.C = vec_realx(4);
+	m_CNCWorkpieceRealPos.A1 = vec_realx(5);
+	m_CNCWorkpieceRealPos.A2 = vec_realx(6);
+	m_CNCWorkpieceRealPos.Y = m_CNCWorkpieceRealPos.Y1;
+	m_CNCWorkpieceRealPos.A = m_CNCWorkpieceRealPos.A1;
 
 }
 // Get next reference point at counter timer call for feedback control
@@ -482,21 +493,66 @@ vector<double> FiveAxisCNC::NormalizedVector(vector<double> temple_original_vect
 	temple_vector = temple_original_vector/tempNormal;
 	return temple_vector;
 }
+void FiveAxisCNC::ConvertFromMachineToWorkpieceCoordinate(vector<double> Vec_machine_coordinate,vector<double> &Vec_workpiece_coordinate)
+{
+	m_fcos_theta_C = cosf(Vec_machine_coordinate(3));
+	m_fsin_theta_C = sinf(Vec_machine_coordinate(3));
+	m_fcos_theta_A = cosf(Vec_machine_coordinate(4));
+	m_fsin_theta_A = sinf(Vec_machine_coordinate(4));
+
+// 	Vec_workpiece_coordinate(0) = Vec_machine_coordinate(0)*m_fcos_theta_C-(Vec_machine_coordinate(1)+m_fDy)*m_fcos_theta_A*m_fsin_theta_C+
+// 		(Vec_machine_coordinate(2)-m_fDz)*m_fsin_theta_A*m_fsin_theta_C+ m_fDy*m_fsin_theta_C;
+// 	Vec_workpiece_coordinate(1) = Vec_machine_coordinate(0)*m_fsin_theta_C+(Vec_machine_coordinate(1)+m_fDy)*m_fcos_theta_A*m_fcos_theta_C-										
+// 		(Vec_machine_coordinate(2)-m_fDz)*m_fsin_theta_A*m_fcos_theta_C-m_fDy*m_fcos_theta_C;
+// 	Vec_workpiece_coordinate(2) = (Vec_machine_coordinate(1)+m_fDy)*m_fsin_theta_A+(Vec_machine_coordinate(2)-m_fDz)*m_fcos_theta_A+m_fDz;
+
+	// User define coordinate which distance m_fOrigX,m_fOrigY,m_fOrigZ from coordinate at pivot point
+	Vec_workpiece_coordinate(0) = m_fcos_theta_C*(Vec_machine_coordinate(0)+m_fOrigX)+ m_fDy*m_fsin_theta_C-m_fcos_theta_A*m_fsin_theta_C*(Vec_machine_coordinate(1)+m_fOrigY)+
+		m_fsin_theta_A*m_fsin_theta_C*(Vec_machine_coordinate(2)+m_fOrigZ);
+	Vec_workpiece_coordinate(1) = m_fsin_theta_C*(Vec_machine_coordinate(0)+m_fOrigX)-m_fDy*m_fcos_theta_C+m_fcos_theta_A*m_fcos_theta_C*(Vec_machine_coordinate(1)+m_fOrigY)-
+		m_fsin_theta_A*m_fcos_theta_C*(Vec_machine_coordinate(2)+m_fOrigZ);
+	Vec_workpiece_coordinate(2) = m_fDz+m_fcos_theta_A*(Vec_machine_coordinate(2)+m_fOrigZ)+m_fsin_theta_A*(Vec_machine_coordinate(1)+m_fOrigY);
+
+	Vec_workpiece_coordinate(3) = Vec_machine_coordinate(3);
+	Vec_workpiece_coordinate(4) = Vec_machine_coordinate(4);
+}
+void FiveAxisCNC::ConvertFromWorkpieceToMachineCoordinate(vector<double> Vec_workpiece_coordinate,vector<double> &Vec_machine_coordinate)
+{
+	m_fcos_theta_C = cosf(Vec_workpiece_coordinate(3));
+	m_fsin_theta_C = sinf(Vec_workpiece_coordinate(3));
+	m_fcos_theta_A = cosf(Vec_workpiece_coordinate(4));
+	m_fsin_theta_A = sinf(Vec_workpiece_coordinate(4));
+// 
+// 	Vec_machine_coordinate(0) = Vec_workpiece_coordinate(0)*m_fcos_theta_C+Vec_workpiece_coordinate(1)*m_fsin_theta_C;
+// 	Vec_machine_coordinate(1) = m_fcos_theta_A*(Vec_workpiece_coordinate(1)*m_fcos_theta_C-Vec_workpiece_coordinate(0)*m_fsin_theta_C) - m_fDy+
+// 		m_fDy*m_fcos_theta_A- m_fDz*m_fsin_theta_A+ Vec_workpiece_coordinate(2)*m_fsin_theta_A;
+// 	Vec_machine_coordinate(2) = m_fDz-m_fDz*m_fcos_theta_A-m_fsin_theta_A*(Vec_workpiece_coordinate(1)*m_fcos_theta_C-Vec_workpiece_coordinate(0)*m_fsin_theta_C)+
+// 		Vec_workpiece_coordinate(2)*m_fcos_theta_A-m_fDy*m_fsin_theta_A;
+	// User define coordinate which distance m_fOrigX,m_fOrigY,m_fOrigZ from coordinate at pivot point
+	Vec_machine_coordinate(0) = Vec_workpiece_coordinate(0)*m_fcos_theta_C-m_fOrigX+Vec_workpiece_coordinate(1)*m_fsin_theta_C;
+	Vec_machine_coordinate(1) = m_fcos_theta_A*(Vec_workpiece_coordinate(1)*m_fcos_theta_C-Vec_workpiece_coordinate(0)*m_fsin_theta_C) - m_fOrigY+
+		m_fDy*m_fcos_theta_A- m_fDz*m_fsin_theta_A+ Vec_workpiece_coordinate(2)*m_fsin_theta_A;
+	Vec_machine_coordinate(2) = Vec_workpiece_coordinate(2)*m_fcos_theta_A-m_fDz*m_fcos_theta_A-m_fsin_theta_A*(Vec_workpiece_coordinate(1)*m_fcos_theta_C-Vec_workpiece_coordinate(0)*m_fsin_theta_C)
+		-m_fOrigZ-m_fDy*m_fsin_theta_A;
+
+
+	Vec_machine_coordinate(3) = Vec_workpiece_coordinate(3);
+	Vec_machine_coordinate(4) = Vec_workpiece_coordinate(4);
+}
 void FiveAxisCNC::FiveAxisMachineErrorEstimation(void)
 {
 
 	//real: norm_2 v = sqrt (sum (v [i] * v [i]))      // inner_prod (v1, v2) = sum (v1 [i] * v2 [i])
 	//vector_real_position_q(0)
-	m_fcos_theta_C = cosf(vector_real_position_q(3));
-	m_fsin_theta_C = sinf(vector_real_position_q(3));
-	m_fcos_theta_A = cosf(vector_real_position_q(4));
-	m_fsin_theta_A = sinf(vector_real_position_q(4));
+	//ConvertFromMachineToWorkpieceCoordinate(vector_real_position_q,vector_real_position_workpiece_q);
+	m_fcos_theta_C = cosf(vector_real_position_workpiece_q(3));
+	m_fsin_theta_C = sinf(vector_real_position_workpiece_q(3));
+	m_fcos_theta_A = cosf(vector_real_position_workpiece_q(4));
+	m_fsin_theta_A = sinf(vector_real_position_workpiece_q(4));
 
-	vector_actual_position_at_q_c1(0) = vector_real_position_q(0)*m_fcos_theta_C-(vector_real_position_q(1)+m_fDy)*m_fcos_theta_A*m_fsin_theta_C+
-										(vector_real_position_q(2)-m_fDz)*m_fsin_theta_A*m_fsin_theta_C+ m_fDy*m_fsin_theta_C;
-	vector_actual_position_at_q_c1(1) = vector_real_position_q(0)*m_fsin_theta_C+(vector_real_position_q(1)+m_fDy)*m_fcos_theta_A*m_fcos_theta_C-										
-										(vector_real_position_q(2)-m_fDz)*m_fsin_theta_A*m_fcos_theta_C-m_fDy*m_fcos_theta_C;
-	vector_actual_position_at_q_c1(2) = (vector_real_position_q(1)+m_fDy)*m_fsin_theta_A+(vector_real_position_q(2)-m_fDz)*m_fcos_theta_A+m_fDz;
+	vector_actual_position_at_q_c1(0) = vector_real_position_workpiece_q(0);
+	vector_actual_position_at_q_c1(1) = vector_real_position_workpiece_q(1);
+	vector_actual_position_at_q_c1(2) = vector_real_position_workpiece_q(2);
 
 	vector_actual_orientation_at_q_c1(0) = m_fsin_theta_A*m_fsin_theta_C;
 	vector_actual_orientation_at_q_c1(1) = -m_fsin_theta_A*m_fcos_theta_C;
@@ -543,12 +599,18 @@ void FiveAxisCNC::FiveAxisMachineErrorEstimation(void)
 	vector_desired_orientation_at_qd_c1 = vector_desired_orientation_at_qd_c1/(float)tempNormal;
 
 
+
+	vector_desired_position_workpiece_qd(0) = vector_desired_position_at_qd_c1(0);
+	vector_desired_position_workpiece_qd(1) = vector_desired_position_at_qd_c1(1);
+	vector_desired_position_workpiece_qd(2) = vector_desired_position_at_qd_c1(2);
+	
+
 	// no needd to put here vector_desired_position_qd
-	m_CNCRefPos.A = acosf(vector_desired_orientation_at_qd_c1(2));
-	tempNormal = sinf(m_CNCRefPos.A);
+	vector_desired_position_workpiece_qd(4)= acosf(vector_desired_orientation_at_qd_c1(2));
+	tempNormal = sinf(vector_desired_position_workpiece_qd(4));
 	if ((vector_desired_orientation_at_qd_c1(1)!=0)&&(tempNormal!=0)) {
-						m_CNCRefPos.C = atan2(-vector_desired_orientation_at_qd_c1(1)/tempNormal, vector_desired_orientation_at_qd_c1(0)/tempNormal);
-						if (m_CNCRefPos.C>0.0) {m_CNCRefPos.C =m_CNCRefPos.C-2.0*PI; };
+						vector_desired_position_workpiece_qd(3) = atan2(-vector_desired_orientation_at_qd_c1(1)/tempNormal, vector_desired_orientation_at_qd_c1(0)/tempNormal);
+						if (vector_desired_position_workpiece_qd(3)>0.0) {vector_desired_position_workpiece_qd(3) =vector_desired_position_workpiece_qd(3)-2.0*PI; };
 					//	m_CNCRefPos.C = PI/2+atanf(-vector_desired_orientation_at_qd_c1(0)/vector_desired_orientation_at_qd_c1(1));
 					
 					//	if (vector_desired_orientation_at_qd_c1(1)<0.0) {m_CNCRefPos.C =m_CNCRefPos.C+ PI/2; };
@@ -559,18 +621,12 @@ void FiveAxisCNC::FiveAxisMachineErrorEstimation(void)
 
 // 	m_CNCRefPos.A = acosf(0.5);
 // 	m_CNCRefPos.C = acosf(1);
-
-	m_fcos_theta_C = cosf(m_CNCRefPos.C);
-	m_fsin_theta_C = sinf(m_CNCRefPos.C);
-	m_fcos_theta_A = vector_desired_orientation_at_qd_c1(2);
-	m_fsin_theta_A = sinf(m_CNCRefPos.A);
+	ConvertFromWorkpieceToMachineCoordinate(vector_desired_position_workpiece_qd,vector_desired_position_qd);
 
 	// My matlab calculation
-	m_CNCRefPos.X = vector_desired_position_at_qd_c1(0)*m_fcos_theta_C+vector_desired_position_at_qd_c1(1)*m_fsin_theta_C;
-	m_CNCRefPos.Y = m_fcos_theta_A*(vector_desired_position_at_qd_c1(1)*m_fcos_theta_C-vector_desired_position_at_qd_c1(0)*m_fsin_theta_C) - m_fDy+
-		            m_fDy*m_fcos_theta_A- m_fDz*m_fsin_theta_A+ vector_desired_position_at_qd_c1(2)*m_fsin_theta_A;
-    m_CNCRefPos.Z = m_fDz-m_fDz*m_fcos_theta_A-m_fsin_theta_A*(vector_desired_position_at_qd_c1(1)*m_fcos_theta_C-vector_desired_position_at_qd_c1(0)*m_fsin_theta_C)+
-					vector_desired_position_at_qd_c1(2)*m_fcos_theta_A-m_fDy*m_fsin_theta_A;
+	m_CNCRefPos.X = vector_desired_position_qd(0);
+	m_CNCRefPos.Y = vector_desired_position_qd(1);
+    m_CNCRefPos.Z = vector_desired_position_qd(2);
 
 
 	// Revert calculation
@@ -586,8 +642,8 @@ void FiveAxisCNC::FiveAxisMachineErrorEstimation(void)
 
 
 	// Convert to degree
-	m_CNCRefPos.C= m_CNCRefPos.C* PITODEGREE;
-	m_CNCRefPos.A= m_CNCRefPos.A* PITODEGREE;
+	m_CNCRefPos.C= vector_desired_position_qd(3);
+	m_CNCRefPos.A= vector_desired_position_qd(4);
 //     m_CNCRefPos.A = 0.0;
 // 	m_CNCRefPos.C =  0.0;
 // 	m_CNCRefPos.X = vector_desired_position_at_qd_c1(0);
@@ -1334,6 +1390,15 @@ void FiveAxisCNC::InitControlVariable()
 {
 	vector_disturbance_estimator_de.clear();
 	ResetRealData();
+	m_fDz = 0.0;//20; //mm
+	m_fDy = 0.0;//4; //mm
+	m_strDebugString = "";
+
+	m_fOrigX = 0.0;m_fOrigY = 0.0;m_fOrigZ = 40.0; // Machine Coordinate from cross point
+
+	vector_machine_pos_init.clear();
+
+
 		m_fCNCStartX = 0.0;
 		m_fCNCStartY = 0.0;
 		m_fCNCStartZ = 0.0;
@@ -1577,12 +1642,36 @@ void FiveAxisCNC::GetNextPointRefInRegulation() {
 // 		vec_refr(3) = m_CNCRefPos.Z;
 // 		vec_refr(4) = m_CNCRefPos.C;
 // 		vec_refr(5) = m_CNCRefPos.A;
+	switch (m_iCurrentCoordinate)
+	{
+	case MACHINECOORDINATE:
+		vector_desired_position_qd(0) = vector_desired_position_qd(0) +m_CNCPosManualStep.X;
+		vector_desired_position_qd(1) = vector_desired_position_qd(1) +m_CNCPosManualStep.Y;
+		vector_desired_position_qd(2) = vector_desired_position_qd(2) +m_CNCPosManualStep.Z;
+		vector_desired_position_qd(3) = vector_desired_position_qd(3) +m_CNCPosManualStep.C;
+		vector_desired_position_qd(4) = vector_desired_position_qd(4) +m_CNCPosManualStep.A;
+		ConvertFromMachineToWorkpieceCoordinate(vector_desired_position_qd,vector_desired_position_workpiece_qd);
+		break;
+	case WORKPIECECOORDINATE:
+		vector_desired_position_workpiece_qd(0) = vector_desired_position_workpiece_qd(0) +m_CNCWorkpiecePosStep.X;
+		vector_desired_position_workpiece_qd(1) = vector_desired_position_workpiece_qd(1) +m_CNCWorkpiecePosStep.Y;
+		vector_desired_position_workpiece_qd(2) = vector_desired_position_workpiece_qd(2) +m_CNCWorkpiecePosStep.Z;
+		vector_desired_position_workpiece_qd(3) = vector_desired_position_workpiece_qd(3) +m_CNCWorkpiecePosStep.C;
+		vector_desired_position_workpiece_qd(4) = vector_desired_position_workpiece_qd(4) +m_CNCWorkpiecePosStep.A;
+		ConvertFromWorkpieceToMachineCoordinate(vector_desired_position_workpiece_qd,vector_desired_position_qd);
+		break;
+	}
+	m_CNCWorkpieceRefPos.X = vector_desired_position_workpiece_qd(0);
+	m_CNCWorkpieceRefPos.Y = vector_desired_position_workpiece_qd(1);
+	m_CNCWorkpieceRefPos.Z = vector_desired_position_workpiece_qd(2);
+	m_CNCWorkpieceRefPos.C = vector_desired_position_workpiece_qd(3);
+	m_CNCWorkpieceRefPos.A = vector_desired_position_workpiece_qd(4);
 
-		vector_next_desired_position_data(0) =  m_CNCRefPos.X ;
-		vector_next_desired_position_data(1) =  m_CNCRefPos.Y;
-		vector_next_desired_position_data(3) =  m_CNCRefPos.Z;
-		vector_next_desired_position_data(4) =  m_CNCRefPos.C;
-		vector_next_desired_position_data(5) =  m_CNCRefPos.A;
+		vector_next_desired_position_data(0) =  vector_desired_position_qd(0) ;
+		vector_next_desired_position_data(1) =  vector_desired_position_qd(1) ;
+		vector_next_desired_position_data(3) =  vector_desired_position_qd(2) ;
+		vector_next_desired_position_data(4) =  vector_desired_position_qd(3);
+		vector_next_desired_position_data(5) =  vector_desired_position_qd(4);
 		SetRefPosition(vector_next_desired_position_data);
 }
 void FiveAxisCNC::GetNextPointRefInGCodePath() {  // Using function

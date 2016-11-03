@@ -127,6 +127,8 @@ namespace RmLabCNC{
 			vector_desired_position_at_shifted_qd_c2,vector_desired_velocity_at_shifted_qd_c2,vector_desired_acceleration_at_shifted_qd_c2,
 			vector_tracking_error_velocity_dot_e1_at_qd_c2, vector_tracking_error_e1_at_qd_c2,
 			vector_actual_position_at_q_c2;
+		static vector<double> vector_real_position_workpiece_q,vector_desired_position_workpiece_qd, vector_machine_pos_init;
+
 	   static matrix<double> matrix_rotation_RC1;
 
 // void InitStaticVariable()
@@ -200,7 +202,7 @@ public:
 
 	FiveAxisControlModule ControlModule;
 	FiveAxisIOModule IOModule;
-	CNCPOSITION m_CNCRefPos,m_CNCPosManualStep,m_CNCTableOrigin,m_CNCRealPos,
+	CNCPOSITION m_CNCRefPos,m_CNCPosManualStep,m_CNCWorkpiecePosStep,m_CNCWorkpieceRefPos,m_CNCWorkpieceRealPos,m_CNCRealPos,
 				m_CNCStartRefVel,m_NextCNCStartRefVel,m_CNCEndRefVel,m_NextCNCEndRefVel ;
 	double SAMPLING_TIME;
 // 	m_fexpTnow = m_fexpTnow+ m_fSampTime;
@@ -266,12 +268,13 @@ public:
 	//end  Mathematical curve data
 
 	// Variable for proposed tool orientation contour estimation
-	double     m_fcutting_length,m_fDz,m_fDy, m_fcos_theta_C,m_fcos_theta_A, m_fsin_theta_C,m_fsin_theta_A;
+	double     m_fcutting_length,m_fDz,m_fDy, m_fcos_theta_C,m_fcos_theta_A, m_fsin_theta_C,m_fsin_theta_A,m_fOrigX,m_fOrigY,m_fOrigZ;
 
 	double m_fdelay_time,m_fMath_rc1,m_fMath_theta_c1,m_fMath_shifted_Theta_c1,
 		tempNormal;
 
 	 double     m_fMath_theta_c2,m_fMath_shifted_Theta_c2,m_fMath_rc2;
+	 unsigned int m_iCurrentCoordinate;
 	// double test0,test1,test2,test3,test4,test5;
 	 
 	System::String^ m_strDebugString;
@@ -346,6 +349,9 @@ public:
 	double TestMatrix(int mt_index);
 	void SetMatrix(int mt_index, double mt_value);
 
+// Tool orientation function
+	void ConvertFromMachineToWorkpieceCoordinate(vector<double> Vec_machine_coordinate,vector<double> &Vec_workpiece_coordinate);
+	void ConvertFromWorkpieceToMachineCoordinate(vector<double> Vec_workpiece_coordinate,vector<double> &Vec_machine_coordinate);
 };
 }
 #endif

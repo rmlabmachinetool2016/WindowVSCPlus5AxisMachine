@@ -43,9 +43,9 @@ public:
 	static const double RESONATE_LINER_ENC_Y1		= 0.0001;//2/(500.0*4.8*4.0);		// mm/pulse
 	static const double RESONATE_LINER_ENC_Y2		= 0.0001;//(1.0/10000.0);		// mm/pulse
 	static const double RESONATE_LINER_ENC_Z		= 0.0001;//2/(500.0*4.8*4.0);		// mm/pulse
-	static const double RESONATE_ROTATION_ENC_C		= (360/1562500.0);	// Deg/pulse //(2.0*PI/1562500.0);	// rad/pulse
-	static const double RESONATE_ROTATION_ENC_A1	= (360/3125000.0);// Deg/pulse   //(2.0*PI/3125000.0);	// rad/pulse
-	static const double RESONATE_ROTATION_ENC_A2	= (360/3125000.0);// Deg/pulse   //(2.0*PI/3125000.0);	// rad/pulse
+	static const double RESONATE_ROTATION_ENC_C		= (2.0*PI/1562500.0);	// rad/pulse(360/1562500.0);	// Deg/pulse //(2.0*PI/1562500.0);	// rad/pulse
+	static const double RESONATE_ROTATION_ENC_A1	= (2.0*PI/3125000.0);	// rad/pulse(360/3125000.0);// Deg/pulse   //(2.0*PI/3125000.0);	// rad/pulse
+	static const double RESONATE_ROTATION_ENC_A2	= (2.0*PI/3125000.0);	// rad/pulse(360/3125000.0);// Deg/pulse   //(2.0*PI/3125000.0);	// rad/pulse
 // 	static const double MAX_FORCE_X					= 500.0;					// N  3 Axis Machine tool X axis
 // 	static const double MAX_FORCE_Y1				= 500.0;					// N  3 Axis Machine tool Y axis
 // 	static const double MAX_FORCE_Y2				= 500.0;					// N  3 Axis Machine tool Z axis
